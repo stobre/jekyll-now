@@ -1,5 +1,5 @@
 ---
-layout: post2
+layout: post
 title: 在线直播写代码的网站
 ---
 
