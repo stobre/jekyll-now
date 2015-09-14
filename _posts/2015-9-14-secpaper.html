@@ -1,0 +1,1130 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>《dig挖出DNS的秘密》-linux命令五分钟系列之三十四_枝叶飞扬_新浪博客</title>
+<meta name="keywords" content="《dig挖出DNS的秘密》-linux命令五分钟系列之三十四_枝叶飞扬_新浪博客,枝叶飞扬,dig,nslookup,域名,解析,it" />
+<meta name="description" content="《dig挖出DNS的秘密》-linux命令五分钟系列之三十四_枝叶飞扬_新浪博客,枝叶飞扬," />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta http-equiv="mobile-agent" content="format=html5; url=http://blog.sina.cn/dpool/blog/s/blog_605f5b4f01014pjd.html?vt=4">
+<meta http-equiv="mobile-agent" content="format=wml; url=http://blog.sina.cn/dpool/blog/ArtRead.php?nid=605f5b4f01014pjd&vt=1">
+<!–[if lte IE 6]>
+<script type="text/javascript">
+try{
+document.execCommand("BackgroundImageCache", false, true);
+}catch(e){}
+</script>
+<![endif]–>
+<script type="text/javascript">
+window.staticTime=new Date().getTime();
+</script>
+<link rel="pingback" href="http://upload.move.blog.sina.com.cn/blog_rebuild/blog/xmlrpc.php" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://upload.move.blog.sina.com.cn/blog_rebuild/blog/xmlrpc.php?rsd" />
+<link href="http://blog.sina.com.cn/blog_rebuild/blog/wlwmanifest.xml" type="application/wlwmanifest+xml" rel="wlwmanifest" />
+<link rel="alternate" type="application/rss+xml" href="http://blog.sina.com.cn/rss/1616862031.xml" title="RSS" />
+<link href="http://simg.sinajs.cn/blog7style/css/conf/blog/article.css" type="text/css" rel="stylesheet" /><link href="http://simg.sinajs.cn/blog7style/css/common/common.css" type="text/css" rel="stylesheet" /><link href="http://simg.sinajs.cn/blog7style/css/blog/blog.css" type="text/css" rel="stylesheet" /><link href="http://simg.sinajs.cn/blog7style/css/module/common/blog.css" type="text/css" rel="stylesheet" /><style id="tplstyle" type="text/css">@charset "utf-8";@import url("http://simg.sinajs.cn/blog7newtpl/css/4/4_1/t.css");
+</style>
+<style id="positionstyle"  type="text/css">
+.sinabloghead .blogtoparea{ left:120px;top:41%;}
+.sinabloghead .blognav{ left:120px;top:63%;}
+</style>
+<style id="bgtyle"  type="text/css">
+</style>
+<style id="headtyle"  type="text/css">
+</style>
+<style id="navtyle"  type="text/css">
+</style>
+<script type="text/javascript" src="http://d1.sina.com.cn/litong/zhitou/sspnew.js"></script></head>
+<body>
+<!--$sinatopbar-->
+<div style="z-index:512;" class="nsinatopbar">
+  <div style="position:absolute;left:0;top:0;" id="trayFlashConnetion"></div>
+  <div class="ntopbar_main"> 
+    <a id="login_bar_logo_link_350" href="http://blog.sina.com.cn" target="_blank"><img class="ntopbar_logo" src="http://simg.sinajs.cn/blog7style/images/common/topbar/topbar_logo.gif" width="100" alt="新浪博客"></a>
+    <div class="ntopbar_floatL">
+      <div class="ntopbar_search" id="traySearchBar"></div>
+	  <div class="ntopbar_ad" id="loginBarActivity" style="display:none;"></div>
+    </div>
+    <div class="ntopbar_loading"><img src="http://simg.sinajs.cn/blog7style/images/common/loading.gif">加载中…</div>
+  </div>
+</div>
+<!--$end sinatopbar-->
+
+<div class="sinabloga" id="sinabloga">
+	<div id="sinablogb" class="sinablogb">
+
+	   
+ <div id="sinablogHead" class="sinabloghead">
+     <div style="display: none;" id="headflash" class="headflash"></div>
+	   <div id="headarea" class="headarea">
+      <div id="blogTitle" class="blogtoparea">
+      <h1 id="blogname" class="blogtitle"><a href="http://blog.sina.com.cn/12leaves"><span id="blognamespan">加载中...</span></a></h1>
+	  		
+					<div id="bloglink" class="bloglink"><a href="http://blog.sina.com.cn/12leaves">http://blog.sina.com.cn/12leaves</a>  <a onclick="return false;" class="CP_a_fuc" href="#" id="SubscribeNewRss">[<cite>订阅</cite>]</a><a class="CP_a_fuc" href="javascript:void(scope.pa_add.add('1616862031'));">[<cite>手机订阅</cite>]</a></div>
+      </div>
+      <div class="blognav" id="blognav">
+      			  <div id="blognavBg" class="blognavBg"></div> <div class="blognavInfo"> 
+		<span><a   href="http://blog.sina.com.cn/12leaves">首页</a></span>
+      <span><a class="on" href="http://blog.sina.com.cn/s/articlelist_1616862031_0_1.html">博文目录</a></span>
+      <span><a href="http://photo.blog.sina.com.cn/12leaves">图片</a></span>
+      <span class="last"><a  href="http://blog.sina.com.cn/s/profile_1616862031.html">关于我</a></span></div>
+      </div>      		      		 	
+      
+             <div class="autoskin" id="auto_skin">
+       </div>
+
+<div class="adsarea">
+     <a href="#"><div id="template_clone_pic" class="pic"></div></a>
+     <div id="template_clone_link" class="link wdc_HInf"></div>
+     <div id="template_clone_other" class="other"></div>        
+</div>
+    </div>
+    </div>
+    
+    <!--主题内容开始 -->
+    <div class="sinablogbody" id="sinablogbody">
+		
+	<!--第一列start-->
+    <div id="column_1" class="SG_colW21 SG_colFirst"><div class="SG_conn" id="module_901">
+    <div class="SG_connHead">
+            <span class="title" comp_title="个人资料">个人资料</span>
+            <span class="edit">
+                        </span>
+    </div>
+    <div class="SG_connBody">
+        <div class="info">
+                         
+            <div class="info_img" id="comp_901_head"><img src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" real_src ="http://portrait8.sinaimg.cn/1616862031/blog/180" id="comp_901_head_image" width="180" height="180" alt="枝叶飞扬" title="枝叶飞扬" /></div>
+            
+            <div class="info_txt">
+              <div class="info_nm">
+                <img id="comp_901_online_icon" style="display:none;" class="SG_icon SG_icon1" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" width="15" height="15" align="absmiddle" />
+                <span class="SG_txtb"><strong id="ownernick">枝叶飞扬                                </strong></span>
+                
+                <div class="clearit"></div>
+              </div>
+              <div class="info_btn1">
+                <a target="_blank" href="http://weibo.com/u/1616862031?source=blog" class="SG_aBtn SG_aBtn_ico"><cite><img class="SG_icon SG_icon51" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" width="15" height="15" align="absmiddle" />微博</cite></a>
+                <div class="clearit"></div>
+              </div>
+    <div class="SG_j_linedot"></div>        <div class="info_locate" id = "info_locate_id">
+<div class="SG_j_linedot"></div>
+<div class="info_btn2">
+    <p>
+    <a href="javascript:void(0);" class="SG_aBtn " id="comp901_btn_invite"><cite >加好友</cite></a>
+    <a href="javascript:void(0);" class="SG_aBtn" id="comp901_btn_sendpaper"><cite >发纸条</cite></a>
+    </p>
+    <p>
+    <a href="http://blog.sina.com.cn/s/profile_1616862031.html#write" class="SG_aBtn"   id="comp901_btn_msninfo"><cite>写留言</cite></a>
+    <a href="#" onclick="return false;" class="SG_aBtn"  id="comp901_btn_follow"><cite onclick="Module.SeeState.add()">加关注</cite></a>
+    </p>
+    <div class="clearit"></div>
+</div>
+<div class="SG_j_linedot"></div>
+</div>
+                  <div class="info_list">     
+                                   <ul class="info_list1">
+                    <li><span class="SG_txtc">博客等级：</span><span id="comp_901_grade"><img src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" real_src="http://simg.sinajs.cn/blog7style/images/common/number/1.gif"  /><img src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" real_src="http://simg.sinajs.cn/blog7style/images/common/number/9.gif"  /></span></li>
+                    <li><span class="SG_txtc">博客积分：</span><span id="comp_901_score"><strong>0</strong></span></li>
+                    </ul>
+                    <ul class="info_list2">
+                    <li><span class="SG_txtc">博客访问：</span><span id="comp_901_pv"><strong>710,704</strong></span></li>
+                    <li><span class="SG_txtc">关注人气：</span><span id="comp_901_attention"><strong>166</strong></span></li>
+                    <li><span class="SG_txtc">获赠金笔：</span><strong id="comp_901_d_goldpen">0支</strong></li>
+                    <li><span class="SG_txtc">赠出金笔：</span><strong id="comp_901_r_goldpen">0支</strong></li>
+					<li class="lisp" id="comp_901_badge"><span class="SG_txtc">荣誉徽章：</span></li>
+                    </ul>
+                  </div>
+<div class="clearit"></div>
+    </div>
+    <div class="clearit"></div>
+</div>
+            </div>       
+            <div class="SG_connFoot"></div>
+</div>
+<div id="module_903" class="SG_conn ">
+    <div class="SG_connHead">
+    <span comp_title="相关博文" class="title">相关博文</span>
+    <span class="edit"> </span>
+    </div>
+    <div class="SG_connBody">
+    <div class="atcTitList relaList">        <ul class="">
+
+                <li class="SG_j_linedot1" style="display:none;">
+            <p id="atcTitLi_SLOT_41" class="atcTitCell_tit SG_dot" style="display:none">
+        </p>
+        </li>
+        <li class="SG_j_linedot1" style="display:none;">
+            <p id="atcTitLi_SLOT_42"  class="atcTitCell_tit SG_dot" style="display:none">
+        </p>
+        </li>
+        
+                	</ul>
+    <div class="atcTit_more"><span class="SG_more"><a href="http://blog.sina.com.cn/" target="_blank">更多&gt;&gt;</a></span></div></div>    </div>
+    <div class="SG_connFoot"></div>
+  </div>
+<div class="SG_conn " id="module_904">
+<div class="SG_connHead">
+<span class="title">推荐博文</span>
+</div>
+<div class="SG_connBody ">
+	<div class="atcTitList relaList">		<ul class="">
+			<li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="安倍的不安" target="_blank" href="http://blog.sina.com.cn/s/blog_6011cb260102vrhg.html?tj=2?tj=2">安倍的不安</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1611778854" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="灵异事件！巴西小镇惊现800多" target="_blank" href="http://blog.sina.com.cn/s/blog_69f845650102wjna.html?tj=2?tj=2">灵异事件！巴西小镇惊现800多</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1777878373" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="南非发现新人种遗骸&nbsp;" target="_blank" href="http://blog.sina.com.cn/s/blog_69f845650102wjnb.html?tj=2?tj=2">南非发现新人种遗骸&nbsp;</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1777878373" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="隐藏腐尸中的镜头记录被秃鹫啄食" target="_blank" href="http://blog.sina.com.cn/s/blog_73f3af200102vu11.html?tj=2?tj=2">隐藏腐尸中的镜头记录被秃鹫啄食</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1945349920" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="手机购买调查:iPhone&n" target="_blank" href="http://blog.sina.com.cn/s/blog_4b348a350102w356.html?tj=2?tj=2">手机购买调查:iPhone&n</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1261734453" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="奥巴马“荒野求生”吃北极熊吃剩" target="_blank" href="http://blog.sina.com.cn/s/blog_73f3af200102vu12.html?tj=2?tj=2">奥巴马“荒野求生”吃北极熊吃剩</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1945349920" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="移动出行大热&nbsp;滴滴野" target="_blank" href="http://blog.sina.com.cn/s/blog_4a46c3960102w4ds.html?tj=2?tj=2">移动出行大热&nbsp;滴滴野</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1246151574" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="唐棣导演长片处女作《满洲里来的" target="_blank" href="http://blog.sina.com.cn/s/blog_4929ab540102vq8l.html?tj=2?tj=2">唐棣导演长片处女作《满洲里来的</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1227467604" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="当代新儒家如何“返本”（中）" target="_blank" href="http://blog.sina.com.cn/s/blog_4fc406940102vr0s.html?tj=2?tj=2">当代新儒家如何“返本”（中）</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1338246804" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="家电市场：明年依旧难乐观" target="_blank" href="http://blog.sina.com.cn/s/blog_4c16738e0102vlxp.html?tj=2?tj=2">家电市场：明年依旧难乐观</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1276539790" class="SG_linkb"></a></p>
+		</li>		</ul>
+		<div id="atcPicList">
+		</div>
+	<div class="atcTit_more"><span class="SG_more"><a target="_blank" href="http://blog.sina.com.cn/">查看更多</a>&gt;&gt;</span></div></div></div>
+<div class="SG_connFoot"></div>
+</div>
+        <div class="SG_conn" id="module_47"><div class="SG_connHead">
+                <span class="title" comp_title="谁看过这篇博文">谁看过这篇博文</span>
+                                <span class="edit"></span>
+            </div>
+            <div class="SG_connBody">
+            	<div class="wdtLoading"><img src="http://simg.sinajs.cn/blog7style/images/common/loading.gif" />加载中…</div>            </div>
+            <div class="SG_connFoot"></div>
+                  </div></div>
+	<!--第一列end-->
+	
+	<!--第二列start-->
+	<div id="column_2" class="SG_colW73">	
+<div id="module_920" class="SG_conn">
+	<div class="SG_connHead">
+	    <span comp_title="正文" class="title">正文</span>
+	    <span class="edit"><span id="articleFontManage" class="fontSize">字体大小：<a href="javascript:;" onclick="changeFontSize(2);return false;">大</a> <strong>中</strong> <a href="javascript:;" onclick="changeFontSize(0);return false;">小</a></span></span>
+	</div>
+    <div class="SG_connBody">
+<!--博文正文 begin -->
+	<div id="articlebody" class="artical" favMD5='{"605f5b4f01014pjd":"6ae0b975f232393a8a79aca68f4b71c9"}'>
+		<div class="articalTitle"> 
+			
+								<h2 id="t_605f5b4f01014pjd" class="titName SG_txta">《dig挖出DNS的秘密》-linux命令五分钟系列之三十四</h2>
+			
+					<span class="time SG_txtc">(2012-12-24 10:22:41)</span><div class="turnBoxzz"><a href="javascript:;" class="SG_aBtn SG_aBtn_ico SG_turn"  action-type="reblog" action-data="{srcBlog:1, blogId:'605f5b4f01014pjd'}"><cite><img class="SG_icon SG_icon111" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" width="15" height="15" align="absmiddle">转载<em class="arrow">▼</em></cite></a></div>		</div>
+		<div class="articalTag" id="sina_keyword_ad_area">
+			<table>
+				<tr>
+					<td class="blog_tag">
+					<script>
+					var $tag='dig,nslookup,域名,解析,it';
+					var $tag_code='d20b2a047016dd0a2e3a04e4855486b6';
+					var $r_quote_bligid='605f5b4f01014pjd';
+					var $worldcup='0';
+					var $worldcupball='0';
+					</script>
+											<span class="SG_txtb">标签：</span>
+																				<h3><a href="http://search.sina.com.cn/?c=blog&q=dig&by=tag" target="_blank">dig</a></h3>
+																				<h3><a href="http://search.sina.com.cn/?c=blog&q=nslookup&by=tag" target="_blank">nslookup</a></h3>
+																				<h3><a href="http://search.sina.com.cn/?c=blog&q=%D3%F2%C3%FB&by=tag" target="_blank">域名</a></h3>
+																				<h3><a href="http://search.sina.com.cn/?c=blog&q=%BD%E2%CE%F6&by=tag" target="_blank">解析</a></h3>
+																				<h3><a href="http://search.sina.com.cn/?c=blog&q=it&by=tag" target="_blank">it</a></h3>
+																</td>
+					<td class="blog_class">
+											<span class="SG_txtb">分类：</span>
+						<a target="_blank" href="http://blog.sina.com.cn/s/articlelist_1616862031_8_1.html">linux</a>
+										</td>
+				</tr>
+			</table>
+		</div>
+						<!-- 正文开始 -->
+		<div id="sina_keyword_ad_area2" class="articalContent   ">
+			<p>我相信使用nslookup的同学一定比使用dig的同学多，所以还是有必要花些时间给大家介绍一下dig的。</P>
+<p>dig，和nslookup作用有些类似，都是DNS查询工具。</P>
+<p>dig，其实是一个缩写，即Domain Information Groper。</P>
+<p>一些专业的DNS管理员在追查DNS问题时，都乐于使用dig命令，是看中了dig设置灵活、输出清晰、功能强大的特点。</P>
+<p><span STYLE="color: #0000ff;"><strong>【最简单的dig用法】</STRONG></SPAN></P>
+<p>最简单的dig用法，当然就是直接输入dig按回车。</P>
+<p><span></SPAN></P>
+<div>
+<div>
+<div><a HREF="http://roclinux.cn/?p=2449#">?</A></DIV>
+<table CELLPADDING="0" CELLSPACING="0" BORDER="0">
+<tbody>
+<tr>
+<td>
+<div>1</DIV>
+<div>2</DIV>
+<div>3</DIV>
+<div>4</DIV>
+<div>5</DIV>
+<div>6</DIV>
+</TD>
+<td>
+<div>
+<div><code>$</CODE> <code>dig</CODE></DIV>
+<div>&nbsp;<wbr></DIV>
+<div><code>;
+&lt;&lt;&gt;&gt; DiG 9.8.2rc1-RedHat-9.8.2-0.10.rc1.el6_3.2
+&lt;&lt;&gt;&gt;</CODE> <code>//Dig</CODE><code>命令的版本信息</CODE></DIV>
+<div><code>;;
+global options: +cmd</CODE></DIV>
+<div><code>;;
+Got answer:</CODE></DIV>
+<div><code>;;
+-&gt;&gt;HEADER&lt;&lt;/code&gt;</CODE></DIV>
+</DIV>
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+</DIV>
+</DIV>
+<p>从上面的输出，你一定观察到了，当直接使用dig命令，不加任何参数和选项时，<b><font COLOR="#ED1C24">dig会向默认的上连DNS服务器查询“.”（根域）的NS记录。</FONT></B></P>
+<p><span STYLE="color: #0000ff;"><strong>【dig加个点】</STRONG></SPAN></P>
+<p>刚才直接输入dig，这次我们在后面加上一个“.”，看看结果和刚才有何区别：</P>
+<div>
+<div>
+<div><a HREF="http://roclinux.cn/?p=2449#">?</A></DIV>
+<table CELLPADDING="0" CELLSPACING="0" BORDER="0">
+<tbody>
+<tr>
+<td>
+<div>1</DIV>
+<div>2</DIV>
+<div>3</DIV>
+<div>4</DIV>
+<div>5</DIV>
+<div>6</DIV>
+</TD>
+<td>
+<div>
+<div><code>$</CODE> <code>dig</CODE>
+<code>.</CODE></DIV>
+<div>&nbsp;<wbr></DIV>
+<div><code>;
+&lt;&lt;&gt;&gt; DiG 9.8.2rc1-RedHat-9.8.2-0.10.rc1.el6_3.2
+&lt;&lt;&gt;&gt; .</CODE></DIV>
+<div><code>;;
+global options: +cmd</CODE></DIV>
+<div><code>;;
+Got answer:</CODE></DIV>
+<div><code>;;
+-&gt;&gt;HEADER&lt;&lt;/code&gt;</CODE></DIV>
+</DIV>
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+</DIV>
+</DIV>
+<p><span STYLE="color: #0000ff;"><strong>【我想用google-DNS来查baidu.com的A记录】</STRONG></SPAN></P>
+<div>
+<div>
+<div><a HREF="http://roclinux.cn/?p=2449#">?</A></DIV>
+<table CELLPADDING="0" CELLSPACING="0" BORDER="0">
+<tbody>
+<tr>
+<td>
+<div>1</DIV>
+<div>2</DIV>
+<div>3</DIV>
+<div>4</DIV>
+<div>5</DIV>
+<div>6</DIV>
+<div>7</DIV>
+</TD>
+<td>
+<div>
+<div><code>$</CODE> <b><code>dig</CODE>
+<code>@8.8.8.8 www.baidu.com A</CODE>
+<code>//</CODE><code>命令格式为</CODE><code>dig</CODE>
+<code>@dnsserver name
+querytype</CODE></B></DIV>
+<div>&nbsp;<wbr></DIV>
+<div><code>;
+&lt;&lt;&gt;&gt; DiG 9.8.2rc1-RedHat-9.8.2-0.10.rc1.el6_3.2
+&lt;&lt;&gt;&gt; @8.8.8.8 www.baidu.com A</CODE></DIV>
+<div><code>;
+(1 server found)</CODE></DIV>
+<div><code>;;
+global options: +cmd</CODE></DIV>
+<div><code>;;
+Got answer:</CODE></DIV>
+<div><code>;;
+-&gt;&gt;HEADER&lt;&lt;/code&gt;</CODE></DIV>
+</DIV>
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+</DIV>
+</DIV>
+<p>从这个例子，大家学习到了dig的基本的命令格式是：</P>
+<div>
+<div>
+<div><a HREF="http://roclinux.cn/?p=2449#">?</A></DIV>
+<table CELLPADDING="0" CELLSPACING="0" BORDER="0">
+<tbody>
+<tr>
+<td>
+<div>1</DIV>
+</TD>
+<td>
+<div>
+<div><code>dig</CODE> <code>@dnsserver
+name querytype</CODE></DIV>
+</DIV>
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+</DIV>
+</DIV>
+<p>
+如果你设置的dnsserver是一个域名，那么dig会首先通过默认的上连DNS服务器去查询对应的IP地址，然后再以设置的dnsserver为上连DNS服务器。<br />
+
+<b><font COLOR="#ED1C24">如果你没有设置@dnsserver，那么dig就会依次使用/etc/resolv.conf里的地址作为上连DNS服务器。</FONT></B><br />
+
+而对于querytype，如果你看过我上一篇有关nslookup命令的讲解，那么你应该对querytype有所了解，你可以设置A/AAAA/PTR/MX/ANY等值，默认是查询A记录。</P>
+<p><span STYLE="color: #0000ff;"><strong>【一些常用的选项】</STRONG></SPAN></P>
+<p><font COLOR="#ED1C24"><strong>1
+-c选项</STRONG>，可以设置协议类型（class），包括IN(默认)、CH和HS。</FONT></P>
+<p><font COLOR="#ED1C24"><strong>2
+-f选项</STRONG>，dig支持从一个文件里读取内容进行批量查询，这个非常体贴和方便。文件的内容要求一行为一个查询请求。来个实际例子吧：</FONT></P>
+<div>
+<div>
+<div><a HREF="http://roclinux.cn/?p=2449#">?</A></DIV>
+<table CELLPADDING="0" CELLSPACING="0" BORDER="0">
+<tbody>
+<tr>
+<td>
+<div>1</DIV>
+<div>2</DIV>
+<div>3</DIV>
+<div>4</DIV>
+<div>5</DIV>
+<div>6</DIV>
+<div>7</DIV>
+<div>8</DIV>
+<div>9</DIV>
+<div>10</DIV>
+<div>11</DIV>
+</TD>
+<td>
+<div>
+<div><code>$</CODE> <code>cat</CODE>
+<code>querylist</CODE> <code>//</CODE><code>文件内容，共有两个域名需要查询</CODE></DIV>
+<div><code>www.baidu.com</CODE></DIV>
+<div><code>www.sohu.com</CODE></DIV>
+<div><code>$</CODE> <code>dig</CODE>
+<code>-f querylist -c IN -t
+A</CODE><code>//</CODE><code>设置-f参数开始批量查询</CODE></DIV>
+<div>&nbsp;<wbr></DIV>
+<div><code>;
+&lt;&lt;&gt;&gt; DiG 9.8.2rc1-RedHat-9.8.2-0.10.rc1.el6_3.2
+&lt;&lt;&gt;&gt; www.baidu.com</CODE></DIV>
+<div><code>;;
+global options: +cmd</CODE></DIV>
+<div><code>;;
+Got answer:</CODE></DIV>
+<div><code>;;
+-&gt;&gt;HEADER&lt;&gt; DiG 9.8.2rc1-RedHat-9.8.2-0.10.rc1.el6_3.2
+&lt;&lt;&gt;&gt; www.sohu.com</CODE></DIV>
+<div><code>;;
+Got answer:</CODE></DIV>
+<div><code>;; -&gt;&gt;HEADER&lt;&lt;/code&gt;</CODE></DIV>
+</DIV>
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+</DIV>
+</DIV>
+<p><strong>3
+-4和-6两个选项</STRONG>，用于设置仅适用哪一种作为查询包传输协议，分别对应着IPv4和IPv6。</P>
+<p><strong>4 -t选项</STRONG>，用来设置查询类型，默认情况下是A，也可以设置MX等类型，来一个例子：</P>
+<div>
+<div>
+<div><a HREF="http://roclinux.cn/?p=2449#">?</A></DIV>
+<table CELLPADDING="0" CELLSPACING="0" BORDER="0">
+<tbody>
+<tr>
+<td>
+<div>1</DIV>
+<div>2</DIV>
+<div>3</DIV>
+<div>4</DIV>
+<div>5</DIV>
+<div>6</DIV>
+</TD>
+<td>
+<div>
+<div><code>$</CODE> <code>dig</CODE>
+<code>roclinux.cn -t MX</CODE></DIV>
+<div>&nbsp;<wbr></DIV>
+<div><code>;
+&lt;&lt;&gt;&gt; DiG 9.8.2rc1-RedHat-9.8.2-0.10.rc1.el6_3.2
+&lt;&lt;&gt;&gt; roclinux.cn -t MX</CODE></DIV>
+<div><code>;;
+global options: +cmd</CODE></DIV>
+<div><code>;;
+Got answer:</CODE></DIV>
+<div><code>;;
+-&gt;&gt;HEADER&lt;&lt;/code&gt;</CODE></DIV>
+</DIV>
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+</DIV>
+</DIV>
+<p><strong>5
+-q选项</STRONG>，其实它本身是一个多余的选项，但是它在复杂的dig命令中又是那么的有用。-q选项可以显式设置你要查询的域名，这样可以避免和其他众多的参数、选项相混淆，提高了命令的可读性，来个例子：</P>
+<div>
+<div>
+<div><a HREF="http://roclinux.cn/?p=2449#">?</A></DIV>
+<table CELLPADDING="0" CELLSPACING="0" BORDER="0">
+<tbody>
+<tr>
+<td>
+<div>1</DIV>
+<div>2</DIV>
+<div>3</DIV>
+<div>4</DIV>
+<div>5</DIV>
+<div>6</DIV>
+</TD>
+<td>
+<div>
+<div><code>$</CODE> <code>dig</CODE>
+<code>-q www.roclinux.cn</CODE></DIV>
+<div>&nbsp;<wbr></DIV>
+<div><code>;
+&lt;&lt;&gt;&gt; DiG 9.8.2rc1-RedHat-9.8.2-0.10.rc1.el6_3.2
+&lt;&lt;&gt;&gt; -q www.roclinux.cn</CODE></DIV>
+<div><code>;;
+global options: +cmd</CODE></DIV>
+<div><code>;;
+Got answer:</CODE></DIV>
+<div><code>;;
+-&gt;&gt;HEADER&lt;&lt;/code&gt;</CODE></DIV>
+</DIV>
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+</DIV>
+</DIV>
+<p><strong>6 -x选项</STRONG>，是逆向查询选项。可以查询IP地址到域名的映射关系。举一个例子：</P>
+<div>
+<div>
+<div><a HREF="http://roclinux.cn/?p=2449#">?</A></DIV>
+<table CELLPADDING="0" CELLSPACING="0" BORDER="0">
+<tbody>
+<tr>
+<td>
+<div>1</DIV>
+<div>2</DIV>
+<div>3</DIV>
+<div>4</DIV>
+<div>5</DIV>
+<div>6</DIV>
+</TD>
+<td>
+<div>
+<div><code>$</CODE> <code>dig</CODE>
+<code>-x 193.0.14.129</CODE></DIV>
+<div>&nbsp;<wbr></DIV>
+<div><code>;
+&lt;&lt;&gt;&gt; DiG 9.8.2rc1-RedHat-9.8.2-0.10.rc1.el6_3.2
+&lt;&lt;&gt;&gt; -x 193.0.14.129</CODE></DIV>
+<div><code>;;
+global options: +cmd</CODE></DIV>
+<div><code>;;
+Got answer:</CODE></DIV>
+<div><code>;;
+-&gt;&gt;HEADER&lt;&lt;/code&gt;</CODE></DIV>
+</DIV>
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+</DIV>
+</DIV>
+<p><span STYLE="color: #0000ff;"><strong>【dig特有的查询选项（query
+option）】</STRONG></SPAN></P>
+<p>
+和刚才的选项不同，dig还有一批所谓的“查询选项”，这批选项的使用与否，会影响到dig的查询方式或输出的结果信息，因此对于这批选项，dig要求显式的在其前面统一的加上一个“+”（加号），这样dig识别起来会更方便，同时命令的可读性也会更强。<br />
+
+dig总共有42个查询选项，涉及到DNS信息的方方面面，如此多的查询选项，本文不会一一赘述，只会挑出最最常用的几个重点讲解。</P>
+<p><span STYLE="color: #0000ff;"><strong>【TCP代替UDP】</STRONG></SPAN></P>
+<p>众所周知，DNS查询过程中的交互是采用UDP的。如果你希望采用TCP方式，需要这样：</P>
+<div>
+<div>
+<div><a HREF="http://roclinux.cn/?p=2449#">?</A></DIV>
+<table CELLPADDING="0" CELLSPACING="0" BORDER="0">
+<tbody>
+<tr>
+<td>
+<div>1</DIV>
+<div>2</DIV>
+<div>3</DIV>
+<div>4</DIV>
+<div>5</DIV>
+<div>6</DIV>
+</TD>
+<td>
+<div>
+<div><code>$</CODE> <code>dig</CODE>
+<code>+tcp www.baidu.com</CODE></DIV>
+<div>&nbsp;<wbr></DIV>
+<div><code>;
+&lt;&lt;&gt;&gt; DiG 9.8.2rc1-RedHat-9.8.2-0.10.rc1.el6_3.2
+&lt;&lt;&gt;&gt; +tcp www.baidu.com</CODE></DIV>
+<div><code>;;
+global options: +cmd</CODE></DIV>
+<div><code>;;
+Got answer:</CODE></DIV>
+<div><code>;;
+-&gt;&gt;HEADER&lt;&lt;/code&gt;</CODE></DIV>
+</DIV>
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+</DIV>
+</DIV>
+<p><span STYLE="color: #0000ff;"><strong>【默认追加域】</STRONG></SPAN></P>
+<p>大家直接看例子，应该就能理解“默认域”的概念了，也就能理解+domain=somedomain的作用了：</P>
+<div>
+<div>
+<div><a HREF="http://roclinux.cn/?p=2449#">?</A></DIV>
+<table CELLPADDING="0" CELLSPACING="0" BORDER="0">
+<tbody>
+<tr>
+<td>
+<div>1</DIV>
+<div>2</DIV>
+<div>3</DIV>
+<div>4</DIV>
+<div>5</DIV>
+<div>6</DIV>
+</TD>
+<td>
+<div>
+<div><code>dig</CODE> <code>+domain=baidu.com image</CODE></DIV>
+<div>&nbsp;<wbr></DIV>
+<div><code>;
+&lt;&lt;&gt;&gt; DiG 9.8.2rc1-RedHat-9.8.2-0.10.rc1.el6_3.2
+&lt;&lt;&gt;&gt; +domain=baidu.com image</CODE></DIV>
+<div><code>;;
+global options: +cmd</CODE></DIV>
+<div><code>;;
+Got answer:</CODE></DIV>
+<div><code>;;
+-&gt;&gt;HEADER&lt;&lt;/code&gt;</CODE></DIV>
+</DIV>
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+</DIV>
+</DIV>
+<p><span STYLE="color: #0000ff;"><strong>【跟踪dig全过程】</STRONG></SPAN></P>
+<p><b><font COLOR="#ED1C24">dig非常著名的一个查询选项就是+trace，当使用这个查询选项后，dig会从根域查询一直跟踪直到查询到最终结果，并将整个过程信息输出出来。</FONT></B></P>
+<div>
+<div>
+<div><a HREF="http://roclinux.cn/?p=2449#">?</A></DIV>
+<table CELLPADDING="0" CELLSPACING="0" BORDER="0">
+<tbody>
+<tr>
+<td>
+<div>1</DIV>
+<div>2</DIV>
+<div>3</DIV>
+<div>4</DIV>
+<div>5</DIV>
+<div>6</DIV>
+<div>7</DIV>
+<div>8</DIV>
+<div>9</DIV>
+<div>10</DIV>
+<div>11</DIV>
+<div>12</DIV>
+<div>13</DIV>
+<div>14</DIV>
+<div>15</DIV>
+<div>16</DIV>
+<div>17</DIV>
+<div>18</DIV>
+<div>19</DIV>
+<div>20</DIV>
+<div>21</DIV>
+<div>22</DIV>
+<div>23</DIV>
+<div>24</DIV>
+<div>25</DIV>
+<div>26</DIV>
+<div>27</DIV>
+<div>28</DIV>
+<div>29</DIV>
+<div>30</DIV>
+<div>31</DIV>
+<div>32</DIV>
+<div>33</DIV>
+<div>34</DIV>
+<div>35</DIV>
+</TD>
+<td>
+<div>
+<div><code>$</CODE> <code>dig</CODE>
+<code>+trace roclinux.cn</CODE></DIV>
+<div>&nbsp;<wbr></DIV>
+<div><code>;
+&lt;&lt;&gt;&gt; DiG 9.2.4 &lt;&lt;&gt;&gt; +trace
+roclinux.cn</CODE></DIV>
+<div><code>;;
+global options:&nbsp;<wbr> printcmd</CODE></DIV>
+<div><code>.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+335937&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+l.root-servers.net.</CODE></DIV>
+<div><code>.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+335937&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+b.root-servers.net.</CODE></DIV>
+<div><code>.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+335937&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+d.root-servers.net.</CODE></DIV>
+<div><code>.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+335937&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+k.root-servers.net.</CODE></DIV>
+<div><code>.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+335937&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+h.root-servers.net.</CODE></DIV>
+<div><code>.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+335937&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+j.root-servers.net.</CODE></DIV>
+<div><code>.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+335937&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+a.root-servers.net.</CODE></DIV>
+<div><code>.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+335937&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+e.root-servers.net.</CODE></DIV>
+<div><code>.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+335937&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+c.root-servers.net.</CODE></DIV>
+<div><code>.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+335937&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+m.root-servers.net.</CODE></DIV>
+<div><code>.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+335937&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+g.root-servers.net.</CODE></DIV>
+<div><code>.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+335937&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+i.root-servers.net.</CODE></DIV>
+<div><code>.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+335937&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+f.root-servers.net.</CODE></DIV>
+<div><code>;; Received 400 bytes from
+10.23.0.231</CODE><code>#53(10.23.0.231) in
+0 ms <b><font COLOR="#ED1C24">//从本地DNS查找到根域DNS列表</FONT></B></CODE></DIV>
+<div>&nbsp;<wbr></DIV>
+<div><code>cn.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+172800&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+c.dns.cn.</CODE></DIV>
+<div><code>cn.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+172800&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+a.dns.cn.</CODE></DIV>
+<div><code>cn.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+172800&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+b.dns.cn.</CODE></DIV>
+<div><code>cn.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+172800&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+e.dns.cn.</CODE></DIV>
+<div><code>cn.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+172800&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+ns.cernet.net.</CODE></DIV>
+<div><code>cn.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+172800&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+d.dns.cn.</CODE></DIV>
+<div><code>;; Received 292 bytes from
+192.228.79.201</CODE><code>#53(<b>b.root-servers.net</B>) in 460 ms
+<b><font COLOR="#ED1C24">//选择了b.root-servers.net这台根域DNS来查找cn.域DNS列表</FONT></B></CODE></DIV>
+<div>&nbsp;<wbr></DIV>
+<div><code>roclinux.cn.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+21600&nbsp;<wbr>&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+ns11.edong.com.</CODE></DIV>
+<div><code>roclinux.cn.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+21600&nbsp;<wbr>&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+ns12.edong.com.</CODE></DIV>
+<div><code>;; Received 76 bytes from
+203.119.27.1</CODE><code>#53(<b><font COLOR="#ED1C24">c.dns.cn</FONT></B>) in 0 ms <b><font COLOR="#ED1C24">//选择了c.dns.cn这台cn.域DNS服务器来查找roclinux.cn的DNS列表</FONT></B></CODE></DIV>
+<div>&nbsp;<wbr></DIV>
+<div><code>roclinux.cn.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+3600&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+A&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+116.255.245.206</CODE></DIV>
+<div><code>roclinux.cn.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+3600&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+ns12.edong.com.</CODE></DIV>
+<div><code>roclinux.cn.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+3600&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+NS&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+ns11.edong.com.</CODE></DIV>
+<div><code>;; Received 124 bytes from
+61.147.124.145</CODE><code>#53(ns11.edong.com) in 104 ms
+<b>//最终查找到A记录</B></CODE></DIV>
+</DIV>
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+</DIV>
+</DIV>
+<p><span STYLE="color: #0000ff;"><strong>【精简dig输出】</STRONG></SPAN></P>
+<p>1 使用+nocmd的话，可以节省输出dig版本信息。</P>
+<p>2 使用+short的话，仅会输出最精简的CNAME信息和A记录，其他都不会输出。就像这样：</P>
+<div>
+<div>
+<div><a HREF="http://roclinux.cn/?p=2449#">?</A></DIV>
+<table CELLPADDING="0" CELLSPACING="0" BORDER="0">
+<tbody>
+<tr>
+<td>
+<div>1</DIV>
+<div>2</DIV>
+<div>3</DIV>
+<div>4</DIV>
+</TD>
+<td>
+<div>
+<div><code>$</CODE> <code>dig</CODE>
+<code>+short www.baidu.com</CODE></DIV>
+<div><code>www.a.shifen.com.</CODE></DIV>
+<div><code>119.75.218.77</CODE></DIV>
+<div><code>119.75.217.56</CODE></DIV>
+</DIV>
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+</DIV>
+</DIV>
+<p>3 使用+nocomment的话，可以节省输出dig的详情注释信息。</P>
+<p>4
+使用+nostat的话，最后的统计信息也不会输出。当+nocmd、+nocomment和+nostat都是用上，是这样：</P>
+<div>
+<div>
+<div><a HREF="http://roclinux.cn/?p=2449#">?</A></DIV>
+<table CELLPADDING="0" CELLSPACING="0" BORDER="0">
+<tbody>
+<tr>
+<td>
+<div>1</DIV>
+<div>2</DIV>
+<div>3</DIV>
+<div>4</DIV>
+<div>5</DIV>
+</TD>
+<td>
+<div>
+<div><code>$</CODE> <code>dig</CODE>
+<code>+nocmd +nocomment +nostat
+www.baidu.com</CODE></DIV>
+<div><code>;www.baidu.com.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+A</CODE></DIV>
+<div><code>www.baidu.com.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+260&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+CNAME&nbsp;<wbr>&nbsp;<wbr>
+www.a.shifen.com.</CODE></DIV>
+<div><code>www.a.shifen.com.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+244&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+A&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+119.75.217.56</CODE></DIV>
+<div><code>www.a.shifen.com.&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+244&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+IN&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+A&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>&nbsp;<wbr>
+119.75.218.77</CODE></DIV>
+</DIV>
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+</DIV>
+</DIV>
+<p><span STYLE="color: #0000ff;"><strong>【我们还需要学习什么】</STRONG></SPAN></P>
+<p>坚持看我的博客的同学，已经掌握了nslookup和dig两个DNS工具，我想，下一步你可以<br />
+自己搭建一套内部的DNS服务器了，自己设置master/slave服务器，自己添加Zone，<br />
+自己添加正解、反解，自己设置缓存超时等等，相信通过这一番折腾，<br />
+你对DNS会有不一样的理解和认识。</P>							
+		</div>
+						<!-- 正文结束 -->
+		<div id='share' class="shareUp">
+        	<div class="share SG_txtb">
+			分享： 
+			<div class="bshare-custom" style="display:inline;margin-left:5px;"><a title="分享到新浪微博" class="bshare-sinaminiblog" href="javascript:void(0);"></a><a title="分享到微信" class="bshare-weixin" href="javascript:void(0);"></a><a title="分享到QQ空间" class="bshare-qzone" href="javascript:void(0);"></a><a title="分享到豆瓣" class="bshare-douban" href="javascript:void(0);"></a><a title="更多平台" class="bshare-more bshare-more-icon more-style-addthis"></a>
+			</div>
+			</div>
+            <div class="up">
+	        	<div title="喜欢后让更多人看到" id="dbox_605f5b4f01014pjd" class="upBox upBox_click" style="cursor: pointer;">
+	            	<p ti_title="《dig挖出DNS的秘密》-linux命令五分钟系列之三十四" id="dbox2_605f5b4f01014pjd" class="count" ></p>
+	                <p class="link"><img width="15" height="15" align="absmiddle" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" class="SG_icon SG_icon34">喜欢</p>
+	            </div>
+<!--
+                <div class="upBox upBox_add">
+                    <p class="count">0</p>
+                    <p class="link"><img width="20" height="16" align="absmiddle" title="推荐" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" class="SG_icon SG_icon214">赠金笔</p>
+                </div>
+-->
+                                <div class="upBox upBox_add">
+                    <p class="count" id="goldPan-num">0</p>
+                    <p class="link" id="goldPan-give"><img class="SG_icon SG_icon214" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" width="20" height="16" title="赠金笔" align="absmiddle">赠金笔</p>
+                </div>
+                
+	        </div>
+            <div class="clearit"></div>
+		</div>
+		<div class="articalInfo">
+			<!-- 分享到微博 {$t_blog} -->
+			<div class="IL">
+				阅读<span id="r_605f5b4f01014pjd" class="SG_txtb"></span><em class="SG_txtb">┊</em> 
+				<a href="#commonComment">评论</a> <span id="c_605f5b4f01014pjd" class="SG_txtb"></span><em class="SG_txtb">┊</em>				<a href="javascript:;" onclick="$articleManage('605f5b4f01014pjd',5);return false;">收藏</a><span id="f_605f5b4f01014pjd"  class="SG_txtb"></span>
+				<em class="SG_txtb">┊</em><a href="#" id="quote_set_sign" onclick="return false ;">转载</a><a  href="#" id="z_605f5b4f01014pjd" onclick="return false ;" class="zznum"></a>				<span id="fn_《dig挖出DNS的秘密》-linux命令五分钟系列之三十四" class="SG_txtb"></span><em class="SG_txtb">┊</em>
+				<a onclick="return false;" href="javascript:;" ><cite id="d1_digg_605f5b4f01014pjd">喜欢</cite></a><a id="d1_digg_down_605f5b4f01014pjd" href="javascript:;" ><b>▼</b></a>
+									<em class="SG_txtb">┊</em><a href="http://blog.sina.com.cn/main_v5/ria/print.html?blog_id=blog_605f5b4f01014pjd" target="_blank">打印</a><em class="SG_txtb">┊</em><a id="q_605f5b4f01014pjd" onclick="report('605f5b4f01014pjd');return false;" href="#">举报</a>
+											</div>
+			<div class="IR">
+				<table>
+					<tr>
+											<th class="SG_txtb" scope="row">已投稿到：</th>
+						<td>
+							<div class="IR_list">
+								<span><img class="SG_icon SG_icon36" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" width="15" height="15" title="排行榜" align="absmiddle" /> <a href="http://blog.sina.com.cn/lm/114/113/day.html" class="SG_linkb" target="_blank">排行榜</a></span>							</div>
+						</td>
+										</tr>
+									</table>
+			</div>
+		</div>
+		<div class="clearit"></div>
+		<div class="blogzz_zzlist borderc" id="blog_quote" style="display:none">加载中，请稍候......</div>
+		<div class="articalfrontback SG_j_linedot1 clearfix" id="new_nextprev_605f5b4f01014pjd">
+							<div><span class="SG_txtb">前一篇：</span><a href="http://blog.sina.com.cn/s/blog_605f5b4f01014pj6.html">nslookup命令</a></div>
+										<div><span class="SG_txtb">后一篇：</span><a href="http://blog.sina.com.cn/s/blog_605f5b4f01014pjl.html">《nslookup通往DNS的桥梁》-linux命令五分钟系列之三十三</a></div>
+					</div>
+		<div class="clearit"></div>
+							
+		<div id="loginFollow"></div>
+				<div class="allComm">
+			<div  class="allCommTit" >
+				<div class="SG_floatL">
+				    <strong>评论</strong>
+				    <span id="commAd_1" style="display:none;">
+				        <span style="margin-left:15px; width:220px; display:inline-block;"><a target="_blank" href="http://blog.sina.com.cn/lm/8/2009/0325/105340.html">重要提示：警惕虚假中奖信息</a></span>
+				    </span>
+				</div>
+				<div class="SG_floatR"><a class="CP_a_fuc" href="#post">[<cite>发评论</cite>]</a></div>
+			</div>
+			<ul id="article_comment_list" class="SG_cmp_revert"><!-- 循环始 --><li>评论加载中，请稍候...</li><!-- 循环终  --></ul>
+			<div class="clearit"></div>
+			<div class="myCommPages SG_j_linedot1">
+				<div class="SG_page" id="commentPaging" style="display:none;">
+					<ul class="SG_pages">
+					</ul>
+				</div>
+				<div class="clearit"></div>
+			</div>
+			<a name="post"></a>
+			<div class="writeComm">
+				<div class="allCommTit">
+					<div class="SG_floatL">
+					    <strong>发评论</strong>
+					    <span></span>
+					</div>
+					<div class="SG_floatR"></div>
+				</div>
+				<div class="wrCommTit">
+					<div class="SG_floatL" id="commentNick" style="display:none;"></div>
+				</div>
+				<div class="formTextarea">
+					<div style="float:left;" id="commonComment">
+					<iframe id="postCommentIframe"  frameborder="0" style="border:1px solid #C7C7C7;
+		height:158px;width:448px;maring-top:1px;background-color:white;" src="http://blog.sina.com.cn/main_v5/ria/blank2.html"></iframe>
+					<textarea id="commentArea" tabindex="1" style="display:none;"></textarea>
+					</div>
+					<div id="mobileComment" style="float:left;display:none;">
+						<textarea id="mbCommentTa" style="width:438px;height:150px;border:1px solid #C7C7C7;line-height:18px;padding:5px;"></textarea>
+					</div>
+					<div class="faceblk" id="faceWrap">
+						<div id="smilesSortShow" class="faceline1">
+						</div>
+						<ul id="smilesRecommended" class="faceline01"></ul>
+					</div>
+					<div class="clearit"></div>
+				</div>
+				<div class="formLogin">
+					<div class="SG_floatL"> 
+					<p id="commentlogin" style="display:none;"><span>登录名：</span><input type="text" style="width: 115px;" id="login_name" tabindex="2"/>   <span>密码：</span><input type="password" style="width: 115px;" id="login_pass" tabindex="3"/>   <a href="http://login.sina.com.cn/getpass.html" target="_blank">找回密码</a>   <a href="http://login.sina.com.cn/signup/signup.php?entry=blog&src=blogicp&srcuid=1616862031" target="_blank">注册</a>	<input type="checkbox" id="login_remember"/><label for="login_remember" style="display:inline-block;" title="建议在网吧/公用电脑上取消该选项">记住登录状态</label></p><p id="commentloginM" style="display:none;"><span>昵&nbsp;&nbsp;&nbsp;称：</span><input type="text" style="width: 115px;" id="comment_anonyous"  value="新浪网友"/ tabindex="2" disabled></p><p id="quote_comment_p"><input type="checkbox" id="bb"> <label for="bb"><img height="18" align="absmiddle" width="18" title="" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" class="SG_icon SG_icon110">分享到微博 <img height="15" align="absmiddle" width="15" title="新" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" class="SG_icon SG_icon11"></label>&nbsp;&nbsp;&nbsp;<input type="checkbox" id="cbCommentQuote" /><label for="cbCommentQuote">评论并转载此博文</label><img class="SG_icon SG_icon11" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" width="15" height="15" title="新" align="absmiddle" /></p><p><span>验证码：</span><input type="text" style="width: 46px;" id="login_check" tabindex="4" onclick="return false;"/>  <a class="SG_linka" id='check_show'>请点击后输入验证码</a><img id="comment_check_img" align="absmiddle"  style="display:none;"/>  <a id="comment_get_vcode" href="#" onclick="return false;">收听验证码</a></p>
+					</div>
+
+					<span style="display: none; color: rgb(153, 153, 153); margin-left: 10px;" id="login_remember_caution"></span>
+
+											<div class="SG_floatR" id="anonymity_cont"><input type="checkbox" id="anonymity"/><label for="anonymity">匿名评论</label></div>
+									</div>
+				<div class="formBtn">
+					<a href="javascript:;" onclick="return false;" class="SG_aBtn" tabindex="5"><cite id="postcommentid">发评论</cite></a>
+					<p class="SG_txtc">以上网友发言只代表其个人观点，不代表新浪网的观点或立场。</p>
+				</div>
+			</div>
+		</div>
+				<div class="clearit"></div>
+		
+				<div class="articalfrontback articalfrontback2 clearfix">
+						  <div class="SG_floatL"><span class="SG_txtb">&lt;&nbsp;前一篇</span><a href="http://blog.sina.com.cn/s/blog_605f5b4f01014pj6.html">nslookup命令</a></div>
+									  <div class="SG_floatR"><span class="SG_txtb">后一篇&nbsp;&gt;</span><a href="http://blog.sina.com.cn/s/blog_605f5b4f01014pjl.html">《nslookup通往DNS的桥梁》-linux命令五分钟系列之三十三</a></div>
+					</div>
+		<div class="clearit"></div>
+				
+	</div>
+	<!--博文正文 end -->
+		<script type="text/javascript">
+			var voteid="";
+		</script>
+
+            </div>       
+            <div class="SG_connFoot"></div>
+          </div>
+</div>
+	<!--第二列start-->
+	
+	<!--第三列start-->
+	<div id="column_3" class="SG_colWnone"><div style="width:0px;height:0.1px;margin:0px;">&nbsp;&nbsp;</div></div>
+	<!--第三列end-->
+
+	
+    </div>
+   <!--主题内容结束 -->
+  
+
+	<div id="diggerFla" style="position:absolute;left:0px;top:0px;width:0px"></div>
+    <div class="sinablogfooter" id="sinablogfooter"  style="position:relative;">
+      
+      <p class="SG_linka"><a href="http://control.blog.sina.com.cn/admin/advice/advice_list.php" target="_blank">新浪BLOG意见反馈留言板</a>　<a href="javascript:;" onclick="window.open ('http://control.blog.sina.com.cn/admin/advice/impeach.php?url=http%3A//blog.sina.com.cn/s/blog_4cf7b4ec0100eudp.html%3Ftj%3D1', '','height=495, width=510, top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=n o, status=no');">不良信息反馈</a>　电话：4006900000 提示音后按1键（按当地市话标准计费）　欢迎批评指正</p>
+   
+      <p class="SG_linka"><a href="http://corp.sina.com.cn/chn/" target="_blank">新浪简介</a> | <a href="http://corp.sina.com.cn/eng/" target="_blank">About Sina</a> | <a href="http://emarketing.sina.com.cn/" target="_blank">广告服务</a> | <a href="http://www.sina.com.cn/contactus.html" target="_blank">联系我们</a> | <a href="http://corp.sina.com.cn/chn/sina_job.html" target="_blank">招聘信息</a> | <a href="http://www.sina.com.cn/intro/lawfirm.shtml" target="_blank">网站律师</a> | <a href="http://english.sina.com" target="_blank">SINA English</a> | <a href="http://members.sina.com.cn/apply/" target="_blank">会员注册</a> | <a href="http://help.sina.com.cn/" target="_blank">产品答疑</a> </p>
+      <p class="copyright SG_linka"> Copyright &copy; 1996 - 2015 SINA Corporation,  All Rights Reserved</p>
+      <p class="SG_linka"> 新浪公司 <a href="http://www.sina.com.cn/intro/copyright.shtml" target="_blank">版权所有</a></p>
+	  <a href="http://www.bj.cyberpolice.cn/index.jsp"  target="_blank" class="gab_link"></a>
+    </div>
+  </div>
+</div>
+<div id="swfbox"></div>
+<script id="PVCOUNTER_FORIE" type="text/javascript"></script>
+</body>
+<script type="text/javascript">
+var scope = {
+    $newTray : 1,
+    $setDomain : true,
+    $uid : "1616862031",
+    $PRODUCT_NAME : "blog7",      //blog7photo,blog7icp
+    $pageid : "article",
+    $key :  "11219f5b13fde78a21191728a164c830",
+    $uhost : "12leaves",
+    $ownerWTtype :"",
+    $private: {"cms":0,"hidecms":0,"blogsize":0,"ad":0,"sms":0,"adver":0,"tj":0,"p4p":0,"spamcms":0,"pageset":0,"invitationset":0,"top":0,"active":"4","medal7":3,"t_sina":"1616862031","oauth_token":1,"oauth_token_secret":1,"uname":"","p_push_t":0,"p_get_t":0,"articleclass":"117"},
+    $summary: "我相信使用nslookup的同学一定比使用dig的同学多，所以还是有必要花些时间给大家介绍一下dig的。 dig，和n...  (来自 @头条博客)",
+    $is_photo_vip:0,
+		 $nClass:0,
+		 $articleid:"605f5b4f01014pjd",
+		 $sort_id:113,
+		 $cate_id:"",
+		 $isCommentAllow:0,
+		 $album_pic:"",
+		 $pn_x_rank:0,
+		 $x_quote_c:"1",
+		 $flag2008:"",
+		     component_lists:{"2":{"size":730,"list":[920]},"1":{"size":210,"list":[901,903,904,47]}},
+    formatInfo:1,
+    UserPic:[{"pid":"","repeat":"repeat-x","align-h":"center","align-v":"top","apply":"0"},{"pid":"","repeat":"repeat-x","align-h":"center","align-v":"top","apply":"0"},{"pid":"","repeat":"repeat-x","align-h":"center","align-v":"top","apply":"0"}],
+    UserBabyPic:{"photoX":0,"photoY":0,"photoURL":null,"angle":0,"zoom":0,"maskX":0,"maskY":0,"maskURL":null,"frameURL":null},
+    UserColor:1,
+    backgroundcolor:"#f6f6f6",
+    tpl:"4_1",
+    reclist:0    };
+var $encrypt_code = "3f9381854888f6389050727839db44c0";
+</script>
+
+<script type="text/javascript" src="http://sjs.sinajs.cn/blog7common/js/boot.js"></script>
+<script type="text/javascript">__load_js();</script>
+<script type="text/javascript">__render_page();</script>
+
+
+<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/buttonLite.js#style=-1&amp;uuid=b436f96b-ce3c-469f-93ca-9c0c406fcf10&amp;pophcol=2&amp;lang=zh"></script><script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
+<script type="text/javascript" charset="utf-8">
+        bShare.addEntry({pic: "", title:"分享自枝叶飞扬  《《dig挖出DNS的秘密》-linux命令五分钟系列之三十四》", summary:"我相信使用nslookup的同学一定比使用dig的同学多，所以还是有必要花些时间给大家介绍一下dig的。 dig，和n...  (来自 @头条博客)"});
+     </script>
+<script type="text/javascript" src="http://sjs.sinajs.cn/xblogtheme/js/blog680-min.js"></script>
+<script type="text/javascript">
+        var slotArr = ['atcTitLi_SLOT_41', 'atcTitLi_SLOT_42','loginBarActivity']; //广告位id
+        var sourceArr = ['SLOT_41','SLOT_42','SLOT_43,SLOT_47,SLOT_48'];  //广告资源id
+        SinaBlog680.staticBox(slotArr, sourceArr);
+</script>
+</html>
