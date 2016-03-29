@@ -1,0 +1,451 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>在vps上搭建代理服务器 | 启飞</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="&amp;lt;!--head--&amp;gt;
+由于你懂的原因, 我们需要代理翻墙.
+[TOC]
+几种连接方式
+
+
+no
+name
+info
+image
+
+
+
+
+1
+direct
+不行
+
+
+
+2
+proxy
+刚开始可以, 过一会就不行
+
+
+
+3
+encrypt proxy
+可以
+
+
+
+
+看图3就可以知道, 我们需要一个代理服务器, 也就是我们的vps.
+客户端加密后通过代理服务器来翻墙.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在vps上搭建代理服务器">
+<meta property="og:url" content="http://qefee.com/2016/01/13/在vps上搭建代理服务器/index.html">
+<meta property="og:site_name" content="启飞">
+<meta property="og:description" content="&amp;lt;!--head--&amp;gt;
+由于你懂的原因, 我们需要代理翻墙.
+[TOC]
+几种连接方式
+
+
+no
+name
+info
+image
+
+
+
+
+1
+direct
+不行
+
+
+
+2
+proxy
+刚开始可以, 过一会就不行
+
+
+
+3
+encrypt proxy
+可以
+
+
+
+
+看图3就可以知道, 我们需要一个代理服务器, 也就是我们的vps.
+客户端加密后通过代理服务器来翻墙.">
+<meta property="og:image" content="http://qefee.qiniudn.com/20160113_%E5%9C%A8vps%E4%B8%8A%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8direct.png">
+<meta property="og:image" content="http://qefee.qiniudn.com/20160113_%E5%9C%A8vps%E4%B8%8A%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8proxy.png">
+<meta property="og:image" content="http://qefee.qiniudn.com/20160113_%E5%9C%A8vps%E4%B8%8A%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8encrypt%20proxy.png">
+<meta property="og:updated_time" content="2016-01-13T06:44:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在vps上搭建代理服务器">
+<meta name="twitter:description" content="&amp;lt;!--head--&amp;gt;
+由于你懂的原因, 我们需要代理翻墙.
+[TOC]
+几种连接方式
+
+
+no
+name
+info
+image
+
+
+
+
+1
+direct
+不行
+
+
+
+2
+proxy
+刚开始可以, 过一会就不行
+
+
+
+3
+encrypt proxy
+可以
+
+
+
+
+看图3就可以知道, 我们需要一个代理服务器, 也就是我们的vps.
+客户端加密后通过代理服务器来翻墙.">
+  
+    <link rel="alternative" href="/atom.xml" title="启飞" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-47713171-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">启飞</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">自己自在</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://qefee.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-在vps上搭建代理服务器" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/13/在vps上搭建代理服务器/" class="article-date">
+  <time datetime="2016-01-13T03:06:26.000Z" itemprop="datePublished">2016-01-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/tools/">tools</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      在vps上搭建代理服务器
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!--head-->
+<p>由于<strong>你懂的</strong>原因, 我们需要代理翻墙.</p>
+<p>[TOC]</p>
+<h1 id="u51E0_u79CD_u8FDE_u63A5_u65B9_u5F0F"><a href="#u51E0_u79CD_u8FDE_u63A5_u65B9_u5F0F" class="headerlink" title="几种连接方式"></a>几种连接方式</h1><table>
+<thead>
+<tr>
+<th style="text-align:center">no</th>
+<th>name</th>
+<th>info</th>
+<th>image</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td>direct</td>
+<td>不行</td>
+<td><img src="http://qefee.qiniudn.com/20160113_%E5%9C%A8vps%E4%B8%8A%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8direct.png" alt="direct"></td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td>proxy</td>
+<td>刚开始可以, 过一会就不行</td>
+<td><img src="http://qefee.qiniudn.com/20160113_%E5%9C%A8vps%E4%B8%8A%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8proxy.png" alt="direct"></td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td>encrypt proxy</td>
+<td>可以</td>
+<td><img src="http://qefee.qiniudn.com/20160113_%E5%9C%A8vps%E4%B8%8A%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8encrypt%20proxy.png" alt="encrypt"></td>
+</tr>
+</tbody>
+</table>
+<p>看图3就可以知道, 我们需要一个代理服务器, 也就是我们的vps.</p>
+<p>客户端加密后通过代理服务器来翻墙.</p>
+<a id="more"></a>
+<!--body-->
+<h1 id="u8F6F_u4EF6_u5B89_u88C5"><a href="#u8F6F_u4EF6_u5B89_u88C5" class="headerlink" title="软件安装"></a>软件安装</h1><p>安装方式各有不同, 这里就只是列个大纲. 详细请看参考文档或者百度.</p>
+<h2 id="u670D_u52A1_u7AEF"><a href="#u670D_u52A1_u7AEF" class="headerlink" title="服务端"></a>服务端</h2><p>就是我们的vps代理服务器.</p>
+<ol>
+<li>squid</li>
+<li>stunnel</li>
+</ol>
+<h2 id="u5BA2_u6237_u7AEF"><a href="#u5BA2_u6237_u7AEF" class="headerlink" title="客户端"></a>客户端</h2><p>就是需要翻墙的电脑.</p>
+<ol>
+<li>stunnel</li>
+</ol>
+<h1 id="u8F6F_u4EF6_u914D_u7F6E"><a href="#u8F6F_u4EF6_u914D_u7F6E" class="headerlink" title="软件配置"></a>软件配置</h1><h2 id="u670D_u52A1_u7AEF-1"><a href="#u670D_u52A1_u7AEF-1" class="headerlink" title="服务端"></a>服务端</h2><h3 id="1-squid"><a href="#1-squid" class="headerlink" title="1.squid"></a>1.squid</h3><p>我没改动配置, 使用了默认配置.</p>
+<h3 id="2-stunnel"><a href="#2-stunnel" class="headerlink" title="2.stunnel"></a>2.stunnel</h3><p><u><em>(以下内容拷贝自参考文档)</em></u></p>
+<p>接下来，我们需要在Squid上添加一层加密。</p>
+<h4 id="2-1-_u751F_u6210_u516C_u94A5_u548C_u79C1_u94A5"><a href="#2-1-_u751F_u6210_u516C_u94A5_u548C_u79C1_u94A5" class="headerlink" title="2.1.生成公钥和私钥"></a>2.1.生成公钥和私钥</h4><p>生成私钥（<code>privatekey.pem</code>）：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out privatekey<span class="class">.pem</span> <span class="number">2048</span></span><br></pre></td></tr></table></figure>
+<p>生成公钥（<code>publickey.pem</code>）：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl req -new -x509 -key privatekey<span class="class">.pem</span> -out publickey<span class="class">.pem</span> -days <span class="number">1095</span></span><br></pre></td></tr></table></figure>
+<p>（需要注意的是，<code>Common Name</code>需要与服务器的IP或者主机名一致）</p>
+<p>合并：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat privatekey<span class="class">.pem</span> publickey<span class="class">.pem</span> &gt;&gt; /etc/stunnel/stunnel.pem</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-_u4FEE_u6539stunnel_u914D_u7F6E"><a href="#2-2-_u4FEE_u6539stunnel_u914D_u7F6E" class="headerlink" title="2.2.修改stunnel配置"></a>2.2.修改stunnel配置</h4><p>新建一个配置文件<code>/etc/stunnel/stunnel.conf</code>，输入如下内容</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">client = <span class="value"><span class="keyword">no</span></span></span></span><br><span class="line"><span class="title">[squid]</span></span><br><span class="line"><span class="setting">accept = <span class="value"><span class="number">4128</span></span></span></span><br><span class="line"><span class="setting">connect = <span class="value"><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">3128</span></span></span></span><br><span class="line"><span class="setting">cert = <span class="value">/etc/stunnel/stunnel.pem</span></span></span><br></pre></td></tr></table></figure>
+<p>配置中指定了stunnel所暴露的HTTPS代理端口为4128，可以修改为其他的值。</p>
+<h2 id="u5BA2_u6237_u7AEF-1"><a href="#u5BA2_u6237_u7AEF-1" class="headerlink" title="客户端"></a>客户端</h2><h3 id="1-stunnel"><a href="#1-stunnel" class="headerlink" title="1.stunnel"></a>1.stunnel</h3><p>修改配置文件<code>stunnel.conf</code>,</p>
+<p>其中<code>stunnel.pem</code>就是我们在服务器上生成的那个, 需要从服务器下载到客户端.</p>
+<p>4128是我们上面服务器指定的端口.</p>
+<p>7777是我们开放的端口, 即用户使用的代理端口.</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">cert = <span class="value">/etc/stunnel/stunnel.pem</span></span></span><br><span class="line"><span class="setting">client = <span class="value"><span class="keyword">yes</span></span></span></span><br><span class="line"><span class="title">[squid]</span></span><br><span class="line"><span class="setting">accept = <span class="value"><span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">7777</span></span></span></span><br><span class="line"><span class="setting">connect = <span class="value">[你的服务器 IP]:<span class="number">4128</span></span></span></span><br></pre></td></tr></table></figure>
+<h1 id="u542F_u52A8_u8F6F_u4EF6"><a href="#u542F_u52A8_u8F6F_u4EF6" class="headerlink" title="启动软件"></a>启动软件</h1><p>先启动服务端的<code>squid</code>和<code>stunnel</code>, 然后启动客户端的<code>stunnel</code>.</p>
+<p>没问题的话, 现在可以指定代理为<code>127.0.0.1:7777</code>加密代理上网了.</p>
+<p>浏览器推荐Chrome的插件<a href="https://chrome.google.com/webstore/detail/proxy-switchyomega/padekgcemlokbadohgkifijomclgjgif?hl=en" target="_blank" rel="external">Proxy SwitchyOmega</a></p>
+<h1 id="u53C2_u8003_u6587_u6863"><a href="#u53C2_u8003_u6587_u6863" class="headerlink" title="参考文档"></a>参考文档</h1><ol>
+<li><a href="http://www.predatorray.me/%E5%9C%A8VPS%E4%B8%8A%E6%90%AD%E5%BB%BASquid%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8/" target="_blank" rel="external">使用Squid搭建HTTPS代理服务器</a></li>
+<li><a href="http://www.centoscn.com/image-text/config/2014/1203/4231.html" target="_blank" rel="external">CentOS配置基于web认证的squid 3.1.23</a></li>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-an-ssl-tunnel-using-stunnel-on-ubuntu" target="_blank" rel="external">How To Set Up an SSL Tunnel Using Stunnel on Ubuntu</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://qefee.com/2016/01/13/在vps上搭建代理服务器/" data-id="cilnel08d000oc79kjkq7axhi" class="article-share-link">Share</a>
+      
+        <a href="http://qefee.com/2016/01/13/在vps上搭建代理服务器/#disqus_thread" class="article-comment-link">Comments</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/proxy/">proxy</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/01/21/TypeScript入门-语法篇/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          TypeScript入门-语法篇
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/01/07/nodejs自动签到程序/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">nodejs自动签到程序</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android/">android</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/cordova/">cordova</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">46</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/html/">html</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/interesting/">interesting</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ios/">ios</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/jquerymobile/">jquerymobile</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mac/">mac</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/nodejs/">nodejs</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/qefee/">qefee</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/tools/">tools</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/typescript/">typescript</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/SegmentedControl/">SegmentedControl</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cordova/">cordova</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flexbox/">flexbox</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fsnotify/">fsnotify</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gobyexample/">gobyexample</a><span class="tag-list-count">39</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/interesting/">interesting</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jquerymobile/">jquerymobile</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mac/">mac</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/proxy/">proxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/qefee/">qefee</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/toolbar/">toolbar</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typescript/">typescript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/公益/">公益</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/SegmentedControl/" style="font-size: 10px;">SegmentedControl</a> <a href="/tags/android/" style="font-size: 18px;">android</a> <a href="/tags/cordova/" style="font-size: 12px;">cordova</a> <a href="/tags/flexbox/" style="font-size: 10px;">flexbox</a> <a href="/tags/fsnotify/" style="font-size: 10px;">fsnotify</a> <a href="/tags/go/" style="font-size: 16px;">go</a> <a href="/tags/gobyexample/" style="font-size: 20px;">gobyexample</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/interesting/" style="font-size: 12px;">interesting</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/jquerymobile/" style="font-size: 10px;">jquerymobile</a> <a href="/tags/mac/" style="font-size: 10px;">mac</a> <a href="/tags/nodejs/" style="font-size: 12px;">nodejs</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/qefee/" style="font-size: 14px;">qefee</a> <a href="/tags/toolbar/" style="font-size: 10px;">toolbar</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/公益/" style="font-size: 10px;">公益</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03/">March 2014</a><span class="archive-list-count">45</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">February 2014</a><span class="archive-list-count">16</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/03/11/ios中使用SegmentedControl来切换视图/">ios中使用SegmentedControl来切换视图</a>
+          </li>
+        
+          <li>
+            <a href="/2016/03/10/ios的toolbar的item的几种简单布局/">ios的toolbar的item的几种简单布局</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/26/cordova开发ios时候getScript函数无效的解决办法/">cordova开发ios时候getScript函数无效的解决办法</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/25/CryptoJS简单使用/">CryptoJS简单使用</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/23/macbook频繁掉线的解决办法/">macbook频繁掉线的解决办法</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 qefee<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'qefee';
+  
+  var disqus_url = 'http://qefee.com/2016/01/13/在vps上搭建代理服务器/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
