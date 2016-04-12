@@ -1,4 +1,14 @@
-使用 squid3 + stunnel 搭建完加密的代理服务器后
-今天突然上不去了，以为是被GFW给墙了
-后来发现，是服务器走的ipv6地址
-把ipv6地址删除，或者禁掉，就又可以fq了
+使用 squid3 + stunnel 搭建完加密的代理服务器后<br>
+今天突然上不去了，以为是被GFW给墙了<br>
+后来发现，是服务器走的ipv6地址<br>
+把ipv6地址删除，或者禁掉，就又可以fq了<br>
+
+
+
+过了一段时间后发现，还是经常链接不上<br>
+服务器的两个服务，用linux的计划任务cron，每隔2小时重启一下，暂时能解决问题<br>
+
+
+0 */2 * * * service squid3 restart<br>
+0 */2 * * * service stunnel4 restart<br>
+
