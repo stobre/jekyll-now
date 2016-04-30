@@ -1,0 +1,710 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>自然语言处理（NLP）常用开源工具总结&#8212;-不定期更新 | 学步园</title> 
+<meta name="description" content="       学习自然语言这一段时间以来接触和听说了好多开源的自然语言处理工具，在这里做一下汇总方便自己以后学习，其中有自己使用过的也有了解不是很多的，对于不甚了解的工具以后学习熟悉了会做更新的。" />
+<meta name="keywords" content="" />
+<link rel="stylesheet" href="http://cdn.xuebuyuan.com/wp-content/themes/HotNewspro/style.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="http://cdn.xuebuyuan.com/wp-content/themes/HotNewspro/css/css.css" />
+<link rel="stylesheet" href="http://cdn.xuebuyuan.com/wp-content/themes/HotNewspro/css/highlight.css" />
+<link rel="stylesheet" href="http://cdn.xuebuyuan.com/wp-content/themes/HotNewspro/css/img.css" />
+<link rel="pingback" href="http://www.xuebuyuan.com/xmlrpc.php" />
+<link rel="shortcut icon" href="http://cdn.xuebuyuan.com/wp-content/themes/HotNewspro/images/favicon.ico" />
+<script type="text/javascript" src="http://cdn.xuebuyuan.com/wp-content/themes/HotNewspro/js/jquery.min.js" ></script>
+<link rel="alternate" type="application/rss+xml" title="学步园 &raquo; Feed" href="http://www.xuebuyuan.com/feed" />
+<link rel="alternate" type="application/rss+xml" title="学步园 &raquo; 评论Feed" href="http://www.xuebuyuan.com/comments/feed" />
+<link rel='stylesheet' id='wp-syntax-css-css'  href='http://www.xuebuyuan.com/wp-content/plugins/wp-syntax/css/wp-syntax.css?ver=1.0' type='text/css' media='all' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.xuebuyuan.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.xuebuyuan.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='再见了疯狂坦克  再见了游戏大厅' href='http://www.xuebuyuan.com/155395.html' />
+<link rel='next' title='多少钱才可让人重拾理想' href='http://www.xuebuyuan.com/728393.html' />
+<meta name="generator" content="WordPress 3.8" />
+<link rel='canonical' href='http://www.xuebuyuan.com/1789418.html' />
+<link rel='shortlink' href='http://www.xuebuyuan.com/?p=1789418' />
+		<link href="http://cdn.xuebuyuan.com/wp-content/themes/HotNewspro/styles/4-blue.css" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+.banner img{
+	margin: 0 0 5px 0;
+}
+</style>
+
+<script type="text/javascript" src="http://cdn.xuebuyuan.com/wp-content/themes/HotNewspro/comments-ajax.js"></script>
+<script type="text/javascript" src="http://cdn.xuebuyuan.com/wp-content/themes/HotNewspro/js/reply.js"></script>
+<script type="text/javascript" src="http://cdn.xuebuyuan.com/wp-content/themes/HotNewspro/js/custom.js"></script>
+<script type="text/javascript" src="http://cdn.xuebuyuan.com/wp-content/themes/HotNewspro/js/superfish.js"></script>
+<script type="text/javascript" src="http://cdn.xuebuyuan.com/wp-content/themes/HotNewspro/js/mousewheel.js"></script>
+<script type="text/javascript" src="http://cdn.xuebuyuan.com/wp-content/themes/HotNewspro/js/fancybox.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		$("a[rel=example_group]").fancybox({
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none',
+			'titlePosition' 	: 'over',
+			'titleFormat'		: function(title, currentArray, currentIndex, currentOpts) {
+				return '<span id="fancybox-title-over">共 ' + currentArray.length + ' 张图片，当前第 ' + (currentIndex + 1) +' 张 '+ (title.length ? ' &nbsp; ' + title : '') + '</span>';
+			}
+		});
+
+		$("#various").fancybox({
+			'padding'			: 0,
+			'autoScale'			: false,
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none'
+		});
+		$("#download").fancybox({
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none'
+		});
+	});
+</script>
+<script type="text/javascript">
+$(function () {
+$('.thumbnail img,.thumbnail_t img,.box_comment img,#slideshow img,.cat_ico,.cat_name,.r_comments img,.v_content_list img').hover(
+function() {$(this).fadeTo("fast", 0.5);},
+function() {$(this).fadeTo("fast", 1);
+});
+});
+</script>
+<!-- PNG -->
+<!--[if lt IE 7]>
+<script type="text/javascript" src="http://www.xuebuyuan.com/wp-content/themes/HotNewspro/js/pngfix.js"></script>
+<script type="text/javascript">
+DD_belatedPNG.fix('.boxCaption,.top_box,.logo,.reply,.imgcat,.banner img,#fancybox-left-ico,#fancybox-right-ico,#fancybox-close');
+</script>
+<![endif]-->
+<!-- 图片延迟加载 -->
+<script type="text/javascript" src="http://cdn.xuebuyuan.com/wp-content/themes/HotNewspro/js/lazyload.js"></script>
+<script type="text/javascript">
+	$(function() {          
+    	$(".entry_box img,.entry_box_h img,#entry img,.entry_b img").lazyload({
+            effect:"fadeIn",
+			failurelimit : 30
+          });
+    	});
+</script>
+<!-- IE6菜单 -->
+<script type="text/javascript"><!--//--><![CDATA[//><!--
+sfHover = function() {
+	if (!document.getElementsByTagName) return false;
+	var sfEls = document.getElementById("menu").getElementsByTagName("li");
+
+	for (var i=0; i<sfEls.length; i++) {
+		sfEls[i].onmouseover=function() {
+			this.className+=" sfhover";
+		}
+		sfEls[i].onmouseout=function() {
+			this.className=this.className.replace(new RegExp(" sfhover\\b"), "");
+		}
+	}	
+	var sfEls = document.getElementById("topnav").getElementsByTagName("li");
+	for (var i=0; i<sfEls.length; i++) {
+		sfEls[i].onmouseover=function() {
+			this.className+=" sfhover";
+		}
+	}
+}
+if (window.attachEvent) window.attachEvent("onload", sfHover);
+//--><!]]></script>
+<!-- 预加载 -->
+</head>
+<body class="single single-post postid-1789418 single-format-standard zh">
+<div id="wrapper">
+	<div id="top">
+		<div id='topnav'>
+			<div class="left_top ">
+				<div class="home_h"><a href="http://www.xuebuyuan.com" title="首  页" class="home_h"></a></div>
+				<div class="menu-%e5%af%bc%e8%88%aa-container"><ul id="menu-%e5%af%bc%e8%88%aa" class="menu"><li id="menu-item-1703978" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1703978"><a href="http://www.xuebuyuan.com/category/web%e5%89%8d%e7%ab%af">web前端</a></li>
+<li id="menu-item-1703980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1703980"><a href="http://www.xuebuyuan.com/category/%e6%95%b0%e6%8d%ae%e5%ba%93">数据库</a></li>
+<li id="menu-item-1703982" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1703982"><a href="http://www.xuebuyuan.com/category/%e7%bc%96%e7%a8%8b%e8%af%ad%e8%a8%80">编程语言</a></li>
+<li id="menu-item-1703979" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1703979"><a href="http://www.xuebuyuan.com/category/%e6%90%9c%e7%b4%a2%e6%8a%80%e6%9c%af">搜索技术</a></li>
+<li id="menu-item-1810308" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1810308"><a href="http://www.xuebuyuan.com/aboutus">关于本站</a></li>
+</ul></div> 
+			</div>
+			<!-- end: left_top --> 
+			<div id="searchbar">
+								<form action="http://www.xuebuyuan.com/search" id="cse-search-box">
+	<div>
+	<input type="hidden" name="cx" value="007504628711321185124:w-wufhldrhc" />
+	<input type="hidden" name="cof" value="FORID:10" />
+	<input type="text" onclick="this.value='';" name="q" id="q" class="swap_value" />
+	<input type="image" src="http://www.xuebuyuan.com/wp-content/themes/HotNewspro/images/go.gif" id="go" alt="Search" title="搜索" />
+	</div>
+</form>							</div>
+			<!-- end: searchbar -->
+		</div>
+		<!-- end: topnav -->
+	</div>
+	<!-- end: top -->
+	<div id="header">
+		<div class="header_c">
+			<div class="login_t"><a id="showbtn"  onclick="showid('smallLay');">登录</a>  <div id="smallLay">
+	<div id="smallLay_box">
+	<!-- if not logged -->
+	<form action="http://www.xuebuyuan.com/wp-login.php?redirect_to=http%3A%2F%2Fwww.xuebuyuan.com%2F1789418.html" method="post" id="loginform">
+		<div class="loginblock">
+			<p class="login"><input type="text" name="log" id="log" size="" tabindex="11" /></p>
+			<p class="password"><input type="password" name="pwd" id="pwd"  size="" tabindex="12" /></p>
+			<p class="lefted"><button value="Submit" id="submit_t" type="submit" tabindex="13">登&nbsp;录</button></p>
+		</div>
+		<input type="hidden" name="redirect_to" value="/1789418.html" />
+		<input type="checkbox" name="rememberme" id="modlogn_remember" value="yes"  checked="checked" alt="Remember Me" />下次自动登录
+	</form>
+	<!-- end if not logged -->
+	</div>
+</div>
+</div>
+			<div class="time">
+<script type="text/javascript">
+today=new Date();
+var day; var date; var hello;
+hour=new Date().getHours()
+if(hour < 6)hello='  凌晨好! '
+else if(hour < 9)hello=' 早上好! '
+else if(hour < 12)hello=' 上午好! '
+else if(hour < 14)hello=' 中午好! '
+else if(hour < 17)hello=' 下午好! '
+else if(hour < 19)hello=' 傍晚好! '
+else if(hour < 22)hello=' 晚上好! '
+else {hello='夜深了! '}
+var webUrl = webUrl;
+document.write(' '+hello);
+</script>
+<span id=localtime>
+<script type="text/javascript">
+today=new Date(); var tdate,tday, x,year; var x = new Array("星期日", "星期一", "星期二", "星期三", "星期四", "星期五","星期六");
+var MSIE=navigator.userAgent.indexOf("MSIE");
+if(MSIE != -1)
+year =(today.getFullYear());
+else
+year = (today.getYear()+1900);
+tdate= year+ "年" + (today.getMonth() + 1 ) + "月" + today.getDate() + "日" + " " + x[today.getDay()];
+document.write(tdate);
+</script>
+</span>
+</div>			<a href="http://www.xuebuyuan.com" title="学步园"><h1 class="logo">学步园</h1></a>		</div>
+		<div class="clear"></div>
+		<!-- end: header_c -->
+
+<script type="text/javascript">
+var cpro_id="u2275153";
+(window["cproStyleApi"] = window["cproStyleApi"] || {})[cpro_id]={at:"3",rsi0:"980",rsi1:"250",pat:"6",tn:"baiduCustNativeAD",rss1:"#FFFFFF",conBW:"1",adp:"1",ptt:"0",titFF:"%E5%BE%AE%E8%BD%AF%E9%9B%85%E9%BB%91",titFS:"",rss2:"#000000",titSU:"0",ptbg:"90",piw:"0",pih:"0",ptp:"0"}
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
+
+	</div>
+	<!-- end: header -->
+			<!-- header_image -->
+		<div class="banner">
+					</div>
+		<!-- end:header_image -->
+		<!-- scroll -->
+	<ul class="scroll">
+	<li class="sct">
+		<a href="#">&nbsp;&nbsp;&nbsp;</a>
+		<div><a class="scroll_t">返回顶部</a></div>
+	</li>
+		<li class="scc">
+		<a href="#">&nbsp;&nbsp;&nbsp;</a>
+		<div><a class="scroll_c">查看留言</a></div>
+	</li>
+		<li class="scb">
+		<a href="#">&nbsp;&nbsp;&nbsp;</a>
+		<div><a class="scroll_b">转到底部</a></div>
+	</li>
+</ul><script type="text/javascript">
+    function doZoom(size) {
+        var zoom = document.all ? document.all['entry'] : document.getElementById('entry');
+        zoom.style.fontSize = size + 'px';
+    }
+</script>
+<div id="content">
+			 <!-- menu -->
+		<div id="map">
+			<div class="browse">现在的位置: <a title="返回首页" href="http://www.xuebuyuan.com/">首页</a> &gt; 综合 &gt; 正文</div>
+			<div id="feed"><a href="http://www.xuebuyuan.com/feed" title="RSS">RSS</a></div>
+		</div>
+		<!-- end: menu -->
+		<div class="entry_box_s">
+			<div class="context">
+				<div class="context_t">
+					<span class="prev"></span>
+					<span class="next"></span>
+				</div>
+			</div>
+			<div class="entry_title_box">
+				<!-- 分类图标 -->
+				<div class="ico"></div>
+				<!-- end: 分类图标 -->
+				<h2 class="entry_title">自然语言处理（NLP）常用开源工具总结&#8212;-不定期更新</h2>
+				<div class="archive_info">
+					<span class="date">2013年02月07日</span>
+					<span class="category"> &#8260; 综合</span>
+										&#8260; 共 3414字					&#8260; 字号 <span class="font"><a href="javascript:doZoom(12)">小</a> <a href="javascript:doZoom(13)">中</a> <a href="javascript:doZoom(18)">大</a></span>
+					<span class="comment"> &#8260; <span>评论关闭</span></span>
+										<span class="edit"></span>
+				</div>
+			</div>
+			<!-- end: entry_title_box -->
+			<div class="entry">
+				<div id="entry">
+					<div class="ad_r">
+	<script type="text/javascript">
+    /*正文右侧中大矩形*/
+    var cpro_id = "u1788635";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
+</div>					<div id="article_content" class="article_content">
+<p>       学习自然语言这一段时间以来接触和听说了好多开源的自然语言处理工具，在这里做一下汇总方便自己以后学习，其中有自己使用过的也有了解不是很多的，对于不甚了解的工具以后学习熟悉了会做更新的。</p>
+</p>
+<h1>1.IKAnalyzer</h1>
+</p>
+<p>IK Analyzer是一个开源的，基于Java语言开发的轻量级的中文分词工具包。从2006.12推出1.0版本开始，IK Analyzer已经推出了多个版本，当前最新版本为2012 u6，最初基于Luence，从3.0开始成为面向Java的公用分词组件，独立于Luence，下载地址为：<a target="_blank" href="http://code.google.com/p/ik-analyzer/">http://code.google.com/p/ik-analyzer/</a>。IK支持细粒度和智能分词两种切分模式，支持英文字母、数字、中文词汇等分词处理，兼容韩文、日文字符。可以支持用户自定义的词典，通过配置<a target="_blank" name="OLE_LINK2"></a><a target="_blank" name="OLE_LINK1">IKAnalyzer.cfg.xml</a>文件来实现，可以配置自定义的扩展词典和停用词典。词典需要采用UTF-8无BOM格式编码，并且每个词语占一行。配置文件如下所示：</p>
+<p align="left">
+<pre code_snippet_id="140277" snippet_file_name="blog_20140103_1_8416238" name="code" class="html">&lt;properties&gt;  
+	&lt;comment&gt;IK Analyzer 扩展配置&lt;/comment&gt;
+	&lt;!--用户可以在这里配置自己的扩展字典--&gt; 
+	&lt;entry key="ext_dict"&gt;ext.dic;&lt;/entry&gt; 
+	
+	&lt;!--用户可以在这里配置自己的扩展停止词字典--&gt;
+	&lt;entry key="ext_stopwords"&gt;stopword.dic;chinese_stopword.dic&lt;/entry&gt; 
+	
+&lt;/properties&gt;
+</pre>
+<p></p>
+<p>IK部署很简单，只需要把IKAnalyzer2012_u6.jar部署于项目的lib中，同时将IKAnalyzer.cfg.xml文件以及词典文件置于src中，即可通过API的方式开发调用。</p>
+<p>示例<span class='wp_keywordlink'><a href="http://www.xuebuyuan.com/" title="代码" target="_blank">代码</a></span>：</p>
+<p align="left">
+<pre code_snippet_id="140277" snippet_file_name="blog_20140103_2_7096463" name="code" class="java">/**
+	 * IK分词功能实现
+	 * @return
+	 */
+	public String spiltWords(String srcString){
+		StringBuffer wordsBuffer = new StringBuffer("");
+        try{
+        	IKSegmenter ik=new IKSegmenter(new StringReader(srcString), true);  
+        	Lexeme lex=null;  
+        	while((lex=ik.next())!=null){  
+//        		System.out.print(lex.getLexemeText()+" ");
+        		wordsBuffer.append(lex.getLexemeText()).append(" ");
+        	}
+        }catch(Exception e){
+        	logger.error(e.getMessage());
+        }
+		return wordsBuffer.toString();
+	}
+</pre>
+<p> </p>
+<p>IK简单、易于扩展，分词结果较好并且采用Java编写，因为我平时的项目以Java居多，所以是我平时处理分词的首选工具。</p>
+<h1>2.中科院ICTCLAS</h1>
+<p>ICTCLAS是由中科院计算所历经数年开发的分词工具，采用C++编写。最新版本命名为ICTCLAS2013，又名为NLPIR汉语分词系统，官网为：<a target="_blank" href="http://ictclas.nlpir.org/">http://ictclas.nlpir.org/</a>。主要功能包括中文分词、词性标注、命名实体识别、用户词典功能，同时支持GBK编码、UTF8编码、BIG5编码，新增微博分词、新词发现与关键词提取。可以可视化界面操作和API方式调用。</p>
+</p>
+<h1 style="margin-left:0cm; text-indent:0cm"><span lang="EN-US">3.</span><span lang="EN-US">FudanNLP</span></h1>
+</p>
+<p>FudanNLP主要是为中文自然语言处理而开发的工具包，也包含为实现这些任务的机器学习<span class='wp_keywordlink'><a href="http://www.xuebuyuan.com/category/%E7%AE%97%E6%B3%95" title="算法" target="_blank">算法</a></span>和数据集。FudanNLP及其包含数据集使用LGPL3.0许可证。</p>
+<p>主要功能包括：</p>
+<p>信息检索：文本分类，新闻聚类。</p>
+<p>中文处理：中文分词，词性标注，实体名识别，关键词抽取，依存句法分析，时间短语识别。</p>
+<p>结构化学习：在线学习，层次分类，聚类，精确推理。</p>
+<p>工具采用Java编写，提供了API的访问调用方式。最新版本为FudanNLP-1.6.1，下载地址为：<a target="_blank" href="http://code.google.com/p/fudannlp/">http://code.google.com/p/fudannlp/</a>。</p>
+<p>下载安装包后解压后，内容如下图所示：</p>
+<p><img src="http://img.blog.csdn.net/20131114200539765?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveXVuemhvbmdmZWluaWFv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
+</p>
+<p>在使用时将fudannlp.jar以及lib中的jar部署于项目中的lib里面。models文件夹中存放的模型文件，主要用于分词、词性标注和命名实体识别以及分词所需的词典；文件夹example中主要是使用的示例代码，可以帮助快速入门和使用；java-docs是API帮助文档；src中存放着源码；PDF文档中有着比较详细的介绍和自然语言处理基础知识的讲解。</p>
+<p>初始运行<span class='wp_keywordlink'><a href="http://www.xuebuyuan.com/" title="程序" target="_blank">程序</a></span>时初始化时间有点长，并且加载模型时占用内存较大。在进行语法分析时感觉分析的结果不是很准确。</p>
+<h1>4.The Stanford Natural LanguageProcessing Group</h1>
+<p>Stanford NLP Group是斯坦福大学自然语言处理的团队，开发了多个NLP工具，官网网址为：<a target="_blank" href="http://nlp.stanford.edu/software/index.shtml">http://nlp.stanford.edu/software/index.shtml</a>。其开发的工具包括以下内容：</p>
+<h2>4.1 Stanford CoreNLP</h2>
+<p>采用Java编写的面向英文的处理工具，下载网址为：<a target="_blank" href="http://nlp.stanford.edu/software/corenlp.shtml">http://nlp.stanford.edu/software/corenlp.shtml</a>。主要功能包括分词、词性标注、命名实体识别、语法分析等。</p>
+<p>我曾经采用它进行英语单词的词性还原，具体应用详见<span class='wp_keywordlink'><a href="http://www.it-crazy.com/" title="文章" target="_blank">文章</a></span>《<a target="_blank" href="http://blog.csdn.net/yunzhongfeiniao/article/details/12999537" style="color:rgb(102,102,102); text-decoration:none; font-family:'Microsoft YaHei'; font-size:20px; line-height:30px">采用Stanford<br />
+ CoreNLP实现英文单词词形还原</a>》。</p>
+<h2>4.2 Stanford Word Segmenter</h2>
+<p>采用CRF（条件随机场）算法进行分词，也是基于Java开发的，同时可以支持中文和Arabic，官方要求Java版本1.6以上，推荐内存至少1G。下载地址为<a target="_blank" href="http://nlp.stanford.edu/software/segmenter.shtml">http://nlp.stanford.edu/software/segmenter.shtml</a>。</p>
+<p>简单的示例程序：</p>
+</p>
+<pre code_snippet_id="140277" snippet_file_name="blog_20140103_3_6922522" name="code" class="java">//设置分词器属性。
+   Properties props = new Properties();
+//字典文件地址，可以用绝对路径，如d:/data
+   props.setProperty("sighanCorporaDict", "data");
+//字典压缩包地址，可以用绝对路径
+   props.setProperty("serDictionary","data/dict-chris6.ser.gz");
+//输入文字的编码；
+   props.setProperty("inputEncoding", "UTF-8");
+   props.setProperty("sighanPostProcessing", "true");
+//初始化分词器，
+   CRFClassifier classifier = new CRFClassifier(props);
+//从持久化文件中加载分词器设置；
+   classifier.loadClassifierNoExceptions("data/ctb.gz", props);
+   // flags must be re-set after data is loaded
+   classifier.flags.setProperties(props);
+//分词
+   List words = classifier.segmentString("语句内容");</pre>
+<p></p>
+<h2>4.3 Stanford POS Tagger</h2>
+<p>采用Java编写的面向英文、中文、法语、阿拉伯语、德语的命名实体识别工具，下载地址为：<a target="_blank" href="http://nlp.stanford.edu/software/tagger.shtml">http://nlp.stanford.edu/software/tagger.shtml</a>。<a target="_blank" name="OLE_LINK3">还没有接触过，需要以后学习研究。</a></p>
+<h2>4.4 Stanford Named Entity Recognizer</h2>
+<p>采用条件随机场模型的命名实体工具，下载地址为：<a target="_blank" href="http://nlp.stanford.edu/software/CRF-NER.shtml">http://nlp.stanford.edu/software/CRF-NER.shtml</a>。还没有接触过，需要以后学习研究。</p>
+<h2>4.5 Stanford Parser</h2>
+<p>进行语法分析的工具，支持英文、中文、阿拉伯文和法语。下载地址为：<a target="_blank" href="http://nlp.stanford.edu/software/lex-parser.shtml">http://nlp.stanford.edu/software/lex-parser.shtml</a>。具体的使用介绍见《<a target="_blank" href="http://blog.csdn.net/yunzhongfeiniao/article/details/16864785" style="color:rgb(0,0,0); text-decoration:none; font-family:'Microsoft YaHei'; font-size:20px; line-height:30px">采用Stanford<br />
+ Parser进行中文语法解析</a>》。</p>
+<h2>4.6 Stanford Classifier</h2>
+<p>采用Java编写的分类器，下载地址为：<a target="_blank" href="http://nlp.stanford.edu/software/classifier.shtml">http://nlp.stanford.edu/software/classifier.shtml</a>。还没有接触过，需要以后学习研究。</p>
+<p></div>
+
+<div style="font-size:0px;height:0px;line-height:0px;margin:0;padding:0;clear:both"></div>														</div>
+							</div>
+			<div class="back_b">
+				<a href="javascript:void(0);" onclick="history.back();">返回</a>
+			</div>
+			<div class="clear"></div>
+			<!-- end: entry -->
+			<i class="lt"></i>
+			<i class="rt"></i>
+		</div>
+		<div class="entry_sb">
+			<i class="lb"></i>
+			<i class="rb"></i>
+		</div>
+
+                <!-- ad_down -->
+                <div class="ad_h">
+		<div class="ad_h_c">
+<table>
+<tr>
+<td>
+<script type="text/javascript">
+    /*500宽矩形*/
+    var cpro_id = "u1507413";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
+
+</td>
+<td>
+
+<script type="text/javascript">
+    /*右侧小矩形*/
+    var cpro_id = "u1507403";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
+
+
+</td>
+</tr>
+</table>
+			<div class="clear"></div>
+		</div>
+	<i class="lt"></i>
+	<i class="rt"></i>
+</div>
+<div class="entry_box_b">
+	<i class="lb"></i>
+	<i class="rb"></i>
+</div>
+
+		<!-- ad -->
+		<div class="ad_h">
+		<div class="ad_h_c">
+			<p align="center"><table align="center" width="90%">
+<tr>
+<td>
+<script type="text/javascript">
+var cpro_id = "u1507366";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
+</td>
+<td>
+<script type="text/javascript">
+var cpro_id = "u1507366";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
+</td>
+</tr>
+</table>
+
+<script type="text/javascript">
+/*双侧飘窗*/
+var cpro_id = "u1507394";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/f.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    /*右下角悬浮视窗*/
+var cpro_id = "u1533898";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/f.js" type="text/javascript"></script>
+
+</p>
+			<div class="clear"></div>
+		</div>
+	<i class="lt"></i>
+	<i class="rt"></i>
+</div>
+<div class="entry_box_b">
+	<i class="lb"></i>
+	<i class="rb"></i>
+</div>
+                <!-- tuijian -->
+                <div class="ad_h">
+		<div class="ad_h_c">
+                        <h4>&nbsp;&nbsp;&nbsp;&nbsp;推荐文章:</h4> <table width="90%" style="margin:auto;">
+<tr>
+<td width="50%">
+<li><a href = "http://www.xuebuyuan.com/1223728.html">redis收集整理</a></li>
+<li><a href = "http://www.xuebuyuan.com/1223730.html">使用phpize建立php扩展（Cannot find config.m4）</a></li>
+<li><a href = "http://www.xuebuyuan.com/1223732.html">curl 错误信息</a></li>
+<li><a href = "http://www.xuebuyuan.com/1223734.html">vi 快捷键</a></li>
+<li><a href = "http://www.xuebuyuan.com/1223736.html">Mongodb</a></li>
+<li><a href = "http://www.xuebuyuan.com/1223738.html">linux diff详解</a></li>
+<li><a href = "http://www.xuebuyuan.com/1223740.html">java byte 数据类型(基础)</a></li>
+<li><a href = "http://www.xuebuyuan.com/1223742.html">ubuntu安装ssh</a></li>
+</td>
+<td>
+<li><a href = "http://www.xuebuyuan.com/1223729.html">Warning: mysql_connect(): Bad handshake in</a></li>
+<li><a href = "http://www.xuebuyuan.com/1223731.html">如何查看服务器当前的负载信息</a></li>
+<li><a href = "http://www.xuebuyuan.com/1223733.html">rm: cannot remove `libtoolT': No such file or directory</a></li>
+<li><a href = "http://www.xuebuyuan.com/1223735.html">memcached 一致性hash原理</a></li>
+<li><a href = "http://www.xuebuyuan.com/1223737.html">Windows7下面使用管理员权限启动命令行cmd.exe</a></li>
+<li><a href = "http://www.xuebuyuan.com/1223739.html">学习设计模式之二：抽象工厂模式(Abstract Factory)</a></li>
+<li><a href = "http://www.xuebuyuan.com/1223741.html">ubuntu安装mysql错误do_abi_check的解决方法</a></li>
+<li><a href = "http://www.xuebuyuan.com/1223743.html">show tables，数据表显示部分</a></li>
+</td>
+</tr>
+</table>
+			<div class="clear"></div>
+		</div>
+	<i class="lt"></i>
+	<i class="rt"></i>
+</div>
+<div class="entry_box_b">
+	<i class="lb"></i>
+	<i class="rb"></i>
+</div>
+
+<!--
+                <div class="ad_h">
+		<div class="ad_h_c">
+                        <h4>&nbsp;&nbsp;&nbsp;&nbsp;友情推荐:</h4> <table width="95%" style="margin:auto;">
+<tr>
+<td>
+&nbsp;&nbsp;<a style="color: #0196e3;" href = "http://www.carcube.com.cn/chanpin/sbG-qc_WtPrW-sGmscO439G508253A==.html">北京现代助力泵高压油管</a>
+&nbsp;&nbsp;<a style="color: #0196e3;" href = "http://www.carcube.com.cn/chanpin/z9a0-kkzMNb6waaxw7jf0bnTzbnc.html">现代I30助力泵高压油管</a>
+&nbsp;&nbsp;<a style="color: #0196e3;" href = "http://www.carcube.com.cn/chanpin/tqu357G-zO_LvNPy1vrBprHDuN_RudPNudw=.html">东风本田思域助力泵高压油管</a>
+&nbsp;&nbsp;<a style="color: #0196e3;" href = "http://www.carcube.com.cn/chanpin/uePW3bG-zO_Rxbjz1vrBprHDuN_RudPNudw=.html">广州本田雅阁助力泵高压油管</a>
+&nbsp;&nbsp;<a style="color: #0196e3;" href = "http://www.carcube.com.cn/chanpin/sb7M70NSVtb6waaxw7jf0bnTzbnc.html">本田CRV助力泵高压油管</a>
+&nbsp;&nbsp;<a style="color: #0196e3;" href = "http://www.carcube.com.cn/chanpin/serWwruv083G9w==.html">标致化油器</a>
+
+</td>
+</tr>
+</table>
+			<div class="clear"></div>
+		</div>
+	<i class="lt"></i>
+	<i class="rt"></i>
+</div>
+<div class="entry_box_b">
+	<i class="lb"></i>
+	<i class="rb"></i>
+</div>
+
+-->
+		<div class="context_b">
+			【上篇】<a href="http://www.xuebuyuan.com/155395.html" rel="prev">再见了疯狂坦克  再见了游戏大厅</a><br/>【下篇】<a href="http://www.xuebuyuan.com/728393.html" rel="next">多少钱才可让人重拾理想</a>			<i class="lt"></i>
+			<i class="rt"></i>
+			<i class="lb"></i>
+			<i class="rb"></i>
+		</div>
+		<!-- relatedposts -->
+								<!-- end: relatedposts -->
+		<!-- entrymeta -->
+
+		<div class="entrymeta">
+			<div class="authorbio">
+				<div class="author_pic">
+<!--
+					<img alt='' src='http://0.gravatar.com/avatar/c8dc34dc16c54bb67aaa8858dbd825fa?s=48&amp;d=wavatar&amp;r=G' class='avatar avatar-48 photo' height='48' width='48' />-->
+				</div>
+				<div class="clear"></div>
+				<div class="author_text">
+					<h4>作者: <span><a href="http://www.xuebuyuan.com/author/braiding" title="由braiding发布" rel="author">braiding</a></span></h4>
+				</div>
+			</div>
+			<span class="spostinfo">
+				<ul>
+					<li>该日志由 braiding 于3年前发表在综合分类下，最后更新于 2013年02月07日.</li>
+					<li>转载请注明: <a href="http://www.xuebuyuan.com/1789418.html" rel="bookmark" title="本文固定链接 http://www.xuebuyuan.com/1789418.html">自然语言处理（NLP）常用开源工具总结&#8212;-不定期更新 | 学步园</a><a href="#" onclick="copy_code('http://www.xuebuyuan.com/1789418.html'); return false;"> +复制链接</a></li>
+					<li class="content_tag"></li>
+				</ul>
+			</span>
+			<i class="lt"></i>
+			<i class="rt"></i>
+			<div class="clear"></div>
+		</div>
+		<div class="entry_sb">
+			<i class="lb"></i>
+			<i class="rb"></i>
+		</div>
+		<!-- end: entrymeta -->
+	<div class="ct"></div>
+	<!-- You can start editing here. -->
+			<!-- If comments are closed. -->
+		<p class="nocomments">抱歉!评论已关闭.</p>
+							</div>
+<!-- end: content -->
+<div id="sidebar">
+	
+						
+		<div class="widget">
+					</div>
+		<div class="widget">
+		<h3>本站推荐</h3>
+<div class="box">
+	<div class="scat_img"></div>
+	<div id="scat">
+				<ul>
+			<li><a href="http://www.xuebuyuan.com/2201282.html" rel="bookmark" title="详细阅读作业的提交和监控（二）">作业的提交和监控（二）</a></li>
+		</ul>
+				<ul>
+			<li><a href="http://www.xuebuyuan.com/2201280.html" rel="bookmark" title="详细阅读作业的提交和监控（一）">作业的提交和监控（一）</a></li>
+		</ul>
+				<ul>
+			<li><a href="http://www.xuebuyuan.com/2198208.html" rel="bookmark" title="详细阅读Electric-fence 介绍">Electric-fence 介绍</a></li>
+		</ul>
+				<ul>
+			<li><a href="http://www.xuebuyuan.com/2198206.html" rel="bookmark" title="详细阅读原子操作浅谈">原子操作浅谈</a></li>
+		</ul>
+				<ul>
+			<li><a href="http://www.xuebuyuan.com/2198205.html" rel="bookmark" title="详细阅读C++模板显式实例化">C++模板显式实例化</a></li>
+		</ul>
+				<ul>
+			<li><a href="http://www.xuebuyuan.com/2198204.html" rel="bookmark" title="详细阅读Hadoop Local 模式运行 Pipes 程序">Hadoop Local 模式运行 Pipes 程</a></li>
+		</ul>
+				<ul>
+			<li><a href="http://www.xuebuyuan.com/2198202.html" rel="bookmark" title="详细阅读Hadoop I/O 上 SequenceFile 类在 Pipes 上的应用">Hadoop I/O 上 SequenceFile 类</a></li>
+		</ul>
+				<ul>
+			<li><a href="http://www.xuebuyuan.com/2198273.html" rel="bookmark" title="详细阅读Boost &#8211; Function 分析">Boost &#8211; Function 分析</a></li>
+		</ul>
+			</div>
+	<div class="clear"></div>
+</div>
+<div class="box-bottom">
+	<i class="lb"></i>
+	<i class="rb"></i>
+</div>
+<script type="text/javascript">
+var c,_=Function;
+with(o=document.getElementById("scat")){ innerHTML+=innerHTML; onmouseover=_("c=1"); onmouseout=_("c=0");}
+(F=_("if(#%26||!c)#++,#%=o.scrollHeight>>1;setTimeout(F,#%26?10:3500);".replace(/#/g,"o.scrollTop")))();
+</script><div class="random_r">
+	<h3>随便看看</h3>
+	<div class="box_r">
+		<ul><ul class="random-post-link">
+<li class="random-post-link">
+<a href="http://www.xuebuyuan.com/zt/42514119.html" title="无线网卡工具">无线网卡工具</a>
+</li>
+<li class="random-post-link">
+<a href="http://www.xuebuyuan.com/zt/42514319.html" title="最好的java书">最好的java书</a>
+</li>
+<li class="random-post-link">
+<a href="http://www.xuebuyuan.com/zt/42516101.html" title="微博系统源码">微博系统源码</a>
+</li>
+<li class="random-post-link">
+<a href="http://www.xuebuyuan.com/zt/42518094.html" title="图片 切割">图片 切割</a>
+</li>
+<li class="random-post-link">
+<a href="http://www.xuebuyuan.com/zt/42520062.html" title="html调用html文件">html调用html文件</a>
+</li>
+<li class="random-post-link">
+<a href="http://www.xuebuyuan.com/zt/42521556.html" title="hadoop 启动">hadoop 启动</a>
+</li>
+<li class="random-post-link">
+<a href="http://www.xuebuyuan.com/zt/42522346.html" title="hadoop 0.23">hadoop 0.23</a>
+</li>
+<li class="random-post-link">
+<a href="http://www.xuebuyuan.com/zt/42523112.html" title="form提交乱码">form提交乱码</a>
+</li>
+<li class="random-post-link">
+<a href="http://www.xuebuyuan.com/zt/42524278.html" title="数据结构学分管理系统课程设计">数据结构学分管理系统课程设计</a>
+</li>
+<li class="random-post-link">
+<a href="http://www.xuebuyuan.com/zt/42525661.html" title="数据结构 c#">数据结构 c#</a>
+</li>
+<ul>
+</ul>
+		<div class="clear"></div>
+	</div>
+	<div class="box-bottom">
+		<i class="lb"></i>
+		<i class="rb"></i>
+	</div>
+</div><div class="ad">
+	<div class="ads">
+	<div class="box_top">
+		<i class="rt"></i>
+		<i class="lt"></i>
+	</div>
+		<div class="ads_c"><p align="center"><script type="text/javascript">
+var cpro_id="u2385005";
+(window["cproStyleApi"] = window["cproStyleApi"] || {})[cpro_id]={at:"3",rsi0:"220",rsi1:"500",pat:"6",tn:"baiduCustNativeAD",rss1:"#FFFFFF",conBW:"1",adp:"1",ptt:"0",titFF:"%E5%BE%AE%E8%BD%AF%E9%9B%85%E9%BB%91",titFS:"14",rss2:"#000000",titSU:"0",ptbg:"90",piw:"0",pih:"0",ptp:"0"}
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    /*右侧悬停广告*/
+    var cpro_id = "u2386663";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
+</p>
+			<div class="clear"></div>
+		</div>
+		<div class="box-bottom">
+			<i class="lb"></i>
+			<i class="rb"></i>
+		</div>
+	</div>
+</div>	</div>
+
+	
+	
+			
+	<div class="widget">
+			</div>
+
+		<div class="widget">
+					</div>
+	
+				<div class="clear"></div>
+
+							</div><div class="clear"></div>
+<div class="footer_top">
+	<div id="menu">
+		<div class="menu-%e5%af%bc%e8%88%aa-container"><ul id="menu-%e5%af%bc%e8%88%aa-1" class="menu"><li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1703978"><a href="http://www.xuebuyuan.com/category/web%e5%89%8d%e7%ab%af">web前端</a></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1703980"><a href="http://www.xuebuyuan.com/category/%e6%95%b0%e6%8d%ae%e5%ba%93">数据库</a></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1703982"><a href="http://www.xuebuyuan.com/category/%e7%bc%96%e7%a8%8b%e8%af%ad%e8%a8%80">编程语言</a></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1703979"><a href="http://www.xuebuyuan.com/category/%e6%90%9c%e7%b4%a2%e6%8a%80%e6%9c%af">搜索技术</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1810308"><a href="http://www.xuebuyuan.com/aboutus">关于本站</a></li>
+</ul></div>	</div>
+	<h2 class="blogtitle">
+	<a href="http://www.xuebuyuan.com/" title="学步园">返回首页</a></h2>
+		<big class="lt"></big>
+	<big class="rt"></big>
+</div>
+<!-- 页脚 -->
+<div class="footer_bottom_a">
+	Copyright &copy; 2013-2014 学步园&nbsp;&nbsp;保留所有权利.
+		<big class="lb"></big>
+	<big class="rb"></big>
+</div>
+<!-- 首页页脚 -->
+ <div class="clear"></div>
+</div>
+
+
+</body></html>
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fc0f0742eeb83d6ab6614a81723b00197' type='text/javascript'%3E%3C/script%3E"));
+</script>
