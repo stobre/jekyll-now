@@ -1,0 +1,600 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>关键字提取算法之TF-IDF扫盲{转载}_赵延宾_新浪博客</title>
+<meta name="keywords" content="关键字提取算法之TF-IDF扫盲{转载}_赵延宾_新浪博客,赵延宾," />
+<meta name="description" content="关键字提取算法之TF-IDF扫盲{转载}_赵延宾_新浪博客,赵延宾," />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta http-equiv="mobile-agent" content="format=html5; url=http://blog.sina.cn/dpool/blog/s/blog_75a4f95a0101ead2.html?vt=4">
+<meta http-equiv="mobile-agent" content="format=wml; url=http://blog.sina.cn/dpool/blog/ArtRead.php?nid=75a4f95a0101ead2&vt=1">
+<!–[if lte IE 6]>
+<script type="text/javascript">
+try{
+document.execCommand("BackgroundImageCache", false, true);
+}catch(e){}
+</script>
+<![endif]–>
+<script type="text/javascript">
+window.staticTime=new Date().getTime();
+</script>
+<link rel="pingback" href="http://upload.move.blog.sina.com.cn/blog_rebuild/blog/xmlrpc.php" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://upload.move.blog.sina.com.cn/blog_rebuild/blog/xmlrpc.php?rsd" />
+<link href="http://blog.sina.com.cn/blog_rebuild/blog/wlwmanifest.xml" type="application/wlwmanifest+xml" rel="wlwmanifest" />
+<link rel="alternate" type="application/rss+xml" href="http://blog.sina.com.cn/rss/1973746010.xml" title="RSS" />
+<link href="http://simg.sinajs.cn/blog7style/css/conf/blog/article.css" type="text/css" rel="stylesheet" /><link href="http://simg.sinajs.cn/blog7style/css/common/common.css" type="text/css" rel="stylesheet" /><link href="http://simg.sinajs.cn/blog7style/css/blog/blog.css" type="text/css" rel="stylesheet" /><link href="http://simg.sinajs.cn/blog7style/css/module/common/blog.css" type="text/css" rel="stylesheet" /><style id="tplstyle" type="text/css">@charset "utf-8";@import url("http://simg.sinajs.cn/blog7newtpl/css/30/30_1/t.css");
+</style>
+<style id="positionstyle"  type="text/css">
+</style>
+<style id="bgtyle"  type="text/css">
+</style>
+<style id="headtyle"  type="text/css">
+</style>
+<style id="navtyle"  type="text/css">
+</style>
+<script type="text/javascript" src="http://d1.sina.com.cn/litong/zhitou/sspnew.js"></script></head>
+<body>
+<!--$sinatopbar-->
+<div style="z-index:512;" class="nsinatopbar">
+  <div style="position:absolute;left:0;top:0;" id="trayFlashConnetion"></div>
+  <div class="ntopbar_main"> 
+    <a id="login_bar_logo_link_350" href="http://blog.sina.com.cn" target="_blank"><img class="ntopbar_logo" src="http://simg.sinajs.cn/blog7style/images/common/topbar/topbar_logo.gif" width="100" alt="新浪博客"></a>
+    <div class="ntopbar_floatL">
+      <div class="ntopbar_search" id="traySearchBar"></div>
+	  <div class="ntopbar_ad" id="loginBarActivity" style="display:none;"></div>
+    </div>
+    <div class="ntopbar_loading"><img src="http://simg.sinajs.cn/blog7style/images/common/loading.gif">加载中…</div>
+  </div>
+</div>
+<!--$end sinatopbar-->
+
+<div class="sinabloga" id="sinabloga">
+	<div id="sinablogb" class="sinablogb">
+
+	   
+ <div id="sinablogHead" class="sinabloghead">
+     <div style="display: none;" id="headflash" class="headflash"></div>
+	   <div id="headarea" class="headarea">
+      <div id="blogTitle" class="blogtoparea">
+      <h1 id="blogname" class="blogtitle"><a href="http://blog.sina.com.cn/u/1973746010"><span id="blognamespan">加载中...</span></a></h1>
+	  		
+					<div id="bloglink" class="bloglink"><a href="http://blog.sina.com.cn/u/1973746010">http://blog.sina.com.cn/u/1973746010</a>  <a onclick="return false;" class="CP_a_fuc" href="#" id="SubscribeNewRss">[<cite>订阅</cite>]</a><a class="CP_a_fuc" href="javascript:void(scope.pa_add.add('1973746010'));">[<cite>手机订阅</cite>]</a></div>
+      </div>
+      <div class="blognav" id="blognav">
+      			  <div id="blognavBg" class="blognavBg"></div> <div class="blognavInfo"> 
+		<span><a   href="http://blog.sina.com.cn/u/1973746010">首页</a></span>
+      <span><a class="on" href="http://blog.sina.com.cn/s/articlelist_1973746010_0_1.html">博文目录</a></span>
+      <span><a href="http://photo.blog.sina.com.cn/u/1973746010">图片</a></span>
+      <span class="last"><a  href="http://blog.sina.com.cn/s/profile_1973746010.html">关于我</a></span></div>
+      </div>      		      		 	
+      
+             <div class="autoskin" id="auto_skin">
+       </div>
+
+<div class="adsarea">
+     <a href="#"><div id="template_clone_pic" class="pic"></div></a>
+     <div id="template_clone_link" class="link wdc_HInf"></div>
+     <div id="template_clone_other" class="other"></div>        
+</div>
+    </div>
+    </div>
+    
+    <!--主题内容开始 -->
+    <div class="sinablogbody" id="sinablogbody">
+		
+	<!--第一列start-->
+    <div id="column_1" class="SG_colW21 SG_colFirst"><div class="SG_conn" id="module_901">
+    <div class="SG_connHead">
+            <span class="title" comp_title="个人资料">个人资料</span>
+            <span class="edit">
+                        </span>
+    </div>
+    <div class="SG_connBody">
+        <div class="info">
+                         
+            <div class="info_img" id="comp_901_head"><img src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" real_src ="http://p3.sinaimg.cn/1973746010/180/49651445137312" id="comp_901_head_image" width="180" height="180" alt="赵延宾" title="赵延宾" /></div>
+            
+            <div class="info_txt">
+              <div class="info_nm">
+                <img id="comp_901_online_icon" style="display:none;" class="SG_icon SG_icon1" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" width="15" height="15" align="absmiddle" />
+                <span class="SG_txtb"><strong id="ownernick">赵延宾                                </strong></span>
+                
+                <div class="clearit"></div>
+              </div>
+              <div class="info_btn1">
+                <a target="_blank" href="http://weibo.com/u/1973746010?source=blog" class="SG_aBtn SG_aBtn_ico"><cite><img class="SG_icon SG_icon51" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" width="15" height="15" align="absmiddle" />微博</cite></a>
+                <div class="clearit"></div>
+              </div>
+    <div class="SG_j_linedot"></div>        <div class="info_locate" id = "info_locate_id">
+<div class="SG_j_linedot"></div>
+<div class="info_btn2">
+    <p>
+    <a href="javascript:void(0);" class="SG_aBtn " id="comp901_btn_invite"><cite >加好友</cite></a>
+    <a href="javascript:void(0);" class="SG_aBtn" id="comp901_btn_sendpaper"><cite >发纸条</cite></a>
+    </p>
+    <p>
+    <a href="http://blog.sina.com.cn/s/profile_1973746010.html#write" class="SG_aBtn"   id="comp901_btn_msninfo"><cite>写留言</cite></a>
+    <a href="#" onclick="return false;" class="SG_aBtn"  id="comp901_btn_follow"><cite onclick="Module.SeeState.add()">加关注</cite></a>
+    </p>
+    <div class="clearit"></div>
+</div>
+<div class="SG_j_linedot"></div>
+</div>
+                  <div class="info_list">     
+                                   <ul class="info_list1">
+                    <li><span class="SG_txtc">博客等级：</span><span id="comp_901_grade"><img src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" real_src="http://simg.sinajs.cn/blog7style/images/common/number/1.gif"  /><img src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" real_src="http://simg.sinajs.cn/blog7style/images/common/number/1.gif"  /></span></li>
+                    <li><span class="SG_txtc">博客积分：</span><span id="comp_901_score"><strong>0</strong></span></li>
+                    </ul>
+                    <ul class="info_list2">
+                    <li><span class="SG_txtc">博客访问：</span><span id="comp_901_pv"><strong>12,529</strong></span></li>
+                    <li><span class="SG_txtc">关注人气：</span><span id="comp_901_attention"><strong>4</strong></span></li>
+                    <li><span class="SG_txtc">获赠金笔：</span><strong id="comp_901_d_goldpen">0支</strong></li>
+                    <li><span class="SG_txtc">赠出金笔：</span><strong id="comp_901_r_goldpen">0支</strong></li>
+					<li class="lisp" id="comp_901_badge"><span class="SG_txtc">荣誉徽章：</span></li>
+                    </ul>
+                  </div>
+<div class="clearit"></div>
+    </div>
+    <div class="clearit"></div>
+</div>
+            </div>       
+            <div class="SG_connFoot"></div>
+</div>
+<div id="module_903" class="SG_conn ">
+    <div class="SG_connHead">
+    <span comp_title="相关博文" class="title">相关博文</span>
+    <span class="edit"> </span>
+    </div>
+    <div class="SG_connBody">
+    <div class="atcTitList relaList">        <ul class="">
+
+                <li class="SG_j_linedot1" style="display:none;">
+            <p id="atcTitLi_SLOT_41" class="atcTitCell_tit SG_dot" style="display:none">
+        </p>
+        </li>
+        <li class="SG_j_linedot1" style="display:none;">
+            <p id="atcTitLi_SLOT_42"  class="atcTitCell_tit SG_dot" style="display:none">
+        </p>
+        </li>
+        
+                	</ul>
+    <div class="atcTit_more"><span class="SG_more"><a href="http://blog.sina.com.cn/" target="_blank">更多&gt;&gt;</a></span></div></div>    </div>
+    <div class="SG_connFoot"></div>
+  </div>
+<div class="SG_conn " id="module_904">
+<div class="SG_connHead">
+<span class="title">推荐博文</span>
+</div>
+<div class="SG_connBody ">
+	<div class="atcTitList relaList">		<ul class="">
+			<li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="日本为何不喜欢特朗普总统？" target="_blank" href="http://blog.sina.com.cn/s/blog_6011cb260102w9bo.html?tj=2?tj=2">日本为何不喜欢特朗普总统？</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1611778854" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="25岁成都女孩在澳大利亚悉尼被" target="_blank" href="http://blog.sina.com.cn/s/blog_593793e50102wgsr.html?tj=2?tj=2">25岁成都女孩在澳大利亚悉尼被</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1496814565" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="中国家庭平均财富多少人拖后腿？" target="_blank" href="http://blog.sina.com.cn/s/blog_3eac66f90102wdre.html?tj=2?tj=2">中国家庭平均财富多少人拖后腿？</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1051485945" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="晚上吃苹果是「毒苹果」？关于苹" target="_blank" href="http://blog.sina.com.cn/s/blog_83e058b10102wajh.html?tj=2?tj=2">晚上吃苹果是「毒苹果」？关于苹</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/2212518065" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="单身不狗，世界潮流" target="_blank" href="http://blog.sina.com.cn/s/blog_1382c65610102wkpa.html?tj=2?tj=2">单身不狗，世界潮流</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/5237400929" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="我可以骚，你不可辱" target="_blank" href="http://blog.sina.com.cn/s/blog_473d53360102wikq.html?tj=2?tj=2">我可以骚，你不可辱</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1195201334" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="山东11万打工者出国做什么赚钱" target="_blank" href="http://blog.sina.com.cn/s/blog_4e780db10102wca9.html?tj=2?tj=2">山东11万打工者出国做什么赚钱</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1316490673" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="常外“毒地”漩涡中的中产家庭" target="_blank" href="http://blog.sina.com.cn/s/blog_61ff32de0102wml5.html?tj=2?tj=2">常外“毒地”漩涡中的中产家庭</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1644114654" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="澳大利亚房地产市场的冰火两重天" target="_blank" href="http://blog.sina.com.cn/s/blog_57340dc90102wlg2.html?tj=2?tj=2">澳大利亚房地产市场的冰火两重天</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1463029193" class="SG_linkb"></a></p>
+		</li><li class="SG_j_linedot1"><p class="atcTitCell_tit SG_dot"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" title="公交公司“出大招”，郑州有多少" target="_blank" href="http://blog.sina.com.cn/s/blog_54a98ec20102w7aw.html?tj=2?tj=2">公交公司“出大招”，郑州有多少</a></p>
+        <p class="atcTitCell_nm"><a suda-uatrack="key=blog_tjblog&value=h_tjblog" target="_blank" href="http://blog.sina.com.cn/u/1420398274" class="SG_linkb"></a></p>
+		</li>		</ul>
+		<div id="atcPicList">
+		</div>
+	<div class="atcTit_more"><span class="SG_more"><a target="_blank" href="http://blog.sina.com.cn/">查看更多</a>&gt;&gt;</span></div></div></div>
+<div class="SG_connFoot"></div>
+</div>
+</div>
+	<!--第一列end-->
+	
+	<!--第二列start-->
+	<div id="column_2" class="SG_colW73">	
+<div id="module_920" class="SG_conn">
+	<div class="SG_connHead">
+	    <span comp_title="正文" class="title">正文</span>
+	    <span class="edit"><span id="articleFontManage" class="fontSize">字体大小：<a href="javascript:;" onclick="changeFontSize(2);return false;">大</a> <strong>中</strong> <a href="javascript:;" onclick="changeFontSize(0);return false;">小</a></span></span>
+	</div>
+    <div class="SG_connBody">
+<!--博文正文 begin -->
+	<div id="articlebody" class="artical" favMD5='{"75a4f95a0101ead2":"ef74ed92612fab902aed93f5f1b7069b"}'>
+		<div class="articalTitle"> 
+			
+								<h2 id="t_75a4f95a0101ead2" class="titName SG_txta">关键字提取算法之TF-IDF扫盲{转载}</h2>
+			
+					<span class="img2">
+				<img width="15" height="15" align="absmiddle" title="此博文包含图片" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" class="SG_icon SG_icon18"/>	
+			</span>
+					<span class="time SG_txtc">(2013-05-19 11:09:14)</span><div class="turnBoxzz"><a href="javascript:;" class="SG_aBtn SG_aBtn_ico SG_turn"  action-type="reblog" action-data="{srcBlog:1, blogId:'75a4f95a0101ead2'}"><cite><img class="SG_icon SG_icon111" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" width="15" height="15" align="absmiddle">转载<em class="arrow">▼</em></cite></a></div>		</div>
+		<div class="articalTag" id="sina_keyword_ad_area">
+			<table>
+				<tr>
+					<td class="blog_tag">
+					<script>
+					var $tag='';
+					var $tag_code='d74c110612de6f60bb014267412d7f7e';
+					var $r_quote_bligid='75a4f95a0101ead2';
+					var $worldcup='0';
+					var $worldcupball='0';
+					</script>
+										</td>
+					<td class="blog_class">
+											<span class="SG_txtb">分类：</span>
+						<a target="_blank" href="http://blog.sina.com.cn/s/articlelist_1973746010_1_1.html">IT</a>
+										</td>
+				</tr>
+			</table>
+		</div>
+						<!-- 正文开始 -->
+		<div id="sina_keyword_ad_area2" class="articalContent   ">
+			<h2 STYLE="font-size: 18px; letter-spacing: -1px; background-image: url(http://common.cnblogs.com/skins/Minyx2_Lite/images/dotsH.gif); margin: 0px; padding: 6px 0px; font-weight: normal; color: rgb(51, 51, 51); font-family: Verdana, 'Lucida Grande', Geneva, Arial, sans-serif; background-color: rgb(255, 255, 255); background-position: 0% 100%; background-repeat: repeat no-repeat;">
+<a HREF="http://www.cnblogs.com/ken-zhang/archive/2010/06/20/1761108.html" NAME="ctl01_lnkTitle">【转】关键字提取算法之TF-IDF扫盲</A></H2>
+<small STYLE="font-size: 12px; color: rgb(171, 171, 171); display: block; text-align: right; font-family: Verdana, 'Lucida Grande', Geneva, Arial, sans-serif; line-height: 18px; background-color: rgb(255, 255, 255);">2010-06-20
+00:20 by 码农.ＫＥＮ, 981 阅读,&nbsp;<wbr><span>0</SPAN>&nbsp;<wbr>评论,&nbsp;<wbr><a HREF="http://www.cnblogs.com/ken-zhang/archive/2010/06/20/1761108.html#">收藏</A>,&nbsp;<wbr><a HREF="http://www.cnblogs.com/ken-zhang/admin/EditPosts.aspx?postid=1761108" NAME="ctl01_lnkEdit">编辑</A></SMALL>
+<div STYLE="font-family: Georgia, 'Times new roman', Times, sans-serif; line-height: 1.8; word-break: break-all; color: rgb(51, 51, 51); background-color: rgb(255, 255, 255);">
+<div STYLE="word-break: normal !important;">
+<em>&nbsp;<wbr></EM>
+<div>TF-IDF（term frequency&ndash;inverse document
+frequency）是一种用于资讯检索与资讯探勘的常用加权技术。TF-IDF是一种统计方法，用以评估一字词对于一个文件集或一个语料库中的其中一份文件的重要程度。字词的重要性随著它在文件中出现的次数成正比增加，但同时会随著它在语料库中出现的频率成反比下降。TF-IDF加权的各种形式常被搜寻引擎应用，作为文件与用户查询之间相关
+...</DIV>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+<em>TF/IDF算法可能并不是百度的重要方法，google适用；百度个人认为是向量空间模型，实质也是TF/IDF。</EM></P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+在招聘的时候，如果碰到信息专业的学生，我总是喜欢问，你知道信息论是谁提出来的吗？应聘的人没有一个能答出来，哎呀，信息论其实对于SEO非常重要，建议大家来看下，tf、idf看起来是比较简单的的一个
+信息处理方法，但是想搞明白并且在实际工作中灵活适用，怕不是那么容易的事情了。--沙僧SEO.</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+在今日我们可以从网络上吸收大量资讯，有时候一堆文章看不完。如果我们想要吸收资讯，时间却又不够的时候，使用电脑帮我们过滤资讯，或是用电脑帮我们做个总整理，是个方法。如果今天手中有一篇文章，我们想要用电脑帮我们找出这篇文章最重要的关键字，要怎麽做呢？在资讯检索
+(IR: Information
+Retrieval)领域里面，有个基础的方法，入门必学的方法，就是使用&nbsp;<wbr><a HREF="http://seo.shaseng.org.cn/TF-IDF.html" TARGET="_blank">TF
+和 IDF</A>&nbsp;<wbr>(TF: Term Frequency, IDF: Inverse
+Document Frequency)。使用这两个估计值，可以让电脑具有计算重要关键字的能力，进而节省我们的时间。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;"><img BORDER="0" ALT="TF 和 IDF 算法,TF/IDF tf idf算法公式" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" real_src ="http://www.shaseng.org.cn/Files/tf-idf.jpg" WIDTH="347" HEIGHT="251"  TITLE="关键字提取算法之TF-IDF扫盲{转载}" /></P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">　　接下来让我们看看，<a HREF="http://seo.shaseng.org.cn/TF-IDF.html" TARGET="_blank">TF
+和 IDF&nbsp;<wbr></A>个是甚麽东西呢？TF 全名是Term
+Frequency，也就是某个关键字出现的次数，譬如说某篇文章里面，「电脑」这个词出现很多次，或是「使用者需求」这个词出现很多次，那麽这些词句的出现频率，就会很高。一篇文章中出现很多次的词句，必定有其重要性。譬如说一篇论述「人工智慧」的文章，「人工智慧」这个词句再文章中出现的频率也一定很高。然而为甚麽除了&nbsp;<wbr><a HREF="http://seo.shaseng.org.cn/TF-IDF.html" TARGET="_blank">TF
+(Term Frequency)&nbsp;<wbr></A>以外，还要有<a HREF="http://seo.shaseng.org.cn/TF-IDF.html" TARGET="_blank">&nbsp;<wbr>IDF
+(Inverse Document Frequency</A>) 呢？</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+　　让我们先想想，如果单使用某个字词出现的频率，来判断一篇文章最重要的关键字，会有甚麽困难。首先，我们会遇到一些常用字词，出现的频率也很高，会和重要字词出现的频率一样高，让电脑因此无法分辨出，哪些是常用字词，那些是重要字词。如果就英文来说，有个规则是语言学家
+(linguist) 归纳出来的规则，叫做 Zipf’s Law。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+　　引述中文维基百科的一段介绍如下：</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">　　从根本上讲, 齐夫定律
+可以表述为, 在自然语言的 语素库 里, 一个单词出现的频率与它在频率表里的排名成 反比. 所以,
+频率最高的单词出现的频率大约是出现频率第二位的单词的 2
+倍，而出现频率第二位的单词则是出现频率第四位的单词的2倍。这个定律被作为任何与 power law probability
+distributions 有关的事物的参考。 这个 “定律” 是 Harvard linguist George Kingsley
+Zipf (IPA [z?f])发表的。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">比如, 在 Brown 语库，
+“the” 是最常见的单词，它在这个语库中出现了大约 7 %（10 万单词中出现 69971
+次）。正如齐夫定律中所描述的一样，出现次数为第二位的单词 “of” 占了整个语库中的 3.5% (36411次), 之後的是”and”
+(28852次). 仅仅 135 但此项就占了 Brown 语库的一半。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+　　所以我们现在知道问题在哪边了。如果只用词句出现的频率来判断某一篇文章里面最重要的关键字，我们可能会找到常用字，而不是最重要的字，像是英文里面的
+“the”、”a”、”it”，都是常常出现的字，但是通常一篇文章里面最重要的字不是这些字，即使那些重要的字出现的频率也很高。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">　　这个时候我们要怎麽办呢？IDF
+在这个时候就帮上忙了。在了解 IDF 之前，我们先了解 DF 是甚麽。DF 就是Document
+Frequency，也就是说，如果今天我们手中有固定 N 篇文章，某个关键字的 Document Frquency
+(DF)，就是说这个关键字在 N 篇文章里面出现了几次。Inverse Document Frequency (IDF) 则是把 DF
+取倒数，如此一来，一个数字乘以 IDF，就等於是除以 DF 的意思。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">　　有了 TF 和 IDF
+以後，我们就可以计算 TF 乘上
+IDF，对每一个关键字都算出一个分数。这个分数的高低，就代表了这个关键字在某篇文章中的重要程度。为甚麽我们说这样子可以找出重要的字，而不是常出现的字呢？因为
+TF 会把某篇文章中，出现最多次的排在第一位，其次的排在第二位，以此类推。然而乘上 IDF 以後，也就是除以
+DF，那些常常出现的字，像是英文中的 “the”、”a”、”it”，因为每一篇文章都会出现，所以 DF 就大。DF 大，取倒数之後的
+IDF 就小，IDF 小，乘上 TF 以後，虽然”the”、”a”、”it”在某篇文章中出现的频率很高，但是因为 IDF 小，TF *
+IDF 一相乘，重要性就变低了，我们 (电脑程式) 就不会把这些常出现的字，误认为是重要的字了！</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+　　真正重要的字会得到甚麽样子的分数呢？如果这篇文章刚好在讲 AI，”AI” 出现很多次，因此 “AI” 在这篇文章里面的 TF
+很高。然而我们电脑资料库里面的 N 篇文章，并不是每一篇都在讲 AI，也因此”AI”可能只有在 N 篇文章里面的某 3
+篇文章出现，因此 DF 只有 3，IDF 变成 0.33，假设我们 N = 100 有 100 篇文章在资料库里面，其他常出现字像是
+“the” 每一篇都出现，DF 就是 100，IDF 就是 0.01。所以 “AI” 的 IDF 会比 “the” 的 IDF
+高，假设这篇文章中 “AI” 和 “the” 两个字出现的次数刚好一样，乘上 IDF 以後，”AI” 这个字的分数就比 “the”
+这个字的分数来的高，电脑也就会判断 “AI” 是这篇文章重要的关键字，而 “the” 这个字并不是这篇文章的重要关键字。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+　　所以经由&nbsp;<wbr><a HREF="http://seo.shaseng.org.cn/TF-IDF.html" TARGET="_blank">TF
+*
+IDF</A>，我们可以计算某个关键字，在某篇文章里面的重要性。从这一个方向，我们可以计算一篇文章中重点的字有哪些，帮我们做一篇文章的总整理。从相反的方向，我们可以给定关键字，然後再每一篇文章里面为这个关键字计算一次
+TF *
+IDF，然後比较哪一篇文章，这个关键字是最具重要性的，用这个方法找出和一个关键字最相关的文章。不管是从文章找出重点字词，或是由关键字找相关文章，<a HREF="http://seo.shaseng.org.cn/TF-IDF.html" TARGET="_blank">TF
+*
+IDF&nbsp;<wbr></A>都是个基本且不错的方法。会写程式又还没嚐试过这个方法的读者，或许可以亲自试试看，不过可能要先自己准备文章资料库
+(corpus)，或是从网际网路上面用网页撷取器 (crawler) 存几篇有兴趣的网页，然後把 HTML
+标签清理乾净，剩下纯文字，就可以用这个方法来小试身手罗！</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+　　我们也可以比较一下人类和电脑的不同。电脑做数学数字的计算，或是执行固定的步骤
+，非常擅长，速度也很快。人类可以了解一个字的意思，读完一篇文章以後，了解了意思，之後要找这篇文章最重要的关键字，是从「意义」开始，回忆出或做出结论，这篇文章重要的关键字是甚麽。<br />
+
+　　然而如果要电脑也遵照这个方向，先了解字的意义，再了解文章的意义，然後在做出结论，这篇文章的重要关键字，反而困难，因为要了解字的意义，电脑需要先有一个语意网路
+(Semantic Network)，或是知识的分类关系树
+(Ontology)，把字句依照语意分门别类，有如生物里面的「界门纲目科属种」一般的关系分类，才有办法了解一个字和其他字的关系。之後要了解一篇文章，又必须要了解一个句子，牵涉到自然语言处理
+(NLP: Natural language Processing)
+的问题，像是从句子里面找出主词、动词、和受词，以及补语，分辨出子句和主句，代名词的指称，以及前後文判断产生不同的剖析
+(parsing)。了解完一句，才能了解整篇文章。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">　　因此，<a HREF="http://seo.shaseng.org.cn/TF-IDF.html" TARGET="_blank">TF
+*
+IDF&nbsp;<wbr></A>对於电脑来说，计算速度快，工程也不浩大，不用大型计算机就可以计算。这边也可以顺便提到
+strong AI 和 weak AI 的关系。如果就工程的角度，<strong>TF *
+IDF</STRONG>&nbsp;<wbr>是个好方法，it works!
+节省我们的时间，或是解决大问题中的一个小环节。然而 strong AI 在这边会提出「中文房间」(Chinese Room)
+的论证，也就是说，电脑能够找出重要关键字，是否就代表电脑真的「知道」(understand) 关键字的意义呢？</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">　　中文房间 (Chinese
+Room)
+简单地说，就是一个人关在房间里面，只留两个窗口，一个地方会送纸条出来，另一个地方会送纸条出去。房间里面有一本手册，里面写满对照表，记载者看到甚麽英文字，就应该输出甚麽中文字，以及一些指令的对照，譬如说窗口送一个指令说
+COMBINE，就把两个中文字写在一起才送出去。接着我们在外面就开始送英文句子进去这个房间，另一个窗口就会有这句话的中文翻译跑出来。然而这个论证想要坦讨的就是，虽然这个房间看起来像是会把英文翻译成中文，但是在房间里面的那个操作人员并不懂中文，他指是按照指令，还有手册里面的对照表，机械式地动作，可是外面看起来像是这个房间会英翻中，因此这个房间应该懂得中文才对。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+　　在这边我的看法是，也许就近程来看，我们只要有可以解决问题的解答就可以，不管电脑是否真的懂 (understand)
+字的意义。然而长期来说，如果我们真的需要具有人类的智力的电脑出现，能够真的懂而不是行为上看起来懂，那麽就要仔细探讨中文房间这种论证。也许生物的方法，像是计算神经科学的方法，是一个方向。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+　　我们可能又会问，神经元只有动作电位和静止两个状态，怎麽能了解意义？但是只有一个神经元，或许没办法了解意义，全部大脑的神经元交互作用，意义可能就因此被了解了！其中的奥妙，就是计算神经科学嚐试要解答的问题之一。有兴趣的读者也可以一起从人脑开始，解决
+strong AI 的问题。或是有数学的高手，也许某一个数学理论，可以很漂亮地解决意义了解的问题也说不定，像是
+manifolds，具有一个集合使用不同面向来观看的特性，同时具有 Global 和 Local
+的性质，是个不错的候选选项。从这个方向去解决 strong AI 也是另一个可能性。总之，继续努力研究就是了！</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">&nbsp;<wbr></P>
+<h2 STYLE="font-size: 18px; letter-spacing: -1px; background-image: url(http://common.cnblogs.com/skins/Minyx2_Lite/images/dotsH.gif); margin: 0px; padding: 6px 0px; font-weight: normal; line-height: 21px; font-family: Verdana, 'Lucida Grande', Geneva, Arial, sans-serif; background-position: 0% 100%; background-repeat: repeat no-repeat;">
+<a HREF="http://www.cnblogs.com/ken-zhang/archive/2010/06/20/1761111.html" NAME="ctl01_lnkTitle">【转】TF-IDF算法扫盲2</A></H2>
+<small STYLE="font-size: 12px; color: rgb(171, 171, 171); display: block; text-align: right; font-family: Verdana, 'Lucida Grande', Geneva, Arial, sans-serif; line-height: 18px;">2010-06-20
+00:25 by 码农.ＫＥＮ, 2109 阅读,&nbsp;<wbr><span>0</SPAN>&nbsp;<wbr>评论,&nbsp;<wbr><a HREF="http://www.cnblogs.com/ken-zhang/archive/2010/06/20/1761111.html#">收藏</A>,&nbsp;<wbr><a HREF="http://www.cnblogs.com/ken-zhang/admin/EditPosts.aspx?postid=1761111" NAME="ctl01_lnkEdit">编辑</A></SMALL>
+<div STYLE="font-family: Georgia, 'Times new roman', Times, sans-serif; line-height: 1.8; word-break: break-all;">
+<div STYLE="word-break: normal !important;">
+<p STYLE="line-height: 1.8; margin: 12px auto;">本文转载自<a HREF="http://www.mryang.org/logs/45675845.html" TARGET="_blank">http://www.mryang.org/logs/45675845.html</A></P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+&nbsp;<wbr></P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+TF-IDF算法是一种简单快捷的文档特征词抽取方法，通过统计文档中的词频来对文档进行主题分类。TF-IDF(term
+frequency&ndash;inverse document
+frequency)是一种统计方法，用以评估一字词对于一个文件集或一个语料库中的其中一份文件的重要程度。字词的重要性随着它在文件中出现的次数成正比增加，但同时会随着它在语料库中出现的频率成反比下降。TF-IDF加权的各种形式常被搜索引擎应用，作为文件与用户查询之间相关程度的度量或评级。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+TF-IDF其主要思想是，如果某个词或短语在一篇文章中出现的频率TF高，并且在其他文章中很少出现，则认为此词或者短语具有很好的类别区分能力，适合用来分类。TF词频(Term
+Frequency)指的是某一个给定的词语在该文件中出现的次数。IDF反文档频率(Inverse Document
+Frequency)是指，如果包含词条的文档越少，IDF越大，则说明词条具有很好的类别区分能力。使用TF-IDF可以计算某个关键字在某篇文章里面的重要性，可以用此关键词来表达文档所包含的含义。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">词频Term
+Frequency(tfij)表示文档i中词汇j出现的频率，计算公式如下：</P>
+<p STYLE="line-height: 1.8; margin: 12px auto; text-align: center;">
+<img ALT="" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" real_src ="http://lh4.ggpht.com/_WHNnl8oxWVk/Sp80FtQezOI/AAAAAAAADVU/QM1-g4vroDg/s800/e5a7b43197068eddf42859f3995ebf15.png"  TITLE="关键字提取算法之TF-IDF扫盲{转载}" /></P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+其中，nij表示词j在文档i中出现的次数，分母则是文档j中所有字词出现的次数之和。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">逆向文档频率Inverse
+Document Frequency(idfj)：是一个词普遍重要性的度量，由下面的式子计算：</P>
+<p STYLE="line-height: 1.8; margin: 12px auto; text-align: center;">
+<img ALT="" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" real_src ="http://lh6.ggpht.com/_WHNnl8oxWVk/Sp80Fkt4yqI/AAAAAAAADVQ/vQum_t0Tnww/s144/489bb0915a2757f6ffac62a7e14fff0e.png"  TITLE="关键字提取算法之TF-IDF扫盲{转载}" /></P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+其中，｜D｜是文档总数，分母是包含词ti的文档数目。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">tfidfij权值（wij）：wij
+= tfij * idfi。权值就是最终要得到的结果，权值的高低直接表明了该题词是否反应了文档的主题。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+实验的第一个步骤是分词，英文的分词很简单，中文分词就是个难题了。在实验中使用了中科院的<a HREF="http://www.ictclas.org/" TARGET="_blank"><font COLOR="#29B0C4">ICTCLAS</FONT></A>（Institute
+of Computing Technology, Chinese Lexical Analysis
+System）系统。该系统应该说是国内较好的分词系统，是中国科学院计算技术研究所在多年研究工作积累的基础上，基于多层隐马模型研制出的汉语词法分析系统，主要功能包括中文分词；词性标注；命
+名实体识别；新词识别；同时支持用户词典。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+在分词时为了提高分词效果，我加入了自己的用户词典 。不过词语不多，只有17个，如果要准确一点的话，应该再多一点。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+分词后，去掉里面的词性标注，然后在去掉里面的停用词（这一步做得不是很好，停用词表有900个词，但是在最后统计中发现还是有一些停用词）。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+最后一步就是利用上面的公式进行词频统计了。统计的方法很多，可以些程序，也可以处理后放到数据库、Excel或装用的统计软件统计。我这里主要是放到数据库后用程序来统计。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+统计的结果还算满意。我选择了<a HREF="http://www.stumental.com/" TARGET="_blank"><font COLOR="#29B0C4">学生心理在线</FONT></A>上关于大学生心理健康的文章13篇，主要关于爱情、就业、性教育、学习、人际交往等几个方面。统计的结果表明，抽取的主题词70％左右的表明文章的主题，还有一些则是由于分词错误，使得该词没有体现主题，但权值较高。</P>
+<p STYLE="line-height: 1.8; margin: 12px auto;">
+这个实验只是一个验证实验，要达到实际应用需求，在TF-IDF中还需要做很多的改进。比如考虑语句关系、词性关系、文章关系、文章标题的重要程度等。</P>
+</DIV>
+</DIV>
+</DIV>
+</DIV>							
+		</div>
+						<!-- 正文结束 -->
+		<div id='share' class="shareUp">
+        	<div class="share SG_txtb">
+			分享： 
+			<div class="bshare-custom" style="display:inline;margin-left:5px;"><a title="分享到新浪微博" class="bshare-sinaminiblog" href="javascript:void(0);"></a><a title="分享到微信" class="bshare-weixin" href="javascript:void(0);"></a><a title="分享到QQ空间" class="bshare-qzone" href="javascript:void(0);"></a><a title="分享到豆瓣" class="bshare-douban" href="javascript:void(0);"></a><a title="更多平台" class="bshare-more bshare-more-icon more-style-addthis"></a>
+			</div>
+			</div>
+            <div class="up">
+	        	<div title="喜欢后让更多人看到" id="dbox_75a4f95a0101ead2" class="upBox upBox_click" style="cursor: pointer;">
+	            	<p ti_title="关键字提取算法之TF-IDF扫盲{转载}" id="dbox2_75a4f95a0101ead2" class="count" ></p>
+	                <p class="link"><img width="15" height="15" align="absmiddle" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" class="SG_icon SG_icon34">喜欢</p>
+	            </div>
+<!--
+                <div class="upBox upBox_add">
+                    <p class="count">0</p>
+                    <p class="link"><img width="20" height="16" align="absmiddle" title="推荐" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" class="SG_icon SG_icon214">赠金笔</p>
+                </div>
+-->
+                                <div class="upBox upBox_add">
+                    <p class="count" id="goldPan-num">0</p>
+                    <p class="link" id="goldPan-give"><img class="SG_icon SG_icon214" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" width="20" height="16" title="赠金笔" align="absmiddle">赠金笔</p>
+                </div>
+                
+	        </div>
+            <div class="clearit"></div>
+		</div>
+		<div class="articalInfo">
+			<!-- 分享到微博 {$t_blog} -->
+			<div class="IL">
+				阅读<span id="r_75a4f95a0101ead2" class="SG_txtb"></span><em class="SG_txtb">┊</em> 
+				<a href="#commonComment">评论</a> <span id="c_75a4f95a0101ead2" class="SG_txtb"></span><em class="SG_txtb">┊</em>				<a href="javascript:;" onclick="$articleManage('75a4f95a0101ead2',5);return false;">收藏</a><span id="f_75a4f95a0101ead2"  class="SG_txtb"></span>
+				<em class="SG_txtb">┊</em><a href="#" id="quote_set_sign" onclick="return false ;">转载</a><a  href="#" id="z_75a4f95a0101ead2" onclick="return false ;" class="zznum"></a>				<span id="fn_关键字提取算法之TF-IDF扫盲{转载}" class="SG_txtb"></span><em class="SG_txtb">┊</em>
+				<a onclick="return false;" href="javascript:;" ><cite id="d1_digg_75a4f95a0101ead2">喜欢</cite></a><a id="d1_digg_down_75a4f95a0101ead2" href="javascript:;" ><b>▼</b></a>
+									<em class="SG_txtb">┊</em><a href="http://blog.sina.com.cn/main_v5/ria/print.html?blog_id=blog_75a4f95a0101ead2" target="_blank">打印</a><em class="SG_txtb">┊</em><a id="q_75a4f95a0101ead2" onclick="report('75a4f95a0101ead2');return false;" href="#">举报</a>
+											</div>
+			<div class="IR">
+				<table>
+					<tr>
+										</tr>
+									</table>
+			</div>
+		</div>
+		<div class="clearit"></div>
+		<div class="blogzz_zzlist borderc" id="blog_quote" style="display:none">加载中，请稍候......</div>
+		<div class="articalfrontback SG_j_linedot1 clearfix" id="new_nextprev_75a4f95a0101ead2">
+							<div><span class="SG_txtb">前一篇：</span><a href="http://blog.sina.com.cn/s/blog_75a4f95a0101eacy.html">文本关键词的提取算法实验[转载]</a></div>
+										<div><span class="SG_txtb">后一篇：</span><a href="http://blog.sina.com.cn/s/blog_75a4f95a0101ead4.html">搜索引擎与网页文本分词的原理</a></div>
+					</div>
+		<div class="clearit"></div>
+							
+		<div id="loginFollow"></div>
+				<div class="allComm">
+			<div  class="allCommTit" >
+				<div class="SG_floatL">
+				    <strong>评论</strong>
+				    <span id="commAd_1" style="display:none;">
+				        <span style="margin-left:15px; width:220px; display:inline-block;"><a target="_blank" href="http://blog.sina.com.cn/lm/8/2009/0325/105340.html">重要提示：警惕虚假中奖信息</a></span>
+				    </span>
+				</div>
+				<div class="SG_floatR"><a class="CP_a_fuc" href="#post">[<cite>发评论</cite>]</a></div>
+			</div>
+			<ul id="article_comment_list" class="SG_cmp_revert"><!-- 循环始 --><li>评论加载中，请稍候...</li><!-- 循环终  --></ul>
+			<div class="clearit"></div>
+			<div class="myCommPages SG_j_linedot1">
+				<div class="SG_page" id="commentPaging" style="display:none;">
+					<ul class="SG_pages">
+					</ul>
+				</div>
+				<div class="clearit"></div>
+			</div>
+			<a name="post"></a>
+			<div class="writeComm">
+				<div class="allCommTit">
+					<div class="SG_floatL">
+					    <strong>发评论</strong>
+					    <span></span>
+					</div>
+					<div class="SG_floatR"></div>
+				</div>
+				<div class="wrCommTit">
+					<div class="SG_floatL" id="commentNick" style="display:none;"></div>
+				</div>
+				<div class="formTextarea">
+					<div style="float:left;" id="commonComment">
+					<iframe id="postCommentIframe"  frameborder="0" style="border:1px solid #C7C7C7;
+		height:158px;width:448px;maring-top:1px;background-color:white;" src="http://blog.sina.com.cn/main_v5/ria/blank2.html"></iframe>
+					<textarea id="commentArea" tabindex="1" style="display:none;"></textarea>
+					</div>
+					<div id="mobileComment" style="float:left;display:none;">
+						<textarea id="mbCommentTa" style="width:438px;height:150px;border:1px solid #C7C7C7;line-height:18px;padding:5px;"></textarea>
+					</div>
+					<div class="faceblk" id="faceWrap">
+						<div id="smilesSortShow" class="faceline1">
+						</div>
+						<ul id="smilesRecommended" class="faceline01"></ul>
+					</div>
+					<div class="clearit"></div>
+				</div>
+				<div class="formLogin">
+					<div class="SG_floatL"> 
+					<p id="commentlogin" style="display:none;"><span>登录名：</span><input type="text" style="width: 115px;" id="login_name" tabindex="2"/>   <span>密码：</span><input type="password" style="width: 115px;" id="login_pass" tabindex="3"/>   <a href="http://login.sina.com.cn/getpass.html" target="_blank">找回密码</a>   <a href="http://login.sina.com.cn/signup/signup.php?entry=blog&src=blogicp&srcuid=1973746010" target="_blank">注册</a>	<input type="checkbox" id="login_remember"/><label for="login_remember" style="display:inline-block;" title="建议在网吧/公用电脑上取消该选项">记住登录状态</label></p><p id="commentloginM" style="display:none;"><span>昵&nbsp;&nbsp;&nbsp;称：</span><input type="text" style="width: 115px;" id="comment_anonyous"  value="新浪网友"/ tabindex="2" disabled></p><p id="quote_comment_p"><input type="checkbox" id="bb"> <label for="bb"><img height="18" align="absmiddle" width="18" title="" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" class="SG_icon SG_icon110">分享到微博 <img height="15" align="absmiddle" width="15" title="新" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" class="SG_icon SG_icon11"></label>&nbsp;&nbsp;&nbsp;<input type="checkbox" id="cbCommentQuote" /><label for="cbCommentQuote">评论并转载此博文</label><img class="SG_icon SG_icon11" src="http://simg.sinajs.cn/blog7style/images/common/sg_trans.gif" width="15" height="15" title="新" align="absmiddle" /></p>
+					<p id="geetest-box" ></p>
+					</div>
+
+					<span style="display: none; color: rgb(153, 153, 153); margin-left: 10px;" id="login_remember_caution"></span>
+
+											<div class="SG_floatR" id="anonymity_cont"><input type="checkbox" id="anonymity"/><label for="anonymity">匿名评论</label></div>
+									</div>
+				<div class="formBtn">
+					<a href="javascript:;" onclick="return false;" class="SG_aBtn" tabindex="5"><cite id="postcommentid">发评论</cite></a>
+					<p class="SG_txtc">以上网友发言只代表其个人观点，不代表新浪网的观点或立场。</p>
+				</div>
+			</div>
+		</div>
+				<div class="clearit"></div>
+		
+				<div class="articalfrontback articalfrontback2 clearfix">
+						  <div class="SG_floatL"><span class="SG_txtb">&lt;&nbsp;前一篇</span><a href="http://blog.sina.com.cn/s/blog_75a4f95a0101eacy.html">文本关键词的提取算法实验[转载]</a></div>
+									  <div class="SG_floatR"><span class="SG_txtb">后一篇&nbsp;&gt;</span><a href="http://blog.sina.com.cn/s/blog_75a4f95a0101ead4.html">搜索引擎与网页文本分词的原理</a></div>
+					</div>
+		<div class="clearit"></div>
+				
+	</div>
+	<!--博文正文 end -->
+		<script type="text/javascript">
+			var voteid="";
+		</script>
+
+            </div>       
+            <div class="SG_connFoot"></div>
+          </div>
+</div>
+	<!--第二列start-->
+	
+	<!--第三列start-->
+	<div id="column_3" class="SG_colWnone"><div style="width:0px;height:0.1px;margin:0px;">&nbsp;&nbsp;</div></div>
+	<!--第三列end-->
+
+	
+    </div>
+   <!--主题内容结束 -->
+  
+
+	<div id="diggerFla" style="position:absolute;left:0px;top:0px;width:0px"></div>
+    <div class="sinablogfooter" id="sinablogfooter"  style="position:relative;">
+      
+      <p class="SG_linka"><a href="http://help.sina.com.cn/index.php?s=askquestion&a=view" target="_blank">新浪BLOG意见反馈留言板</a>　<a href="javascript:;" onclick="window.open ('http://control.blog.sina.com.cn/admin/advice/impeach.php?url=http%3A//blog.sina.com.cn/s/blog_4cf7b4ec0100eudp.html%3Ftj%3D1', '','height=495, width=510, top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=n o, status=no');">不良信息反馈</a>　电话：4006900000 提示音后按1键（按当地市话标准计费）　欢迎批评指正</p>
+   
+      <p class="SG_linka"><a href="http://corp.sina.com.cn/chn/" target="_blank">新浪简介</a> | <a href="http://corp.sina.com.cn/eng/" target="_blank">About Sina</a> | <a href="http://emarketing.sina.com.cn/" target="_blank">广告服务</a> | <a href="http://www.sina.com.cn/contactus.html" target="_blank">联系我们</a> | <a href="http://corp.sina.com.cn/chn/sina_job.html" target="_blank">招聘信息</a> | <a href="http://www.sina.com.cn/intro/lawfirm.shtml" target="_blank">网站律师</a> | <a href="http://english.sina.com" target="_blank">SINA English</a> | <a href="http://members.sina.com.cn/apply/" target="_blank">会员注册</a> | <a href="http://help.sina.com.cn/" target="_blank">产品答疑</a> </p>
+      <p class="copyright SG_linka"> Copyright &copy; 1996 - 2016 SINA Corporation,  All Rights Reserved</p>
+      <p class="SG_linka"> 新浪公司 <a href="http://www.sina.com.cn/intro/copyright.shtml" target="_blank">版权所有</a></p>
+	  <a href="http://www.bj.cyberpolice.cn/index.jsp"  target="_blank" class="gab_link"></a>
+    </div>
+  </div>
+</div>
+<div id="swfbox"></div>
+<script id="PVCOUNTER_FORIE" type="text/javascript"></script>
+</body>
+<script type="text/javascript">
+var scope = {
+    $newTray : 1,
+    $setDomain : true,
+    $uid : "1973746010",
+    $PRODUCT_NAME : "blog7",      //blog7photo,blog7icp
+    $pageid : "article",
+    $key :  "c411ba70a3c6f8557c5f2e207d1df344",
+    $uhost : "",
+    $ownerWTtype :"",
+    $private: {"pageset":0,"tj":0,"adver":0,"sms":0,"ad":0,"blogsize":0,"cms":0,"hidecms":0,"top":0,"invitationset":0,"p4p":0,"spamcms":0,"init7":1,"quote":0,"foot":0,"isprivate":0,"headpic":1,"t_sina":"1973746010","oauth_token":1,"oauth_token_secret":1,"uname":"","p_push_t":"1","p_get_t":"1","articleclass":"117"},
+    $summary: " 【转】关键字提取算法之TF-IDF扫盲 2010-06-20 00:20 by 码农.ＫＥＮ, 981 阅读, 0 评论, 收藏, 编辑     TF-IDF（te...  (来自 @头条博客)",
+    $is_photo_vip:0,
+		 $nClass:0,
+		 $articleid:"75a4f95a0101ead2",
+		 $sort_id:117,
+		 $cate_id:175,
+		 $isCommentAllow:0,
+		 $album_pic:"",
+		 $pn_x_rank:4,
+		 $x_quote_c:"2",
+		 $flag2008:"",
+		     component_lists:{"2":{"size":730,"list":[920]},"1":{"size":210,"list":[901,903,904]}},
+    formatInfo:1,
+    UserPic:[{"pid":null,"repeat":null,"align-h":null,"align-v":null,"apply":null},{"pid":null,"repeat":null,"align-h":null,"align-v":null,"apply":null},{"pid":null,"repeat":null,"align-h":null,"align-v":null,"apply":null}],
+    UserBabyPic:{"photoX":0,"photoY":0,"photoURL":null,"angle":0,"zoom":0,"maskX":0,"maskY":0,"maskURL":null,"frameURL":null},
+    UserColor:"",
+    backgroundcolor:"",
+    tpl:"30_1",
+    reclist:0    };
+var $encrypt_code = "3e1365daf31b8f06f49b7930414b430f";
+</script>
+
+<script type="text/javascript" src="http://sjs.sinajs.cn/blog7common/js/boot.js"></script>
+<script type="text/javascript">__load_js();</script>
+<script type="text/javascript">__render_page();</script>
+
+
+<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/buttonLite.js#style=-1&amp;uuid=b436f96b-ce3c-469f-93ca-9c0c406fcf10&amp;pophcol=2&amp;lang=zh"></script><script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
+<script type="text/javascript" charset="utf-8">
+        bShare.addEntry({pic: "", title:"分享自赵延宾  《关键字提取算法之TF-IDF扫盲{转载}》", summary:" 【转】关键字提取算法之TF-IDF扫盲 2010-06-20 00:20 by 码农.ＫＥＮ, 981 阅读, 0 评论, 收藏, 编辑     TF-IDF（te...  (来自 @头条博客)"});
+     </script>
+<script type="text/javascript" src="http://sjs.sinajs.cn/xblogtheme/js/blog680-min.js"></script>
+<script type="text/javascript">
+        var slotArr = ['atcTitLi_SLOT_41', 'atcTitLi_SLOT_42','loginBarActivity']; //广告位id
+        var sourceArr = ['SLOT_41','SLOT_42','SLOT_43,SLOT_47,SLOT_48'];  //广告资源id
+        SinaBlog680.staticBox(slotArr, sourceArr);
+</script>
+</html>
