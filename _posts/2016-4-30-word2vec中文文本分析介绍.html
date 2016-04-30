@@ -1,0 +1,941 @@
+
+
+<!DOCTYPE HTML>
+<html>
+<head  lang="cn">
+	<title>word2vec词向量训练及中文文本相似度计算 - OPEN 开发经验库</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+	<meta name=keywords content=",算法">
+	<meta name=description content="PS：第一部分主要是给大家引入基础内容作铺垫，这类文章很多，希望大家自己去学习更多更好的基础内容，这篇博客主要是介绍Word2Vec对中文文本的用法。
+">
+	<link rel="shortcut icon" href="/lib/favicon.ico">
+	<link rel=copyright href="http://www.open-open.com/">
+
+	<link href="//cdn.bootcss.com/highlight.js/9.2.0/styles/idea.min.css" rel="stylesheet">
+	<link href="//cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.min.css" rel="stylesheet">
+	
+	<link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+	<link href="//cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="/lib/css/jquery-confirm.css" rel="stylesheet">
+	<link href="http://www.open-open.com/resource/styles.css" rel="stylesheet">
+
+	<style type="text/css" media="screen, projection">
+		/*<![CDATA[*/
+		@import "/lib/css/common.css";
+		@import "/lib/css/main.css";
+		@import "/lib/css/jGrowl.css";
+		/*]]>*/
+		.articleIndex li.active a {
+			color: #0099ff;
+		}
+	</style>
+	<style type="text/css">
+		.topheader h1{font-size: 24px;margin: 0;}
+		.crumbs{padding-bottom: 5px;font-size: 11px;}.crumbs,.crumbs a,.meta{color: #bbb;}
+		#tag-list{margin-top: 10px;}
+		#tag-list a{background: #fff;padding: 2px 10px;text-decoration: none;}
+		#tag-list a:hover{background: #c5e2ff;color: #0099ff;}
+		.crumbs a:hover{color: #0099ff;}
+		#readercontainer{background: #fff;padding: 40px 89px;}
+
+		.post-nav ul{
+			margin: 0;
+		}
+		.post-nav>ul>li a{
+			padding-left: 10px;
+		}
+		.post-nav>ul>li>ul>li a{
+			padding-left: 30px;
+		}
+		.post-nav>ul>li>ul>li>ul>li a{
+			padding-left: 50px;
+		}
+		.post-nav ul li.active a{
+			border-left: 2px solid #0099ff;
+		}
+
+		.aside-fixed {
+			left: 50%;
+			margin-left: 310px;
+			position: fixed;
+			top: 65px;
+			width: 260px;
+		}
+		.bdsharebuttonbox {
+			background: #eee none repeat scroll 0 0;
+			margin-top: 10px;
+			padding: 10px;
+			width: 100%;
+		}
+
+	</style>
+
+	<script type="text/javascript">
+		if(window.location.toString().indexOf('pref=padindex') != -1){
+		}else{
+			if(/AppleWebKit.*Mobile/i.test(navigator.userAgent) || (/MIDP|SymbianOS|NOKIA|SAMSUNG|LG|NEC|TCL|Alcatel|BIRD|DBTEL|Dopod|PHILIPS|HAIER|LENOVO|MOT-|Nokia|SonyEricsson|SIE-|Amoi|ZTE/.test(navigator.userAgent))){
+				if(window.location.href.indexOf("?mobile")<0){
+					try{
+						if(/Android|Windows Phone|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)){
+							window.location.href="http://m.open-open.com/m/lib/view/1455771544995.html";
+						}else if(/iPad/i.test(navigator.userAgent)){
+							window.location.href="http://m.open-open.com/m/lib/view/1455771544995.html"
+						}else{
+							window.location.href="http://m.open-open.com/m/lib/view/1455771544995.html"
+						}
+					}catch(e){}
+				}
+			}
+		}
+	</script>
+
+
+	<script type="text/javascript">
+		var rooturl="/lib";
+		var wgDocKey='1455771544995';
+		var wgDocTitle='word2vec词向量训练及中文文本相似度计算';
+		var wgDocStatusFlag='';
+		var wgUserFolders=null;
+		var wgDownFrame=null;
+		var wgCostByUser=null;
+		var wgDocFavoriteByUser=false;
+		var wgDocScoreByUser=null;
+		var wgUserLogined=0;
+		var tb_pathToImage = "/lib/images/loadingAnimation.gif";
+
+
+	</script>
+
+
+
+
+</head>
+<body id=view>
+
+
+<style>
+	.global-tags{background: #333;color: #ababab;height: 30px;line-height: 30px;width: 100%;}
+	.global-tags .container{position: relative;}
+	.global-tags ul{ height: 30px; margin: 0; overflow: hidden;}
+	.global-tags a{color:#ababab;padding: 5px; }
+	.global-tags a:hover{color:#e0e0e0; }
+	.global-tags li { display: inline-block; padding: 0; }
+	.global-tags  .more { background-color: #333; height: 30px; position: absolute; right: 0; top: 0; width: 30px; }
+	.global-tags  .more:before { background-image: linear-gradient(90deg, rgba(0, 95, 60, 0), #333); background-size: 100% auto; content: ""; height: 100%; left: -20px; position: absolute; top: 0; width: 20px; }
+
+	/* menu */
+	.all-sort{z-index: 100;position: absolute;left: 15px;top: 30px;display: none;}
+	.all-sort-head{background: #ff3c00; color: #fff; margin-right: 20px; text-align: center; width: 160px;float: left;}
+	.all-sort-head a{color: #fff;}
+	.item-list .subitem{float:left;padding:20px;}
+	.all-sort-list{position:relative;width:160px;border:2px solid #393939;border-top:none;background:#393939;float: left;z-index: 100;}
+	.all-sort-list .item .parent{font-weight: 700;border: none;width: 120px;text-align: right;margin-right: 2px;}
+	.all-sort-list .item .parent i{font: 400 9px/14px consolas; height: 14px; margin-left: 10px; width: 4px;}
+	.all-sort-list .item.bo{border-top:none;}
+	.all-sort-list .item h3{height:40px;line-height:40px;font-size:14px;font-weight:normal;width:158px;overflow:hidden; color:#ffffff;margin: 0;}
+	.all-sort-list .item h3 a{color: #ffffff;}
+	.all-sort-list .item:hover h3,.all-sort-list .item:hover span,.all-sort-list .item:hover h3 a,.all-sort-list .item .active ,.all-sort-list .item .active a,.all-sort-list .item .active span{color:#E4393C;}
+	.all-sort-list .item span{padding:0px 5px;color:#ffffff;font-family:"\5B8B\4F53";}
+	.all-sort-list .item a{text-decoration:none;}
+	.all-sort-list .subitem a{ float: left;  margin:5px 20px 5px 0;border-left:1px solid #eee;line-height: 14px;height: 20px;}
+	.all-sort-list .item a:hover{color:#E4393C;}
+	.all-sort-list .item:hover h3,.all-sort-list .item .active{position:relative;z-index:13;background:#FFF;border-color:#DDD;border-width:1px 0px;border-style:solid;}
+	.all-sort-list .item-list{ display:none; position:absolute; width:705px; min-height:360px; _height:360px; background:#FFF; left:157px;  border:1px solid #DDD; top:0; z-index:10; }
+
+</style>
+
+
+<header class="site-header">
+	<div class="header-top ">
+		<div class="header-top-inner">
+			<div class="" style="margin: 0 30px;">
+				<div class="row">
+					<div class="header-top-left col-lg-6 col-md-6 col-sm-6 col-xs-12 v-grid">
+						<div class="header-talet">
+							<a  href="http://www.open-open.com/">首页</a> &nbsp;
+							<a class="" href="http://www.open-open.com/code/">代码</a> &nbsp;
+							<a class="" href="http://www.open-open.com/doc/">文档</a> &nbsp;
+							<a title='OPEN论坛频道' href="http://www.open-open.com/solution/">问答</a> &nbsp;
+							<a title="OPEN资讯" class="" href="http://www.open-open.com/news/">资讯</a> &nbsp;
+							<a title="OPEN经验库" class="active" href="http://www.open-open.com/lib/" >经验</a> &nbsp;
+							<a title="GitHub日报" class="" href="http://www.open-open.com/github/">GitHub日报</a>
+							&nbsp;
+						</div>
+					</div>
+					<div class="header-top-right col-lg-6 col-md-6 col-sm-6 col-xs-12 v-grid">
+						<div class="user-info pull-right" id="Personal">
+							
+								<a href="#" title="登录OPEN经验库" class="login">登录</a>&nbsp;&nbsp;
+								<a href="#" title="注册新的账号" class="register">注册</a>
+							
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<nav class="navbar ">
+		<div class="container">
+			<div class="navbar-header" style="margin-right: 30px;">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+						aria-expanded="false" aria-controls="navbar">
+					<span aria-hidden="true" class="glyphicon glyphicon-menu-hamburger"></span>
+					<span aria-hidden="true" class="glyphicon glyphicon-menu-up"></span>
+				</button>
+				<a class="top-logo" href="//www.open-open.com/lib"><span>www.open-open.com/lib</span></a>
+				<span style="font-size: 26px;color: #db6d4c">OPEN经验</span>
+				<span style="font-size: 12px;color: #b5b5b5"></span>
+			</div>
+
+			<div class="pull-right" style="padding: 20px;">
+				<button class="btn btn-info br40" id="upload" type="button">投稿</button>
+			</div>
+			<div id="search">
+				<form onsubmit="document.charset='utf-8';" accept-charset="utf-8" method="post" action="/lib/query" name="sf">
+					<input type="hidden" value="all" name="site">
+					<div class="input-group">
+						<input type="text" x-webkit-speech="" placeholder="经验搜索" class="form-control" name="q" id="kw">
+                      <span class="input-group-btn">
+                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                      </span>
+
+					</div>
+				</form>
+
+				<!-- /input-group -->
+
+			</div>
+
+		</div>
+	</nav>
+	<div class="global-tags">
+		<div class="container">
+			<div class="all-sort-head"><a href="/lib/list/all">全部经验分类</a>&nbsp;<i aria-hidden="true" class="fa fa-toggle-down"></i></div><div class="all-sort"><div class="all-sort-list"><div data-submenu-id="submenu1" class="item bo"><h3><span>·</span><a href="/lib/list/1">软件开发</a></h3><div id="submenu1" class="item-list clearfix"><div class=" subitem"><a href="/lib/list/405">VR</a><a href="/lib/list/2">Web框架</a><a href="/lib/list/3">GUI开发框架</a><a href="/lib/list/4">图表/报表制作</a><a href="/lib/list/5">搜索引擎</a><a href="/lib/list/6">模板引擎</a><a href="/lib/list/7">缓存组件</a><a href="/lib/list/8">Ajax框架</a><a href="/lib/list/9">XML操作类库</a><a href="/lib/list/10">HTML操作类库</a><a href="/lib/list/12">文件上传</a><a href="/lib/list/347">3D图形处理库</a><a href="/lib/list/14">图形/图像处理</a><a href="/lib/list/15">常用工具包</a><a href="/lib/list/16">JSON开发包</a><a href="/lib/list/353">OAuth开发包</a><a href="/lib/list/17">PDF工具包</a><a href="/lib/list/18">Flex开发</a><a href="/lib/list/19">Office文档处理</a><a href="/lib/list/20">日志处理</a><a href="/lib/list/21">网络工具包</a><a href="/lib/list/22">多媒体处理</a><a href="/lib/list/23">WEB服务/RPC/SOA</a><a href="/lib/list/24">RSS/ATOM相关</a><a href="/lib/list/25">持久层框架</a><a href="/lib/list/26">作业调度框架</a><a href="/lib/list/27">工作流引擎</a><a href="/lib/list/28">业务规则引擎</a><a href="/lib/list/29">面向方面AOP/IoC</a><a href="/lib/list/30">JEE框架</a><a href="/lib/list/31">安全相关</a><a href="/lib/list/32">OpenID/单点登录SSO</a><a href="/lib/list/34">条形码/二维码开发包</a><a href="/lib/list/35">验证码(Captcha)</a><a href="/lib/list/96">网络爬虫</a><a href="/lib/list/214">OSGi</a><a                            href="/lib/list/237">网络技术</a><a href="/lib/list/324">Google相关API</a><a href="/lib/list/328">Swing开发包</a><a href="/lib/list/332">HTML编辑器</a><a href="/lib/list/337" style="color:#FF3C00">JavaScript开发工具包</a><a href="/lib/list/352">TTS/语音合成和处理</a><a href="/lib/list/367">游戏开发</a><a href="/lib/list/370">加密/解密软件包</a><a href="/lib/list/374">源代码语法着色</a><a href="/lib/list/376">WebSocket 开发</a><a href="/lib/list/381">MathML显示与编辑</a><a href="/lib/list/383">计算机视觉库/人脸识别</a><a href="/lib/list/385">XML-RPC 开发</a><a href="/lib/list/386">Markdown处理库</a><a href="/lib/list/387">神经网络</a><a href="/lib/list/389">多媒体播放器</a><a href="/lib/list/391">推荐引擎</a><a href="/lib/list/394">机器学习</a><a href="/lib/list/401">算法</a></div><div class="cat-right"></div></div></div><div data-submenu-id="submenu2" class="item "><h3><span>·</span><a href="/lib/list/36">开发语言与工具</a></h3><div id="submenu2" class="item-list clearfix"><div class=" subitem"><a href="/lib/list/406">R语言</a><a href="/lib/list/37" style="color:#FF3C00">Java开发</a><a href="/lib/list/38">.NET开发</a><a href="/lib/list/39">PHP开发</a><a href="/lib/list/40">C/C++开发</a><a href="/lib/list/42">Ruby开发</a><a href="/lib/list/43">Python开发</a><a href="/lib/list/148">ActionScript开发</a><a href="/lib/list/145" style="color:#FF3C00">JavaScript开发</a><a href="/lib/list/44">Perl开发</a><a href="/lib/list/263">Delphi开发</a><a href="/lib/list/243">Erlang开发</a><a href="/lib/list/211">Google Go/Golang开发</a><a href="/lib/list/201">Scala开发</a><a href="/lib/list/240">Lua开发</a><a href="/lib/list/392">Apple Swift开发</a><a href="/lib/list/301">Objective-C开发</a><a href="/lib/list/45">BUG跟踪管理</a><a href="/lib/list/294">Lisp开发</a><a href="/lib/list/46">项目构建</a><a href="/lib/list/41">移动开发</a><a href="/lib/list/47">单元测试</a><a href="/lib/list/48">测试工具</a><a href="/lib/list/49">性能测试和优化</a><a href="/lib/list/50">程序调试</a><a href="/lib/list/51">代码混淆和加密</a><a href="/lib/list/52">UML/模型工具</a><a href="/lib/list/53">安装制作</a><a href="/lib/list/54">代码分析/审查/优化</a><a href="/lib/list/55">前端技术</a><a href="/lib/list/179">Eclipse开发工具</a><a href="/lib/list/205">IntelliJ IDEA</a><a href="/lib/list/281">NetBeans</a><a href="/lib/list/349">程序文档工具</a><a href="/lib/list/361">语法/词法分析器</a><a href="/lib/list/362">脚本/动态语言</a><a href="/lib/list/364">持续集成系统</a><a href="/lib/list/375">Web开发工具</a><a href="/lib/list/388">Node.js 开发</a><a href="/lib/list/395">中文分词</a><a href="/lib/list/399" style="color:#FF3C00">Android Studio开发工具</a></div><div class="cat-right"></div></div></div><div data-submenu-id="submenu3" class="item "><h3><span>·</span><a href="/lib/list/57">网站系统</a></h3><div id="submenu3" class="item-list clearfix"><div class=" subitem"><a href="/lib/list/58">论坛系统BBS</a><a href="/lib/list/59">建站系统CMS</a><a href="/lib/list/60">电子商务/商城</a><a href="/lib/list/61">SNS社交网络/交友平台</a><a href="/lib/list/62">百科系统Wiki</a><a href="/lib/list/63">门户平台Portal</a><a href="/lib/list/64">网络会议/视频会议</a><a href="/lib/list/65">相册/照片/多媒体系统</a><a href="/lib/list/66">微博工具/系统</a><a href="/lib/list/363">博客系统</a><a href="/lib/list/379">开源问答系统</a></div><div class="cat-right"></div></div></div><div data-submenu-id="submenu4" class="item "><h3><span>·</span><a href="/lib/list/67">企业应用</a></h3><div id="submenu4" class="item-list clearfix"><div class=" subitem"><a href="/lib/list/68">ERP/CRM</a><a href="/lib/list/69">OA办公/协作平台</a><a href="/lib/list/70">WebMail系统</a><a href="/lib/list/71">地理信息系统GIS</a><a href="/lib/list/72">数据挖掘</a><a href="/lib/list/73">文档管理</a><a href="/lib/list/74">项目/任务管理</a><a href="/lib/list/333">教学科研相关</a><a href="/lib/list/357">开源SIP项目</a><a href="/lib/list/368">计算机辅助设计CAD/CAM</a></div><div class="cat-right"></div></div></div><div data-submenu-id="submenu5" class="item "><h3><span>·</span><a href="/lib/list/75">服务器软件</a></h3><div id="submenu5" class="item-list clearfix"><div class=" subitem"><a href="/lib/list/76">应用服务器</a><a href="/lib/list/77">Web服务器</a><a href="/lib/list/78">FTP服务器</a><a href="/lib/list/79">邮件服务器</a><a href="/lib/list/80">缓存服务器</a><a href="/lib/list/81">版本控制系统</a><a href="/lib/list/82">路由器/防火墙</a><a href="/lib/list/83">电话/通讯/IM聊天</a><a href="/lib/list/84">集群/负载均衡</a><a href="/lib/list/85">流媒体服务器</a><a href="/lib/list/86">消息系统</a><a href="/lib/list/220">分布式/云计算/大数据</a><a href="/lib/list/298">企业服务总线ESB</a><a href="/lib/list/321">建站服务器套件</a><a href="/lib/list/348">虚拟化</a><a href="/lib/list/355">目录服务LDAP</a><a href="/lib/list/393">容器系统</a></div><div class="cat-right"></div></div></div><div data-submenu-id="submenu6" class="item "><h3><span>·</span><a href="/lib/list/87">插件和扩展</a></h3><div id="submenu6" class="item-list clearfix"><div class=" subitem"><a href="/lib/list/88">Eclipse插件</a><a href="/lib/list/89">jQuery插件</a><a href="/lib/list/331">Node.js扩展</a><a href="/lib/list/338">jQuery分页插件</a><a href="/lib/list/346">Prototype扩展</a><a href="/lib/list/356">Chrome插件/扩展</a></div><div class="cat-right"></div></div></div><div data-submenu-id="submenu7" class="item "><h3><span>·</span><a href="/lib/list/90">数据库相关</a></h3><div id="submenu7" class="item-list clearfix"><div class=" subitem"><a href="/lib/list/91">数据库服务器</a><a href="/lib/list/92">数据库管理工具</a><a href="/lib/list/93">数据库驱动程序</a><a href="/lib/list/94">数据库建模</a><a href="/lib/list/122">数据库连接池</a><a href="/lib/list/154">SQL</a><a href="/lib/list/307">NoSQL数据库</a></div><div class="cat-right"></div></div></div><div data-submenu-id="submenu8" class="item "><h3><span>·</span><a href="/lib/list/155">操作系统</a></h3><div id="submenu8" class="item-list clearfix"><div class=" subitem"><a href="/lib/list/156">Linux</a><a href="/lib/list/182">CentOS</a><a href="/lib/list/183">Ubuntu</a><a href="/lib/list/224">UNIX</a><a href="/lib/list/251">Fedora</a><a href="/lib/list/274">FreeBSD</a><a href="/lib/list/310">Solaris</a><a href="/lib/list/311">openSUSE</a><a href="/lib/list/312">Debian</a><a href="/lib/list/313">OpenBSD</a></div><div class="cat-right"></div></div></div><div data-submenu-id="submenu9" class="item "><h3><span>·</span>其他分类</h3><div id="submenu9" class="item-list clearfix"><div class=" subitem"><p class="clearfix"><a href="/lib/list/159" class="parent">软件开发管理<i>></i></a><a href="/lib/list/174">敏捷开发</a><a href="/lib/list/178">项目管理</a><a href="/lib/list/196">软件架构</a><a href="/lib/list/296">软件测试</a></p><p class="clearfix"><a href="/lib/list/319" class="parent">管理和监控<i>></i></a><a href="/lib/list/320">系统监控</a><a href="/lib/list/360">日志分析和统计</a><a href="/lib/list/366">备份工具</a></p><p class="clearfix"><a href="/lib/list/322" class="parent">应用工具<i>></i></a><a href="/lib/list/323">磁盘/光驱工具</a><a href="/lib/list/359">文档/文本编辑</a><a href="/lib/list/384">终端/远程登录</a></p><p class="clearfix"><a href="/lib/list/329" class="parent">游戏相关<i>></i></a><a href="/lib/list/330">网页游戏</a></p></div><div class="cat-right"></div></div></div></div></div>
+			<ul class="nav__list">
+				<li class="nav__item " >
+
+				</li>
+				<li class="nav__item"><i class="fa fa-tags"></i></li>
+
+				<li class="nav__item"><a href="/lib/tag/Android"  rel="tag">Android</a></li>
+				<li class="nav__item"><a href="/lib/tag/IOS"  rel="tag">IOS</a></li>
+				<li class="nav__item"><a href="/lib/tag/JavaScript"  rel="tag">JavaScript</a></li>
+				<li class="nav__item"><a href="/lib/tag/HTML5"  rel="tag">HTML5</a></li>
+				<li class="nav__item"><a href="/lib/tag/CSS"  rel="tag">CSS</a></li>
+				<li class="nav__item"><a href="/lib/tag/jQuery"  rel="tag">jQuery</a></li>
+				<li class="nav__item"><a href="/lib/tag/Python"  rel="tag">Python</a></li>
+				<li class="nav__item"><a href="/lib/tag/PHP"  rel="tag">PHP</a></li>
+				<li class="nav__item"><a href="/lib/tag/NodeJS"  rel="tag">NodeJS</a></li>
+				<li class="nav__item"><a href="/lib/tag/Java"  rel="tag">Java</a></li>
+				<li class="nav__item"><a href="/lib/tag/Spring"  rel="tag">Spring</a></li>
+				<li class="nav__item"><a href="/lib/tag/MySQL"  rel="tag">MySQL</a></li>
+				<li class="nav__item"><a href="/lib/tag/MongoDB"  rel="tag">MongoDB</a></li>
+				<li class="nav__item"><a href="/lib/tag/Redis"  rel="tag">Redis</a></li>
+				<li class="nav__item"><a href="/lib/tag/NOSQL"  rel="tag">NOSQL</a></li>
+				<li class="nav__item"><a href="/lib/tag/Vim"  rel="tag">Vim</a></li>
+				<li class="nav__item"><a href="/lib/tag/C++"  rel="tag">C++</a></li>
+				<li class="nav__item"><a href="/lib/tag/C#"  rel="tag">C#</a></li>
+				<li class="nav__item"><a href="/lib/tag/JSON"  rel="tag">JSON</a></li>
+				<li class="nav__item"><a href="/lib/tag/Ruby"  rel="tag">Ruby</a></li>
+				<li class="nav__item"><a href="/lib/tag/Linux"  rel="tag">Linux</a></li>
+				<li class="nav__item"><a href="/lib/tag/Nginx"  rel="tag">Nginx</a></li>
+				<li class="nav__item"><a href="/lib/tag/Docker"  rel="tag">Docker</a></li>
+				<li class="more"></li>
+
+			</ul>
+
+		</div>
+	</div>
+</header>
+
+
+
+<div class="topheader" style="background: #eee;padding: 10px 0 30px;">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-9">
+				<div class="crumbs">
+					<a href="/lib/list/all">所有分类</a>
+					
+						&nbsp;&gt;&nbsp;
+						<a href="/lib/list/1">软件开发</a>
+					
+						&nbsp;&gt;&nbsp;
+						<a href="/lib/list/401">算法</a>
+					
+				</div>
+				<h1 id="articleTitle" >word2vec词向量训练及中文文本相似度计算</h1>
+				<div class="meta" style="margin-top: 10px;">
+					<span id="tag-list">
+					
+						<a href="/lib/tag/"></a>
+					
+					</span>&nbsp;
+
+					<span class=item>2016-02-18 13:15:47 发布</span>
+				</div>
+
+
+			</div>
+			<div  class="col-md-3">
+				<table>
+					<tbody>
+					<tr>
+						<td><strong>您的评价</strong>:</td>
+						<td>
+							<div id=rate class=rate-container><span id=star1 class=star-big-off title=很差>&nbsp;</span><span id=star2 class=star-big-off title=较差>&nbsp;</span><span id=star3 class=star-big-off title=还行>&nbsp;</span><span
+									id=star4 class=star-big-off title=不错>&nbsp;</span><span id=star5 class=star-big-off title=力荐>&nbsp;</span></div>
+						</td>
+						<td width=30>
+							<span id=score-num>0.0</span>
+						</td>
+						<td width=30>
+							<div id=rate-tip></div>
+						</td>
+
+					</tr>
+					</tbody>
+				</table>
+				<div id="favorite-container"><a id="favorite" href="javascript:void(0)" class="btn btn-default">收藏</a>&nbsp;&nbsp;&nbsp;&nbsp;
+					<span class=item>0收藏</span>
+					<div id=favorite-box>
+						<table>
+							<tbody>
+							<tr>
+								<td width=70 align=right>文件夹</td>
+								<td><select id=fav_folderlist name=folder>
+									<option selected value=0>请选择...</option>
+									<option id=newfolder-sp disabled value="">-------------</option>
+									<option value=-1>新增文件夹...</option>
+								</select></td>
+							</tr>
+							<tr style="display: none" id=newfolder-input>
+								<td align=right>新增文件夹</td>
+								<td><input id=fav_newfolder maxlength=50 type=text name=newfolder></td>
+							</tr>
+							<tr>
+								<td align=right>标签</td>
+								<td><input id=fav_tags maxlength=135 size=20 type=text name=tags></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td colspan=2>(多个标签用逗号分隔)</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+<div class="container">
+<div class="row">
+
+		<div id="readercontainer"  class="col-md-9">
+				<article>
+					<p>来自： <a href="http://blog.csdn.net/eastmount/article/details/50637476" rel="nofollow" target="_blank">http://blog.csdn.net/eastmount/article/details/50637476</a></p>
+<br />
+<span style="font-family:'Microsoft YaHei';font-size:18px;">本文是讲述如何使用word2vec的基础教程，文章比较基础，希望对你有所帮助！</span> <br />
+ <span style="font-family:'Microsoft YaHei';font-size:18px;">官网C语言下载地址：</span> <a target="_blank" href="http://word2vec.googlecode.com/svn/trunk/" style="font-family:'Microsoft YaHei';font-size:18px;">http://word2vec.googlecode.com/svn/trunk/</a> <br />
+ <span style="font-family:'Microsoft YaHei';font-size:18px;">官网Python下载地址：</span> <a target="_blank" href="http://radimrehurek.com/gensim/models/word2vec.html" style="font-family:'Microsoft YaHei';font-size:18px;">http://radimrehurek.com/gensim/models/word2vec.html</a> <br />
+ <br />
+ <br />
+ <h2><span style="font-family:Microsoft YaHei;"><strong><span style="font-size:24px;color:#3333ff;">1.简单介绍</span></strong></span></h2>
+ <span style="font-family:Microsoft YaHei;"><span style="font-size:18px;"><br />
+ 参考：《Word2vec的核心架构及其应用 · 熊富林，邓怡豪，唐晓晟 · 北邮2015年》<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 《Word2vec的工作原理及应用探究 · 周练 · 西安电子科技大学2014年》<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 《Word2vec对中文词进行聚类的研究 · 郑文超，徐鹏 · 北京邮电大学2013年》<br />
+ <br />
+ PS：第一部分主要是给大家引入基础内容作铺垫，这类文章很多，希望大家自己去学习更多更好的基础内容，这篇博客主要是介绍Word2Vec对中文文本的用法。<br />
+ <br />
+ <strong>(1) 统计语言模型</strong><br />
+ 统计语言模型的一般形式是给定已知的一组词，求解下一个词的条件概率。形式如下：<br />
+ <br />
+ </span></span> <div style="text-align:center;" href="http://static.open-open.com/lib/uploadImg/20160218/20160218125902_727.png">
+ <img src="http://static.open-open.com/lib/uploadImg/20160218/20160218125902_727.png" alt="" width="264" height="107" /> </div>
+ <br />
+ <span style="font-size:18px;font-family:'Microsoft YaHei';">统计语言模型的一般形式直观、准确，n元模型中假设在不改变词语在上下文中的顺序前提下，距离相近的词语关系越近，距离较远的关联度越远，当距离足够远时，词语之间则没有关联度。</span> <br />
+ <br />
+ <span style="font-size:18px;font-family:'Microsoft YaHei';">但该模型没有完全利用语料的信息：</span> <br />
+ <span style="font-size:18px;font-family:'Microsoft YaHei';">1) 没有考虑距离更远的词语与当前词的关系，即超出范围n的词被忽略了，而这两者很可能有关系的。</span> <br />
+ <span style="font-family:KaiTi_GB2312;"><span style="font-size:14px;color:#990000;">例如，“华盛顿是美国的首都”是当前语句，隔了大于n个词的地方又出现了“北京是中国的首都”，在n元模型中“华盛顿”和“北京”是没有关系的，然而这两个句子却隐含了语法及语义关系，即”华盛顿“和“北京”都是名词，并且分别是美国和中国的首都。</span></span> <br />
+ <span style="font-size:18px;font-family:'Microsoft YaHei';"><br />
+ 2) 忽略了词语之间的相似性，即上述模型无法考虑词语的语法关系。</span> <br />
+ <span style="font-family:KaiTi_GB2312;"><span style="font-size:14px;color:#990000;">例如，语料中的“鱼在水中游”应该能够帮助我们产生“马在草原上跑”这样的句子，因为两个句子中“鱼”和“马”、“水”和“草原”、“游”和“跑”、“中”和“上”具有相同的语法特性。</span></span> <br />
+ <span style="font-size:18px;font-family:'Microsoft YaHei';">而在神经网络概率语言模型中，这两种信息将充分利用到。</span> <br />
+ <br />
+ <span style="font-size:18px;font-family:'Microsoft YaHei';"><strong>(2) 神经网络概率语言模型</strong></span> <br />
+ <span style="font-size:18px;font-family:'Microsoft YaHei';">神经网络概率语言模型是一种新兴的自然语言处理算法，该模型通过学习训练语料获取词向量和概率密度函数，词向量是多维实数向量，向量中包含了自然语言中的语义和语法关系，词向量之间余弦距离的大小代表了词语之间关系的远近，词向量的加减运算则是计算机在"遣词造句"。</span> <br />
+ <br />
+ <span style="font-size:18px;font-family:'Microsoft YaHei';">神经网络概率语言模型经历了很长的发展阶段，由Bengio等人2003年提出的神经网络语言模型NNLM（Neural network&nbsp;language model）最为知名，以后的发展工作都参照此模型进行。历经十余年的研究，神经网络概率语言模型有了很大发展。</span> <br />
+ <span style="font-size:18px;font-family:'Microsoft YaHei';">如今在架构方面有比NNLM更简单的CBOW模型、Skip-gram模型；其次在训练方面，出现了Hierarchical Softmax算法、负采样算法（Negative Sampling），以及为了减小频繁词对结果准确性和训练速度的影响而引入的欠采样（Subsumpling）技术。</span> <br />
+ <br />
+ <div style="text-align:center;" href="http://static.open-open.com/lib/uploadImg/20160218/20160218125903_676.png">
+ <img src="http://static.open-open.com/lib/uploadImg/20160218/20160218125903_676.png" width="661" height="575" alt="" /> </div>
+ <br />
+ <span style="font-family:KaiTi_GB2312;font-size:14px;color:#990000;">上图是基于三层神经网络的自然语言估计模型NNLM(Neural Network Language Model)。NNLM可以计算某一个上下文的下一个词为wi的概率，即(wi=i|context)，词向量是其训练的副产物。NNLM根据语料库C生成对应的词汇表V。</span> <br />
+ <br />
+ <span style="font-family:'Microsoft YaHei';font-size:18px;">神将网络知识可以参考我的前文博客：</span> <a target="_blank" href="http://blog.csdn.net/eastmount/article/details/49591349" style="font-family:'Microsoft YaHei';font-size:18px;">神经网络和机器学习基础入门分享</a> <br />
+ <span style="font-family:'Microsoft YaHei';font-size:18px;">NNLM推荐Rachel-Zhang大神文章：</span> <a target="_blank" href="http://blog.csdn.net/abcjennifer/article/details/46397829" style="font-family:'Microsoft YaHei';font-size:18px;">word2vec——高效word特征求取</a> <br />
+ <span style="font-family:'Microsoft YaHei';font-size:18px;">近年来，神经网络概率语言模型发展迅速，Word2vec是最新技术理论的合集。</span> <br />
+ <span style="font-family:'Microsoft YaHei';font-size:18px;">Word2vec是Google公司在2013年开放的一款用于训练词向量的软件工具。</span> <span style="font-family:'Microsoft YaHei';font-size:18px;"><span style="font-family:'Microsoft YaHei';font-size:18px;">所以，在讲述word2vec之前，先给大家介绍词向量的概念。<br />
+ </span></span> <br />
+ <span style="font-family:'Microsoft YaHei';font-size:18px;"><strong>(3) 词向量</strong></span> <br />
+ <span style="font-family:'Microsoft YaHei';font-size:18px;">参考：licstar大神的NLP文章&nbsp;</span> <a target="_blank" href="http://licstar.net/archives/328" style="font-family:'Microsoft YaHei';font-size:18px;">Deep Learning in NLP （一）词向量和语言模型</a> <br />
+ <span style="font-family:KaiTi_GB2312;font-size:14px;"><span style="color:#990000;">正如作者所说：Deep Learning 算法已经在图像和音频领域取得了惊人的成果，但是在 NLP 领域中尚未见到如此激动人心的结果。有一种说法是，语言（词、句子、篇章等）属于人类认知过程中产生的高层认知抽象实体，而语音和图像属于较为底层的原始输入信号，所以后两者更适合做deep learning来学习特征。</span></span> <br />
+ <span style="font-family:'Microsoft YaHei';font-size:18px;">但是将词用“词向量”的方式表示可谓是将 Deep Learning 算法引入 NLP 领域的一个核心技术。自然语言理解问题转化为机器学习问题的第一步都是通过一种方法把这些符号数学化。</span> <br />
+ <br />
+ <span style="font-family:'Microsoft YaHei';font-size:18px;">词向量具有良好的语义特性，是表示词语特征的常用方式。词向量的每一维的值代表一个具有一定的语义和语法上解释的特征。故可以将词向量的每一维称为一个词语特征。词向量用Distributed Representation表示，一种低维实数向量。</span> <br />
+ <span style="font-family:KaiTi_GB2312;font-size:14px;color:#990000;">例如，NLP中最直观、最常用的词表示方法是One-hot Representation。每个词用一个很长的向量表示，向量的维度表示词表大小，绝大多数是0，只有一个维度是1，代表当前词。<br />
+ “话筒”表示为 [0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 …] 即从0开始话筒记为3。<br />
+ 但这种<span style="color:#990000;font-family:KaiTi_GB2312;font-size:14px;">One-hot Representation采用稀疏矩阵的方式表示词，在解决某些任务时会造成维数灾难，而使用低维的词向量就很好的解决了该问题。同时从实践上看，高维的特征如果要套用Deep Learning，其复杂度几乎是难以接受的，因此低维的词向量在这里也饱受追捧。<br />
+ Distributed Representation低维实数向量，如：[0.792, −0.177, −0.107, 0.109, −0.542, …]。它让相似或相关的词在距离上更加接近。<br />
+ </span></span> <br />
+ <span style="font-family:Microsoft YaHei;"><span style="font-size:18px;">总之，<span style="font-family:'Microsoft YaHei';font-size:18px;">Distributed Representation是一个稠密、低维的实数限量，它的每一维表示词语的一个潜在特征，该特征捕获了有用的句法和语义特征。其特点是将词语的不同句法和语义特征分布到它的每一个维度上去表示。</span><br />
+ 推荐我前面的基础文章：<a target="_blank" href="http://blog.csdn.net/eastmount/article/details/49898133">Python简单实现基于VSM的余弦相似度计算</a></span></span> <br />
+ <span style="font-family:'Microsoft YaHei';font-size:18px;"><strong><br />
+ (4) Word2vec<br />
+ </strong></span> <span style="font-family:'Microsoft YaHei';font-size:18px;">参考：<span style="font-family:'Microsoft YaHei';font-size:18px;">Word2vec的核心架构及其应用 · 熊富林，邓怡豪，唐晓晟 · 北邮2015年</span><br />
+ Word2vec是Google公司在2013年开放的一款用于训练词向量的软件工具。它根据给定的语料库，通过优化后的训练模型快速有效的将一个词语表达成向量形式，其核心架构包括</span> <span style="font-family:'Microsoft YaHei';font-size:18px;">CBOW和Skip-gram。<br />
+ <br />
+ 在开始之前，引入模型复杂度，定义如下：<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <strong>O = E * T * Q</strong><br />
+ 其中，E表示训练的次数，T表示训练语料中词的个数，Q因模型而异。E值不是我们关心的内容，T与训练语料有关，其值越大模型就越准确，Q在下面讲述具体模型是讨论。<br />
+ <br />
+ NNLM模型是神经网络概率语言模型的基础模型。在NNLM模型中，从隐含层到输出层的计算时主要影响训练效率的地方，CBOW和Skip-gram模型考虑去掉隐含层。实践证明新训练的词向量的精确度可能不如NNLM模型（具有隐含层），但可以通过增加训练语料的方法来完善。<br />
+ Word2vec包含两种训练模型，分别是CBOW和Skip_gram(输入层、发射层、输出层)，如下图所示：<br />
+ <br />
+ </span> <div style="text-align:center;" href="http://static.open-open.com/lib/uploadImg/20160218/20160218125903_251.png">
+ <img src="http://static.open-open.com/lib/uploadImg/20160218/20160218125903_251.png" alt="" width="519" height="227" /> </div>
+ <br />
+ <span style="font-family:'Microsoft YaHei';font-size:18px;"><strong>CBOW模型：</strong><br />
+ </span> <span style="font-size:18px;font-family:'Microsoft YaHei';">理解为上下文决定当前词出现的概率。在CBOW模型中，上下文所有的词对当前词出现概率的影响的权重是一样的，因此叫CBOW(continuous bag-of-words model)模型。如在袋子中取词，取出数量足够的词就可以了，至于取出的先后顺序是无关紧要的。</span> <br />
+ <br />
+ <span style="font-family:'Microsoft YaHei';font-size:18px;"><strong>Skip-gram模型：</strong></span> <br />
+ <span style="font-size:18px;font-family:'Microsoft YaHei';">Skip-gram模型是一个简单实用的模型。为什么会提出该问题呢？</span> <br />
+ <span style="font-family:KaiTi_GB2312;font-size:14px;color:#990000;">在NLP中，语料的选取是一个相当重要的问题。<br />
+ 首先，语料必须充分。一方面词典的词量要足够大，另一方面尽可能地包含反映词语之间关系的句子，如“鱼在水中游”这种句式在语料中尽可能地多，模型才能学习到该句中的语义和语法关系，这和人类学习自然语言是一个道理，重复次数多了，也就会模型了。<br />
+ 其次，语料必须准确。所选取的语料能够正确反映该语言的语义和语法关系。如中文的《人民日报》比较准确。但更多时候不是语料选取引发准确性问题，而是处理的方法。<br />
+ 由于窗口大小的限制，这会导致超出窗口的词语与当前词之间的关系不能正确地反映到模型中，如果单纯扩大窗口大小会增加训练的复杂度。Skip-gram模型的提出很好解决了这些问题。</span> <br />
+ <span style="font-family:Microsoft YaHei;font-size:18px;"><br />
+ Skip-gram表示“跳过某些符号”。例如句子“中国足球踢得真是太烂了”有4个3元词组，分别是“中国足球踢得”、“足球踢得真是”、“踢得真是太烂”、“真是太烂了”，句子的本意都是“中国足球太烂”，可是上面4个3元组并不能反映出这个信息。<br />
+ 此时，使用Skip-gram模型允许某些词被跳过，因此可组成“中国足球太烂”这个3元词组。如果允许跳过2个词，即2-Skip-gram，那么上句话组成的3元词组为：<br />
+ <br />
+ </span> <div style="text-align:center;" href="http://static.open-open.com/lib/uploadImg/20160218/20160218125903_264.png">
+ <img src="http://static.open-open.com/lib/uploadImg/20160218/20160218125903_264.png" alt="" width="700" height="123.52941176470588" /> </div>
+ <br />
+ <span style="font-family:Microsoft YaHei;font-size:18px;">由上表可知：一方面Skip-gram反映了句子的真实意思，在新组成的这18个3元词组中，有8个词组能够正确反映例句中的真实意思；另一方面，扩大了语料，3元词组由原来的4个扩展到了18个。<br />
+ 语料的扩展能够提高训练的准确度，获得的词向量更能反映真实的文本含义。<br />
+ </span> <br />
+ <br />
+ <h2><span style="font-family:'Microsoft YaHei';"><span style="font-size:24px;color:#3333ff;"><strong>2.下载源码</strong></span></span></h2>
+ <span style="font-family:Microsoft YaHei;"><br />
+ <span style="font-size:18px;">下载地址：<a target="_blank" href="http://word2vec.googlecode.com/svn/trunk/" style="font-family:'Microsoft YaHei';font-size:18px;">http://word2vec.googlecode.com/svn/trunk/</a><br />
+ 使用SVN Checkout源代码，如下图所示。<br />
+ <br />
+ </span></span> <div style="text-align:center;" href="http://static.open-open.com/lib/uploadImg/20160218/20160218125903_857.png">
+ <img src="http://static.open-open.com/lib/uploadImg/20160218/20160218125903_857.png" alt="" width="467" height="384" /> </div>
+ <br />
+ <div style="text-align:center;" href="http://static.open-open.com/lib/uploadImg/20160218/20160218125903_407.png">
+ <img src="http://static.open-open.com/lib/uploadImg/20160218/20160218125903_407.png" width="661" height="306" alt="" />  <br />
+ </div>
+ <br />
+ <br />
+ <h2><span style="font-family:'Microsoft YaHei';font-size:24px;color:#3333ff;">3.中文语料</span></h2>
+ <span style="font-family:Microsoft YaHei;"><span style="font-size:18px;"><br />
+ PS：最后附有word2vec源码、三大百科语料、腾讯新闻语料和分词python代码。<br />
+ 中文语料可以参考我的文章，通过Python下载百度百科、互动百科、维基百科的内容。<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<a target="_blank" href="http://blog.csdn.net/eastmount/article/details/50610227">[python] lantern访问中文维基百科及selenium爬取维基百科语料</a><br />
+ &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<a target="_blank" href="http://blog.csdn.net/eastmount/article/details/48234733">[Python爬虫] Selenium获取百度百科旅游景点的InfoBox消息盒</a><br />
+ <br />
+ 下载结果如下图所示，共300个国家，百度百科、互动百科、维基百科各自100个，对应的编号都是0001.txt~0100.txt，每个txt中包含一个实体（国家）的信息。<br />
+ <br />
+ </span></span> <div style="text-align:center;" href="http://static.open-open.com/lib/uploadImg/20160218/20160218125903_794.png">
+ <img src="http://static.open-open.com/lib/uploadImg/20160218/20160218125903_794.png" width="700" height="408.03571428571433" alt="" /> </div>
+ <br />
+ <span style="font-family:Microsoft YaHei;font-size:18px;">然后再使用Jieba分词工具对齐进行中文分词和文档合并。<br />
+ </span> <pre class="brush:shell; toolbar: true; auto-links: false;">#encoding=utf-8
+import sys
+import re
+import codecs
+import os
+import shutil
+import jieba
+import jieba.analyse
+
+#导入自定义词典
+jieba.load_userdict("dict_all.txt")
+
+#Read file and cut
+def read_file_cut():    
+    #create path
+    pathBaidu = "BaiduSpiderCountry\\"
+    resName = "Result_Country.txt"
+    if os.path.exists(resName):
+        os.remove(resName)
+    result = codecs.open(resName, 'w', 'utf-8')
+
+    num = 1
+    while num&lt;=100:  #5A 200 其它100
+        name = "%04d" % num 
+        fileName = pathBaidu + str(name) + ".txt"
+        source = open(fileName, 'r')
+        line = source.readline()
+        
+        while line!="":
+            line = line.rstrip('\n')
+            #line = unicode(line, "utf-8")
+            seglist = jieba.cut(line,cut_all=False)  #精确模式
+            output = ' '.join(list(seglist))         #空格拼接
+            #print output
+            result.write(output + ' ')               #空格取代换行'\r\n'
+            line = source.readline()
+        else:
+            print 'End file: ' + str(num)
+            result.write('\r\n')  
+            source.close()
+        num = num + 1
+    else:
+        print 'End Baidu'
+        result.close()
+
+#Run function
+if __name__ == '__main__':
+    read_file_cut()</pre> <br />
+ <span style="font-family:Microsoft YaHei;font-size:18px;">上面只显示了对百度百科100个国家进行分词的代码，但核心代码一样。同时，如果需要对停用词过滤或标点符号过滤可以自定义实现。<br />
+ 分词详见：&nbsp;<a target="_blank" href="http://blog.csdn.net/eastmount/article/details/50256163">[python] 使用Jieba工具中文分词及文本聚类概念</a><br />
+ 分词合并后的结果为Result_Country.txt，相当于600行，每行对应一个<span style="font-family:'Microsoft YaHei';font-size:18px;">分词后<span style="font-family:'Microsoft YaHei';font-size:18px;">的</span></span>国家。</span> <br />
+ <br />
+ <div style="text-align:center;" href="http://static.open-open.com/lib/uploadImg/20160218/20160218125903_0.png">
+ <img src="http://static.open-open.com/lib/uploadImg/20160218/20160218125903_0.png" width="700" height="417.67497034400947" alt="" /> </div>
+ <br />
+ <br />
+ <br />
+ <h2><span style="font-family:'Microsoft YaHei';font-size:24px;color:#3333ff;">4.运行源码</span></h2>
+ <br />
+ <span style="font-family:'Microsoft YaHei';font-size:18px;">强烈推荐三篇大神介绍word2vec处理中文语料的文章，其中Felven好像是师兄。<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; <a target="_blank" href="http://blog.csdn.net/heyongluoyao8/article/details/43488765"> Windows下使用Word2vec继续词向量训练 - 一只鸟的天空</a><br />
+ &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<a target="_blank" href="http://blog.csdn.net/zhaoxinfan/article/details/11069485">利用word2vec对关键词进行聚类 - Felven</a><br />
+ &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<a target="_blank" href="http://www.52nlp.cn/中英文维基百科语料上的word2vec实验">http://www.52nlp.cn/中英文维基百科语料上的word2vec实验</a><br />
+ </span> <br />
+ <span style="font-family:Microsoft YaHei;"><span style="font-size:18px;">因为word2vec需要linux环境，所有首先在windows下安装linux环境模拟器，推荐cygwin。<span style="line-height:26px;">然后把语料Result_Country.txt放入word2vec目录下，修改demo-word.sh文件，该文件默认情况下使用自带的text8数据进行训练，如果训练数据不存在，则会进行下载，因为需要使用自己的数据进行训练，故注释掉下载代码。<br />
+ <br />
+ </span>demo-word.sh文件修改如下：<br />
+ </span></span> <pre class="brush:shell; toolbar: true; auto-links: false;">make
+#if [ ! -e text8 ]; then
+#  wget http://mattmahoney.net/dc/text8.zip -O text8.gz
+#  gzip -d text8.gz -f
+#fi
+time ./word2vec -train Result_Country.txt -output vectors.bin -cbow 1 -size 200 -window 8 -negative 25 -hs 0 -sample 1e-4 -threads 20 -binary 1 -iter 15
+./distance vectors.bin</pre> <br />
+ <span style="font-family:Microsoft YaHei;font-size:18px;">下图参数源自文章：<a target="_blank" href="http://blog.csdn.net/heyongluoyao8/article/details/43488765">Windows下使用Word2vec继续词向量训练 - 一只鸟的天空</a><br />
+ <br />
+ </span> <div style="text-align:center;" href="http://static.open-open.com/lib/uploadImg/20160218/20160218125904_230.png">
+ <img src="http://static.open-open.com/lib/uploadImg/20160218/20160218125904_230.png" alt="" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;" width="700" height="110.77050538525269" /> </div>
+ <br />
+ <span style="font-family:Microsoft YaHei;font-size:18px;">运行命令sh demo-word.sh，等待训练完成。<span style="line-height:26px;">模型训练完成之后，得到了vectors.bin这个词向量文件，可以直接运用。<br />
+ <br />
+ </span></span> <div style="text-align:center;" href="http://static.open-open.com/lib/uploadImg/20160218/20160218125904_432.png">
+ <img src="http://static.open-open.com/lib/uploadImg/20160218/20160218125904_432.png" alt="" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;" width="592" height="230" /> </div>
+ <br />
+ <br />
+ <br />
+ <h2><span style="font-family:'Microsoft YaHei';"><span style="font-size:24px;color:#3333ff;">5.结果展示</span></span></h2>
+ <span style="font-family:Microsoft YaHei;"><br />
+ </span> <span style="font-family:Microsoft YaHei;font-size:18px;">通过训练得到的词向量我们可以进行相应的自然语言处理工作，比如求相似词、关键词聚类等。其中word2vec中提供了distance求词的cosine相似度，并排序。也可以在训练时，设置-classes参数来指定聚类的簇个数，使用kmeans进行聚类。<br />
+ </span> <pre class="brush:shell; toolbar: true; auto-links: false;">cd C:/Users/dell/Desktop/word2vec
+sh demo-word.sh
+./distance vectors.bin</pre> <br />
+ <span style="font-family:Microsoft YaHei;font-size:18px;">输入阿富汗：喀布尔（首都）、坎大哈（主要城市）、吉尔吉斯斯坦、伊拉克等。</span> <br />
+ <div style="text-align:center;" href="http://static.open-open.com/lib/uploadImg/20160218/20160218125904_337.png">
+ <img src="http://static.open-open.com/lib/uploadImg/20160218/20160218125904_337.png" alt="" width="591" height="374" /> </div>
+ <br />
+ <span style="font-family:Microsoft YaHei;font-size:18px;">输入国歌：</span> <br />
+ <div style="text-align:center;" href="http://static.open-open.com/lib/uploadImg/20160218/20160218125904_178.png">
+ <img src="http://static.open-open.com/lib/uploadImg/20160218/20160218125904_178.png" alt="" width="593" height="376" /> </div>
+ <br />
+ <br />
+ <span style="font-family:Microsoft YaHei;font-size:18px;">输入首都：</span> <br />
+ <div style="text-align:center;" href="http://static.open-open.com/lib/uploadImg/20160218/20160218125904_999.png">
+ <img src="http://static.open-open.com/lib/uploadImg/20160218/20160218125904_999.png" alt="" width="591" height="373" /> </div>
+ <br />
+ <span style="font-family:Microsoft YaHei;font-size:18px;">输入GDP:</span> <br />
+ <div style="text-align:center;" href="http://static.open-open.com/lib/uploadImg/20160218/20160218125904_760.png">
+ <img src="http://static.open-open.com/lib/uploadImg/20160218/20160218125904_760.png" alt="" width="588" height="377" /> </div>
+ <p><br />
+ <span style="font-family:Microsoft YaHei;font-size:18px;">最后希望文章对你有所帮助，主要是使用的方法。同时更多应用需要你自己去研究学习。<br />
+ word2vec源码、语料下载地址：<br />
+ <span style="font-family:'Microsoft YaHei';font-size:18px;line-height:26px;">(By:Eastmount 2016-02-18 深夜1点 </span><span style="color:#333333;font-family:'Microsoft YaHei';font-size:18px;line-height:26px;">&nbsp;&nbsp;</span><a target="_blank" href="http://blog.csdn.net/eastmount/" style="color:#336699;text-decoration:none;font-family:'Microsoft YaHei';font-size:18px;line-height:26px;">http://blog.csdn.net/eastmount/</a>&nbsp;<span style="font-family:'Microsoft YaHei';font-size:18px;line-height:26px;">)</span><br />
+ <br />
+ </span></p>
+				</article>
+
+
+
+
+		
+
+
+
+		</div>
+
+
+
+	<div  class="col-md-3">
+		<div class="bdsharebuttonbox">
+			<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+			<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+			<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a>
+			<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a>
+			<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+
+		</div>
+
+		<div class=" side-box" style="margin-top: 20px;">
+				<div class="title"><h3>同类热门经验</h3></div>
+				<ol class="hot">
+					
+						<li>
+							<a title=一文读懂机器学习，大数据/自然语言处理/算法全有了…… href="/lib/view/open1420615208000.html"><span class=title>一文读懂机器学习，大数据/自然语言处理/算法全有了……</span></a>
+						</li>
+					
+						<li>
+							<a title=各种Java加密算法 href="/lib/view/open1397274257325.html"><span class=title>各种Java加密算法</span></a>
+						</li>
+					
+						<li>
+							<a title=C语言的学习基础,100个经典的算法  href="/lib/view/open1364807445109.html"><span class=title>C语言的学习基础,100个经典的算法 </span></a>
+						</li>
+					
+						<li>
+							<a title=MapReduce 模式、算法和用例（MapReduce Patterns, Algorithms, and Use Cases)  href="/lib/view/open1330094286171.html"><span class=title>MapReduce 模式、算法和用例（MapReduce Patterns, Algorithms, and Use Cases) </span></a>
+						</li>
+					
+						<li>
+							<a title=Mahout算法集  href="/lib/view/open1383390452040.html"><span class=title>Mahout算法集 </span></a>
+						</li>
+					
+						<li>
+							<a title=Java RSA 加密解密算法 入门  href="/lib/view/open1346633931975.html"><span class=title>Java RSA 加密解密算法 入门 </span></a>
+						</li>
+					
+
+				</ol>
+			</div>
+		<p class="aiBar"></p>
+		<div class=" side-box post-nav" style="margin-top: 20px;">
+			<div class="title"><h3>阅读目录</h3></div>
+			<ul class="articleIndex"></ul>
+		</div>
+
+	</div>
+
+
+
+</div>
+	</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-9">
+			<table width='100%'><tr>
+				<td valign='top' width="33%" class="Relatedb">
+					<div style="border-bottom: 1px #ccc solid;margin-top: 5px"><strong>相关文档</strong> 　—　<a href="http://www.open-open.com/doc" rel="nofollow" target="_blank">更多</a></div>
+					<ul >
+						
+							<li><a  href="http://www.open-open.com/doc/view/8155d5fef86447d9a39be36275f22e32" rel="nofollow" target="_blank" title="基于改进 HTML2Tree 的中文网页特征向量提取方法.pdf">基于改进 HTML2Tree 的中文网页特征向量提取方法.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/f6948e009f71482ca63ca8f8e751e2a3" rel="nofollow" target="_blank" title="文本挖掘技术02-文本特征提取技术.pdf">文本挖掘技术02-文本特征提取技术.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/6dc5a95dce014b75b889ce5a8c5d8d11" rel="nofollow" target="_blank" title="文本挖掘技术 Text Mining 02-特征提取.pdf">文本挖掘技术 Text Mining 02-特征提取.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/df3608a01cbd436096749eb47271305b" rel="nofollow" target="_blank" title="中文分词技术及其实现.pdf">中文分词技术及其实现.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/ab854d5622d54e88a4064a52e2779249" rel="nofollow" target="_blank" title="Deep Learning 实战之word2vec.pdf">Deep Learning 实战之word2vec.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/bd7deb86b0ba4173b026399ecef8c7e8" rel="nofollow" target="_blank" title="Deep Learning 实战之 word2vec.pdf">Deep Learning 实战之 word2vec.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/6934852dfc5d4468aa4a038d2daf64e6" rel="nofollow" target="_blank" title="Deep Learning 实战之 word2vec.pdf">Deep Learning 实战之 word2vec.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/5f8a0974f99d4a968447631669907642" rel="nofollow" target="_blank" title="Deep learning实战之 word2vec.pdf">Deep learning实战之 word2vec.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/ba61d04f3a254cfb93ad90e86edb9155" rel="nofollow" target="_blank" title="deep learning实战之word2vec.pdf">deep learning实战之word2vec.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/2c9a656ea3834803ae335269e2e6362d" rel="nofollow" target="_blank" title="基于主题相似度模型的TS-PageRank 算法.pdf">基于主题相似度模型的TS-PageRank 算法.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/5bdb7339e15e4b6183acb5bfe1d48ce1" rel="nofollow" target="_blank" title="计算广告技术-短文本相关性.pdf">计算广告技术-短文本相关性.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/d0f8f089c08f4b1f90a859c0c7582260" rel="nofollow" target="_blank" title="heuer - word2vec - From theory to practice.pdf">heuer - word2vec - From theory to practice.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/01d97118eb1046b7bec7f751e4981489" rel="nofollow" target="_blank" title="Hadoop在相似度计算中的优化.pdf">Hadoop在相似度计算中的优化.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/a9ea26e4106646bb88f842f76ec81875" rel="nofollow" target="_blank" title="Sublime Text 2 中文文档.chm">Sublime Text 2 中文文档.chm</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/b531810b142840beae0c2011a5832bb6" rel="nofollow" target="_blank" title="中文文本情感主题句分析与提取研究.pdf">中文文本情感主题句分析与提取研究.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/0d3fc0c1fff143e1984778f8530a92f6" rel="nofollow" target="_blank" title="OpenCV2计算机视觉编程手册(中文).pdf">OpenCV2计算机视觉编程手册(中文).pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/8f46d2e4d4c648ac9e3f0c2722b79f93" rel="nofollow" target="_blank" title="android中文文档.doc">android中文文档.doc</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/67944f0a24cc44f5b12b792eea6c7854" rel="nofollow" target="_blank" title="计算机程序设计艺术-第2卷-半数值算法(第3版)-中文版.pdf">计算机程序设计艺术-第2卷-半数值算法(第3版)-中文版.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/84b22e0bb2404a348696430b27828192" rel="nofollow" target="_blank" title="Vim 中文文档.pdf">Vim 中文文档.pdf</a></li>
+						
+							<li><a  href="http://www.open-open.com/doc/view/15d85cb4ec7e45a78024ef1741187509" rel="nofollow" target="_blank" title="SOLR 中文文档.pdf">SOLR 中文文档.pdf</a></li>
+						
+					</ul>
+				</td>
+				<td valign='top' width="33%" class="Relatedb">
+					<div style="border-bottom: 1px #ccc solid;margin-top: 5px"><strong>相关经验</strong> 　—　<a href="http://www.open-open.com/lib" rel="nofollow" target="_blank">更多</a></div>
+					<ul >
+						
+							<li >
+								<a title=机器学习与深度学习资料  href="/lib/view/open1429836216010.html" target=_blank><span
+										class=title>机器学习与深度学习资料 </span></a>
+
+							</li>
+						
+							<li >
+								<a title=机器学习(Machine Learning)&amp;深度学习(Deep Learning)资料 href="/lib/view/open1428112201271.html" target=_blank><span
+										class=title>机器学习(Machine Learning)&amp;深度学习(Deep Learning)资料</span></a>
+
+							</li>
+						
+							<li >
+								<a title= 近200篇机器学习&amp;深度学习资料分享（含各种文档，视频，源码等）  href="/lib/view/open1428738163484.html" target=_blank><span
+										class=title> 近200篇机器学习&amp;深度学习资料分享（含各种文档，视频，源码等） </span></a>
+
+							</li>
+						
+							<li >
+								<a title=文本相似度算法 href="/lib/view/open1389227417125.html" target=_blank><span
+										class=title>文本相似度算法</span></a>
+
+							</li>
+						
+							<li >
+								<a title=SVM-支持向量机算法概述  href="/lib/view/open1420727506765.html" target=_blank><span
+										class=title>SVM-支持向量机算法概述 </span></a>
+
+							</li>
+						
+							<li >
+								<a title= 文本深度表示模型Word2Vec  href="/lib/view/open1420688729828.html" target=_blank><span
+										class=title> 文本深度表示模型Word2Vec </span></a>
+
+							</li>
+						
+							<li >
+								<a title=文本数据的机器学习自动分类方法(上) href="/lib/view/open1453729035839.html" target=_blank><span
+										class=title>文本数据的机器学习自动分类方法(上)</span></a>
+
+							</li>
+						
+							<li >
+								<a title=文本相似度计算基本方法小结  href="/lib/view/open1400571885550.html" target=_blank><span
+										class=title>文本相似度计算基本方法小结 </span></a>
+
+							</li>
+						
+							<li >
+								<a title=Spark MLlib实现的中文文本分类–Native Bayes  href="/lib/view/open1453539595620.html" target=_blank><span
+										class=title>Spark MLlib实现的中文文本分类–Native Bayes </span></a>
+
+							</li>
+						
+							<li >
+								<a title=Java计算文本相似度实现 href="/lib/view/open1432084912958.html" target=_blank><span
+										class=title>Java计算文本相似度实现</span></a>
+
+							</li>
+						
+							<li >
+								<a title=BABY夜谈大数据 ： 计算文本相似度 href="/lib/view/open1456120926480.html" target=_blank><span
+										class=title>BABY夜谈大数据 ： 计算文本相似度</span></a>
+
+							</li>
+						
+							<li >
+								<a title=使用TextRank算法为文本生成关键字和摘要 href="/lib/view/open1417486687473.html" target=_blank><span
+										class=title>使用TextRank算法为文本生成关键字和摘要</span></a>
+
+							</li>
+						
+							<li >
+								<a title=使用TextRank算法为文本生成关键字和摘要 href="/lib/view/open1445697752085.html" target=_blank><span
+										class=title>使用TextRank算法为文本生成关键字和摘要</span></a>
+
+							</li>
+						
+							<li >
+								<a title=中文分词库：TextRank4ZH href="/lib/view/open1417489927682.html" target=_blank><span
+										class=title>中文分词库：TextRank4ZH</span></a>
+
+							</li>
+						
+					</ul>
+				</td>
+				<td valign='top' width="33%" class="Relatedb">
+					<div style="border-bottom: 1px #ccc solid;margin-top: 5px"><strong>相关讨论</strong> 　—　<a href="http://www.open-open.com/solution" rel="nofollow" target="_blank">更多</a></div>
+					<ul >
+						
+							<li >
+								<a title=什么是云计算？ href="http://www.open-open.com/solution/view/1318332970156" rel="nofollow" target=_blank><span class=title>什么是云计算？</span></a>
+							</li>
+						
+							<li >
+								<a title=阿里面试经历及总结（数据研发、Java研发方向） href="http://www.open-open.com/solution/view/1426946480648" rel="nofollow" target=_blank><span class=title>阿里面试经历及总结（数据研发、Java研发方向）</span></a>
+							</li>
+						
+							<li >
+								<a title=手机开发工程师~20w，上市公司 href="http://www.open-open.com/solution/view/1376044507157" rel="nofollow" target=_blank><span class=title>手机开发工程师~20w，上市公司</span></a>
+							</li>
+						
+							<li >
+								<a title=C++开源库，欢迎补充。 href="http://www.open-open.com/solution/view/1320990756062" rel="nofollow" target=_blank><span class=title>C++开源库，欢迎补充。</span></a>
+							</li>
+						
+							<li >
+								<a title=主流开发语言和开发环境 href="http://www.open-open.com/solution/view/1320149980530" rel="nofollow" target=_blank><span class=title>主流开发语言和开发环境</span></a>
+							</li>
+						
+							<li >
+								<a title=北京招聘多名：资深java、搜索工程师、架构师 href="http://www.open-open.com/solution/view/1368431569766" rel="nofollow" target=_blank><span class=title>北京招聘多名：资深java、搜索工程师、架构师</span></a>
+							</li>
+						
+							<li >
+								<a title=神经网络的应用领域及神经网络软件推荐 href="http://www.open-open.com/solution/view/1365672195437" rel="nofollow" target=_blank><span class=title>神经网络的应用领域及神经网络软件推荐</span></a>
+							</li>
+						
+					</ul>
+				</td>
+			</tr></table>
+		</div>
+
+	</div>
+
+</div>
+
+
+
+
+
+<style>
+	footer{background-color: #fff;
+		border-top: 1px solid rgba(230, 230, 230, 0.75);
+		margin-top: 20px;
+		padding: 20px 0;}
+</style>
+<footer>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4 col-xs-4" style="line-height: 60px;">
+				<span>&copy;2006-2016 深度开源 </span>
+			</div>
+			<div class="col-md-4 col-xs-4 text-center"><span>
+				<a rel="nofollow" href="http://www.open-open.com/" class="brightbox-logo"><img src="http://www.open-open.com/resource/logo-icon.png"  ></a>
+			</span></div>
+			<div class="col-md-4 col-xs-4"  style="line-height: 60px;">
+				 <a target="_blank" href="http://www.miibeian.gov.cn/">浙ICP备09019653号-31</a>
+				<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1257892335'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1257892335' type='text/javascript'%3E%3C/script%3E"));</script>
+			</div>
+		</div>
+	</div>
+</footer>
+
+<script src="//cdn.bootcss.com/jquery/1.12.1/jquery.min.js"></script>
+<script type="text/javascript" src="/lib/js/jquery-confirm.js"></script>
+<script type="text/javascript" src="/lib/js/app.js?1603300956"></script>
+<script type="text/javascript" src="/lib/js/scrolltopcontrol.js"></script>
+<!-- the jScrollPane script -->
+<script type="text/javascript" src="/lib/js/jquery.contentcarousel.js"></script>
+
+<script type="text/javascript">
+	var rooturl="/lib";
+	var tb_pathToImage = "/lib/images/loadingAnimation.gif";
+	var jc = {};
+	$(function (){
+		$('#ca-container').contentcarousel();
+		$('.login').on('click', function () {
+			jc = $.dialog({
+				title: '&nbsp;',
+				content: '<iframe id="dialog" scrolling="no" style="width:100%;border:none;height:300px;" src="/lib/members/login?keepThis=true&TB_iframe=true&height=177&width=280"></iframe>',
+				animation: 'top',
+				columnClass: 'col-md-5 col-md-offset-3',
+				closeAnimation: 'top',
+				backgroundDismiss: true
+			});
+		});
+		$('.register').on('click', function () {
+			jc = $.dialog({
+				title: '&nbsp;',
+				content: '<iframe id="dialog" scrolling="no" style="width:100%;border:none;height:460px;" src="/lib/members/register?keepThis=true&TB_iframe=true&height=460&width=460"></iframe>',
+				animation: 'top',
+				columnClass: 'col-md-6 col-md-offset-3',
+				closeAnimation: 'top',
+				backgroundDismiss: true
+			});
+		});
+
+
+	});
+
+
+</script>
+
+<script src="//cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/lib/js/scrolltopcontrol.js"></script>
+<script type="text/javascript" src="/lib/js/view.js?1603300911"></script>
+
+<script type="text/javascript" src="/lib/js/jquery.jgrowl_minimized.js"></script>
+
+<script type="text/javascript">
+	scrolltotop.offset(95,165);
+	scrolltotop.init();
+</script>
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();
+
+	(function(){
+		var c = new contentIndex();
+		c("article", ".articleIndex");
+		setAIActive();
+
+
+		$(window).scroll(function () {
+			if ($(window).scrollTop() > $(".aiBar").offset().top) {
+				$(".post-nav").addClass("aside-fixed");
+//          console.log($(window).scrollTop());
+			} else {
+//           console.log($(window).scrollTop());
+				$(".post-nav").removeClass("aside-fixed");
+			}
+		});
+		$("#readercontainer img").each(function(index, element) {
+			var $width=$("#readercontainer article").width();
+			if ( this.width>$width) {
+
+				this.height = this.height*$width/this.width;
+				this.width=$width;
+			}
+		});
+
+	})();
+</script>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+<script>
+	(function(){
+		var bp = document.createElement('script');
+		bp.src = '//push.zhanzhang.baidu.com/push.js';
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(bp, s);
+	})();
+</script>
+
+</body>
+</html>
