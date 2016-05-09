@@ -1,0 +1,1213 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+     
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    
+<head>   
+   
+
+    <script type="text/javascript" src="http://c.csdnimg.cn/pubfooter/js/tracking.js" charset="utf-8"></script>  
+
+    <script type="text/javascript">
+        var protocol = window.location.protocol;
+        document.write('<script type="text/javascript" src="' + protocol + '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random() + '"></' + 'script>');
+    </script>
+
+  
+ <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+
+    <title>word2vec——高效word特征求取 - Rachel Zhang的专栏
+        - 博客频道 - CSDN.NET</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="C#菜鸟做这个东东竟然花了快三天的时间了，真是菜，菜，菜～～～下面是我用C#写的 一个简单的TCP通信，主要的功能有：（1） 多个客户端与服务器间的数据交流（2）可以实现群发的功能（3）客户端与服务端可以进行文件的传输主要用到的知识： TCP里的 socket 、、、 多线程 Thread 、、、下面的是界面：下面分别是服务端和客户端的代码，如若借用，请" />
+    <script src="http://static.blog.csdn.net/scripts/jquery.js" type="text/javascript"></script>
+      <script type="text/javascript" src="http://static.blog.csdn.net/scripts/jquery-version.js"></script>
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/ad.js?v=1.1"></script>
+        <!--new top-->
+       
+        <link rel="stylesheet" href="http://c.csdnimg.cn/public/common/toolbar/css/index.css">
+        <!--new top-->
+    
+      <!-- ad begin -->
+         <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/tracking.js"></script>
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="http://static.blog.csdn.net/skin/dark1/css/style.css?v=1.1" />
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="/abcjennifer/rss/list" />
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="http://static.blog.csdn.net/scripts/SyntaxHighlighter/styles/default.css" />
+ 
+
+
+</head>
+<body>
+    <!-- 广告位开始 -->
+        <ins data-revive-zoneid="149" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="http://c.csdnimg.cn/public/common/toolbar/js/html.js" type="text/javascript"></script>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/abcjennifer">Rachel Zhang的专栏</a></h2>
+            <h3>因为理想，所以拼搏，关注计算机应用的点点滴滴……</h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>
+            
+                <li id="btnContents"><a href="http://blog.csdn.net/abcjennifer?viewmode=contents"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_mulu'])">
+                    <img src="http://static.blog.csdn.net/images/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/abcjennifer?viewmode=list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_zhaiyao'])">
+                    <img src="http://static.blog.csdn.net/images/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/abcjennifer/rss/list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])">
+                    <img src="http://static.blog.csdn.net/images/ico_rss.gif">订阅</span></a></li>                
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "abcjennifer";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/abcjennifer";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod='popu_3' > 
+
+<a href="http://edu.csdn.net/huiyiCourse/detail/111
+">
+<font color=red>【免费公开课】C语言指针与汇编内存地址
+</font></a>
+&nbsp;&nbsp;&nbsp;
+<a href="http://blog.csdn.net/blogdevteam/article/details/51198465">
+<font color=blue>有奖试读—漫话程序员面试求职、升职加薪、创业与生活</font></a>
+&nbsp;&nbsp;&nbsp;
+<a href="http://huiyi.csdn.net/activity/product/goods_list?project_id=2928">
+<font color=red>chinapub读书会第8期：程序员代码面试揭秘</font></a>
+&nbsp;&nbsp;&nbsp;
+
+
+</font></a>
+</div>                        </div>
+                        
+
+
+
+<!-- 广告位开始 -->
+<ins data-revive-zoneid="72" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+<!-- 广告位结束 -->
+
+  
+<link href="http://static.blog.csdn.net/css/comment1.css" type="text/css" rel="stylesheet" />
+<link href="http://static.blog.csdn.net/css/style1.css" type="text/css" rel="stylesheet" />
+<script language='JavaScript' type='text/javascript' src='http://download.csdn.net/js/jquery.cookie.js'></script>
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/search-service/main.js"></script>
+<link rel="stylesheet" href="http://static.blog.csdn.net/public/res-min/markdown_views.css?v=1.0" />
+<link rel="stylesheet" href="http://static.blog.csdn.net/css/category.css?v=1.0" />
+<script type="text/javascript" src="http://static.blog.csdn.net/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+
+ <script type="text/javascript" src="http://static.blog.csdn.net/scripts/web-storage-cache.min.js"></script>
+
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/web-storage-cache.min.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/replace.min.js"></script>
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+           
+            var isBole = false;
+            
+          
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/abcjennifer/article/details/46397829">
+        word2vec——高效word特征求取            
+        </a></span>
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_l">
+            <span class="link_categories">
+            标签：
+              <a href='http://www.csdn.net/tag/word2vec' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">word2vec</a><a href='http://www.csdn.net/tag/%e8%af%ad%e8%a8%80%e6%a8%a1%e5%9e%8b' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">语言模型</a><a href='http://www.csdn.net/tag/%e7%89%b9%e5%be%81%e6%8f%90%e5%8f%96' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">特征提取</a>
+            </span>
+        </div>
+        <div class="article_r">
+            <span class="link_postdate">2015-06-07 16:07</span>
+            <span class="link_view" title="阅读次数">6755人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="#comments" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(4)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle('word2vec——高效word特征求取','46397829');return false;" title="收藏">收藏</a></span>
+             <span class="link_report"> <a href="#report" onclick="javascript:report(46397829,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>
+    <div class="embody"  style="display:none" id="embody">
+        <span class="embody_t">本文章已收录于：</span>
+        <div class="embody_c" id="lib" value="{&quot;err&quot;:0,&quot;msg&quot;:&quot;ok&quot;,&quot;data&quot;:[]}"></div>
+    </div>
+    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script  type="text/javascript">
+        $(function () {
+            var lib = eval("("+$("#lib").attr("value")+")");
+            var html = "";
+            if (lib.err == 0) {
+                $.each(lib.data, function (i) {
+                    var obj = lib.data[i];
+                    //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                    html += ' <a href="' + obj.url + '" target="_blank">';
+                    html += ' <img src="' + obj.logo + '">';
+                    html += ' <em><b>' + obj.name + '</b></em>';
+                    html += ' </a>';
+                });
+                if (html != "") {
+                    setTimeout(function () {
+                        $("#lib").html(html);
+                        /*
+                        var testhtml = "";
+                        testhtml += '<a href="#">';
+                        testhtml += '<img src="http://img.knowledge.csdn.net/upload/base/1455589744328_328.jpg">';
+                        testhtml += '<em>Android知识库</em>';
+                        testhtml += '</a>';
+                        $(".embody_c").html(testhtml);
+                        */
+                        $("#embody").show();
+                    }, 100);
+                }
+            }          
+            
+        });
+    </script>
+      <div class="category clearfix">
+        <div class="category_l">
+           <img src="http://static.blog.csdn.net/images/category_icon.jpg">
+            <span>分类：</span>
+        </div>
+        <div class="category_r">
+                    <label  onclick="GetCategoryArticles('1173803','abcjennifer','top','46397829');">
+                        <span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">Machine Learning<em>（47）</em></span>
+                      <img class="arrow-down" src="http://static.blog.csdn.net/images/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="http://static.blog.csdn.net/images/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a  href="http://blog.csdn.net/abcjennifer/article/category/1173803"  target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_1173803">                            
+                            </ul>
+                        </div>
+                    </label>                    
+        </div>
+    </div>
+    <script   type="text/javascript" src="http://static.blog.csdn.net/scripts/category.js"></script>  
+        <div   class="bog_copyright">         
+            <p  class="copyright_p" >版权声明：本文为博主原创文章，未经博主允许不得转载。</p>
+        </div>
+
+  
+
+  
+  
+     
+
+<div id="article_content" class="article_content">
+        <div class="markdown_views"><p>继上次分享了<a href="http://blog.csdn.net/abcjennifer/article/details/45419591">经典统计语言模型</a>，最近公众号中有很多做NLP朋友问到了关于word2vec的相关内容， 本文就在这里整理一下做以分享。 本文分为</p>
+
+<ul>
+<li>概括word2vec </li>
+<li>相关工作</li>
+<li>模型结构 </li>
+<li>Count-based方法 vs. Directly predict</li>
+</ul>
+
+<p>几部分，暂时没有加实验章节，但其实感觉word2vec一文中实验还是做了很多工作的，希望大家有空最好还是看一下~</p>
+
+<hr>
+
+
+
+<h2 id="概括word2vec">概括word2vec</h2>
+
+<p>要解决的问题： 在神经网络中学习将word映射成连续（高维）向量， 其实就是个词语特征求取。</p>
+
+<p>特点： <br>
+1. 不同于之前的计算cooccurrence次数方法，减少计算量 <br>
+2. 高效 <br>
+3. 可以轻松将一个新句子/新词加入语料库</p>
+
+<p>主要思想：神经网络语言模型可以用两步进行训练：1. 简单模型求取word vector;  在求取特征向量时，预测每个词周围的词作为cost  2. 在word vector之上搭建N-gram NNLM，以输出词语的概率为输出进行训练。</p>
+
+<hr>
+
+
+
+<h2 id="相关工作">相关工作</h2>
+
+<p>在传统求取word的空间向量表征时， <font color="#00BFFF">LSA</font> 将词和文档映射到潜在语义空间，从而去除了原始向量空间中的一些“噪音”，但它无法保存词与词之间的linear regularities； <font color="#00BFFF">LDA</font> 是一个三层贝叶斯概率模型，包含词、主题和文档三层结构。文档到主题服从Dirichlet分布，主题到词服从多项式分布， 但是只要训练数据大了， 计算量就一下飚了。</p>
+
+<p>基于神经网络的词语向量表征方法在[Y. Bengio, R. Ducharme, P. Vincent. A neural probabilistic language model, JMLR 2003]中就有提出， 名为<font color="#00BFFF">NNLM</font>， 它是一个前向网络， 同时学习词语表征和一个统计语言模型（后面具体讲）。</p>
+
+<p>在Mikolov的硕士论文[1]和他在ICASSP 2009上发表的文章[2]中， 用一个单隐层网络训练词语表征， 然后将这个表征作为NNLM的输入进行训练。 Word2vec是训练词语表征工作的一个拓展。</p>
+
+<hr>
+
+
+
+<h2 id="模型结构">模型结构</h2>
+
+<p>首先回顾NNLM，RNNLM，然后来看Word2Vec中提出的网络——CBOW，skip-gram Model。<br><br></p>
+
+<blockquote>
+  <p>1 .   <font color="#00BFFF">NNLM</font>[3]</p>
+</blockquote>
+
+<p>NNLM的目标是在一个NN里，求第t个词的概率， 即 <br>
+</p><center> <br>
+<img src="http://img.blog.csdn.net/20150607092627801" alt="NNLM_PROB" title=""> <br>
+</center><p></p>
+
+<p>其中f是这个神经网络, 包括 input，projection， hidden和output。将其分解为两个映射：C和g，C是word到word vector的特征映射(通过一个|V|*D的映射矩阵实现)，也称作look-up table， g是以word特征为输入，输出|V|个词语概率的映射： <br>
+</p><center> <br>
+<img src="http://img.blog.csdn.net/20150607092229129" alt="这里写图片描述" title=""> <br>
+</center><p></p>
+
+<p>如下图所示： <br>
+输入： n个之前的word（其实是他们的在词库V中的index） <br>
+映射： 通过|V|*D的矩阵C映射到D维 <br>
+隐层： 映射层连接大小为H的隐层 <br>
+输出： 输出层大小为|V|，表示|V|个词语的概率</p>
+
+<p></p><center> <br>
+<img src="http://img.blog.csdn.net/20150607091714149" alt="NNLM" title=""> <br>
+</center><p></p>
+
+<p>用parameter个数度量网络复杂度， 则这个网络的复杂度为： <br>
+</p><center> <br>
+<span class="MathJax_Preview"></span><span class="MathJax" id="MathJax-Element-1-Frame" role="textbox" aria-readonly="true"><nobr><span class="math" id="MathJax-Span-1" style="width: 17.607em; display: inline-block;"><span style="display: inline-block; position: relative; width: 13.753em; height: 0px; font-size: 128%;"><span style="position: absolute; clip: rect(1.669em 1000.003em 2.711em -0.414em); top: -2.497em; left: 0.003em;"><span class="mrow" id="MathJax-Span-2"><span class="mi" id="MathJax-Span-3" style="font-family: STIXGeneral-Italic;">O</span><span class="mo" id="MathJax-Span-4" style="font-family: STIXGeneral-Regular; padding-left: 0.315em;">=</span><span class="mi" id="MathJax-Span-5" style="font-family: STIXGeneral-Italic; padding-left: 0.315em;">N<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span><span class="mo" id="MathJax-Span-6" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">∗</span><span class="mi" id="MathJax-Span-7" style="font-family: STIXGeneral-Italic; padding-left: 0.263em;">D</span><span class="mo" id="MathJax-Span-8" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">+</span><span class="mi" id="MathJax-Span-9" style="font-family: STIXGeneral-Italic; padding-left: 0.263em;">N<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span><span class="mo" id="MathJax-Span-10" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">∗</span><span class="mi" id="MathJax-Span-11" style="font-family: STIXGeneral-Italic; padding-left: 0.263em;">D</span><span class="mo" id="MathJax-Span-12" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">∗</span><span class="mi" id="MathJax-Span-13" style="font-family: STIXGeneral-Italic; padding-left: 0.263em;">H<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span><span class="mo" id="MathJax-Span-14" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">+</span><span class="mi" id="MathJax-Span-15" style="font-family: STIXGeneral-Italic; padding-left: 0.263em;">H<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span><span class="mo" id="MathJax-Span-16" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">∗</span><span class="mi" id="MathJax-Span-17" style="font-family: STIXGeneral-Italic; padding-left: 0.263em;">V<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.503em;"></span></span></span><span style="border-left-width: 0.003em; border-left-style: solid; display: inline-block; overflow: hidden; width: 0px; height: 1.07em; vertical-align: -0.13em;"></span></span></nobr></span><script type="math/tex" id="MathJax-Element-1">O = N*D + N*D*H + H*V</script> <br>
+</center> <br>
+其中复杂度最高的部分为H*V, 但通常可以通过hierarchical softmax或binary化词库编码将|V|降至<span class="MathJax_Preview"></span><span class="MathJax" id="MathJax-Element-2-Frame" role="textbox" aria-readonly="true"><nobr><span class="math" id="MathJax-Span-18" style="width: 3.076em; display: inline-block;"><span style="display: inline-block; position: relative; width: 2.398em; height: 0px; font-size: 128%;"><span style="position: absolute; clip: rect(1.669em 1000.003em 2.919em -0.414em); top: -2.497em; left: 0.003em;"><span class="mrow" id="MathJax-Span-19"><span class="mi" id="MathJax-Span-20" style="font-family: STIXGeneral-Italic;">l<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.003em;"></span></span><span class="mi" id="MathJax-Span-21" style="font-family: STIXGeneral-Italic;">o</span><span class="msubsup" id="MathJax-Span-22"><span style="display: inline-block; position: relative; width: 0.94em; height: 0px;"><span style="position: absolute; clip: rect(1.93em 1000.003em 2.867em -0.466em); top: -2.497em; left: 0.003em;"><span class="mi" id="MathJax-Span-23" style="font-family: STIXGeneral-Italic;">g</span><span style="display: inline-block; width: 0px; height: 2.503em;"></span></span><span style="position: absolute; top: -2.081em; left: 0.523em;"><span class="mn" id="MathJax-Span-24" style="font-size: 70.7%; font-family: STIXGeneral-Regular;">2</span><span style="display: inline-block; width: 0px; height: 2.346em;"></span></span></span></span><span class="mi" id="MathJax-Span-25" style="font-family: STIXGeneral-Italic;">V<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.503em;"></span></span></span><span style="border-left-width: 0.003em; border-left-style: solid; display: inline-block; overflow: hidden; width: 0px; height: 1.337em; vertical-align: -0.397em;"></span></span></nobr></span><script type="math/tex" id="MathJax-Element-2">log_2V</script>， 这样计算瓶颈就在于隐层<span class="MathJax_Preview"></span><span class="MathJax" id="MathJax-Element-3-Frame" role="textbox" aria-readonly="true"><nobr><span class="math" id="MathJax-Span-26" style="width: 5.576em; display: inline-block;"><span style="display: inline-block; position: relative; width: 4.326em; height: 0px; font-size: 128%;"><span style="position: absolute; clip: rect(1.669em 1000.003em 2.659em -0.466em); top: -2.497em; left: 0.003em;"><span class="mrow" id="MathJax-Span-27"><span class="mi" id="MathJax-Span-28" style="font-family: STIXGeneral-Italic;">N<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span><span class="mo" id="MathJax-Span-29" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">∗</span><span class="mi" id="MathJax-Span-30" style="font-family: STIXGeneral-Italic; padding-left: 0.263em;">D</span><span class="mo" id="MathJax-Span-31" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">∗</span><span class="mi" id="MathJax-Span-32" style="font-family: STIXGeneral-Italic; padding-left: 0.263em;">H<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.503em;"></span></span></span><span style="border-left-width: 0.003em; border-left-style: solid; display: inline-block; overflow: hidden; width: 0px; height: 1.003em; vertical-align: -0.063em;"></span></span></nobr></span><script type="math/tex" id="MathJax-Element-3">N*D*H</script>了。在word2vec中，为了避免隐层带来的高计算复杂度而去掉了隐层。 <br>
+<br><br><p></p>
+
+<blockquote>
+  <p>2 .   <font color="#00BFFF">RNNLM</font></p>
+</blockquote>
+
+<p>RNN在语言模型上优于其他神经网络，因为不用像上面NNLM中的输入要定死前N个词的N。（具体RNN的结构我会在下篇中讲）简单地说， RNN就是一个隐层自我相连的网络， 隐层同时接收来自t时刻输入和t-1时刻的输出作为输入， 这使得RNN具有短期记忆能力， 所以RNNLM的复杂度为： <br>
+</p><center> <br>
+<span class="MathJax_Preview"></span><span class="MathJax" id="MathJax-Element-4-Frame" role="textbox" aria-readonly="true"><nobr><span class="math" id="MathJax-Span-33" style="width: 10.68em; display: inline-block;"><span style="display: inline-block; position: relative; width: 8.336em; height: 0px; font-size: 128%;"><span style="position: absolute; clip: rect(1.669em 1000.003em 2.711em -0.414em); top: -2.497em; left: 0.003em;"><span class="mrow" id="MathJax-Span-34"><span class="mi" id="MathJax-Span-35" style="font-family: STIXGeneral-Italic;">O</span><span class="mo" id="MathJax-Span-36" style="font-family: STIXGeneral-Regular; padding-left: 0.315em;">=</span><span class="mi" id="MathJax-Span-37" style="font-family: STIXGeneral-Italic; padding-left: 0.315em;">H<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span><span class="mo" id="MathJax-Span-38" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">∗</span><span class="mi" id="MathJax-Span-39" style="font-family: STIXGeneral-Italic; padding-left: 0.263em;">H<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span><span class="mo" id="MathJax-Span-40" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">+</span><span class="mi" id="MathJax-Span-41" style="font-family: STIXGeneral-Italic; padding-left: 0.263em;">H<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span><span class="mo" id="MathJax-Span-42" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">∗</span><span class="mi" id="MathJax-Span-43" style="font-family: STIXGeneral-Italic; padding-left: 0.263em;">V<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.503em;"></span></span></span><span style="border-left-width: 0.003em; border-left-style: solid; display: inline-block; overflow: hidden; width: 0px; height: 1.07em; vertical-align: -0.13em;"></span></span></nobr></span><script type="math/tex" id="MathJax-Element-4">O = H*H + H*V</script> <br>
+</center> <br>
+同样地，其中<span class="MathJax_Preview"></span><span class="MathJax" id="MathJax-Element-5-Frame" role="textbox" aria-readonly="true"><nobr><span class="math" id="MathJax-Span-44" style="width: 3.232em; display: inline-block;"><span style="display: inline-block; position: relative; width: 2.503em; height: 0px; font-size: 128%;"><span style="position: absolute; clip: rect(1.669em 1000.003em 2.659em -0.466em); top: -2.497em; left: 0.003em;"><span class="mrow" id="MathJax-Span-45"><span class="mi" id="MathJax-Span-46" style="font-family: STIXGeneral-Italic;">H<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span><span class="mo" id="MathJax-Span-47" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">∗</span><span class="mi" id="MathJax-Span-48" style="font-family: STIXGeneral-Italic; padding-left: 0.263em;">V<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.503em;"></span></span></span><span style="border-left-width: 0.003em; border-left-style: solid; display: inline-block; overflow: hidden; width: 0px; height: 1.003em; vertical-align: -0.063em;"></span></span></nobr></span><script type="math/tex" id="MathJax-Element-5">H*V</script>也可以降至<span class="MathJax_Preview"></span><span class="MathJax" id="MathJax-Element-6-Frame" role="textbox" aria-readonly="true"><nobr><span class="math" id="MathJax-Span-49" style="width: 3.076em; display: inline-block;"><span style="display: inline-block; position: relative; width: 2.398em; height: 0px; font-size: 128%;"><span style="position: absolute; clip: rect(1.669em 1000.003em 2.919em -0.414em); top: -2.497em; left: 0.003em;"><span class="mrow" id="MathJax-Span-50"><span class="mi" id="MathJax-Span-51" style="font-family: STIXGeneral-Italic;">l<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.003em;"></span></span><span class="mi" id="MathJax-Span-52" style="font-family: STIXGeneral-Italic;">o</span><span class="msubsup" id="MathJax-Span-53"><span style="display: inline-block; position: relative; width: 0.94em; height: 0px;"><span style="position: absolute; clip: rect(1.93em 1000.003em 2.867em -0.466em); top: -2.497em; left: 0.003em;"><span class="mi" id="MathJax-Span-54" style="font-family: STIXGeneral-Italic;">g</span><span style="display: inline-block; width: 0px; height: 2.503em;"></span></span><span style="position: absolute; top: -2.081em; left: 0.523em;"><span class="mn" id="MathJax-Span-55" style="font-size: 70.7%; font-family: STIXGeneral-Regular;">2</span><span style="display: inline-block; width: 0px; height: 2.346em;"></span></span></span></span><span class="mi" id="MathJax-Span-56" style="font-family: STIXGeneral-Italic;">V<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.503em;"></span></span></span><span style="border-left-width: 0.003em; border-left-style: solid; display: inline-block; overflow: hidden; width: 0px; height: 1.337em; vertical-align: -0.397em;"></span></span></nobr></span><script type="math/tex" id="MathJax-Element-6">log_2V</script>， 瓶颈就在于<span class="MathJax_Preview"></span><span class="MathJax" id="MathJax-Element-7-Frame" role="textbox" aria-readonly="true"><nobr><span class="math" id="MathJax-Span-57" style="width: 3.336em; display: inline-block;"><span style="display: inline-block; position: relative; width: 2.607em; height: 0px; font-size: 128%;"><span style="position: absolute; clip: rect(1.669em 1000.003em 2.659em -0.466em); top: -2.497em; left: 0.003em;"><span class="mrow" id="MathJax-Span-58"><span class="mi" id="MathJax-Span-59" style="font-family: STIXGeneral-Italic;">H<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span><span class="mo" id="MathJax-Span-60" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">∗</span><span class="mi" id="MathJax-Span-61" style="font-family: STIXGeneral-Italic; padding-left: 0.263em;">H<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.503em;"></span></span></span><span style="border-left-width: 0.003em; border-left-style: solid; display: inline-block; overflow: hidden; width: 0px; height: 1.003em; vertical-align: -0.063em;"></span></span></nobr></span><script type="math/tex" id="MathJax-Element-7">H*H</script>了。<p></p>
+
+<p><font color="#AF3AFA">由于复杂度最大的部分都在hidden layer, 而且我们的中级目标是提特征（而不是生成语言模型），文中就想能不能牺牲hidden layer的非线性部分， 从而高效训练。 这也是Word2vec中速度提升最多的部分。 </font><font color="#3ECEFF">这也就是一个Log linear model。</font>所以本质上， word2vec并不是一个深度模型。文中提出了两种log linear model，如下面所述。 <br>
+<br><br></p>
+
+<blockquote>
+  <p>3 .  Proposed Method 1 - <font color="#00BFFF">Continuous Bag-of-Words(CBOW) Model</font></p>
+</blockquote>
+
+<p>CBOW的网络结构和NNLM类似，变化：</p>
+
+<ol>
+<li>CBOW去掉了NNLM的非线性部分</li>
+<li>CBOW不考虑word之间的先后顺序， 一起放进bag，也就是在上面NNLM的projection层将映射后的结果求和/求平均（而非按照先后顺序连接起来）</li>
+<li>输入不止用了历史词语，还用了未来词语。 即， 用t-n+1…t-1,t+1,…t+n-1的word作为输入，目标是正确分类得到第t个word。 <br>
+PS: 实验中得到的best n=4</li>
+</ol>
+
+<p>CBOW的复杂度为： <br>
+</p><center> <br>
+<span class="MathJax_Preview"></span><span class="MathJax" id="MathJax-Element-8-Frame" role="textbox" aria-readonly="true"><nobr><span class="math" id="MathJax-Span-62" style="width: 12.711em; display: inline-block;"><span style="display: inline-block; position: relative; width: 9.898em; height: 0px; font-size: 128%;"><span style="position: absolute; clip: rect(1.669em 1000.003em 2.919em -0.414em); top: -2.497em; left: 0.003em;"><span class="mrow" id="MathJax-Span-63"><span class="mi" id="MathJax-Span-64" style="font-family: STIXGeneral-Italic;">O</span><span class="mo" id="MathJax-Span-65" style="font-family: STIXGeneral-Regular; padding-left: 0.315em;">=</span><span class="mi" id="MathJax-Span-66" style="font-family: STIXGeneral-Italic; padding-left: 0.315em;">N<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span><span class="mo" id="MathJax-Span-67" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">∗</span><span class="mi" id="MathJax-Span-68" style="font-family: STIXGeneral-Italic; padding-left: 0.263em;">D</span><span class="mo" id="MathJax-Span-69" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">+</span><span class="mi" id="MathJax-Span-70" style="font-family: STIXGeneral-Italic; padding-left: 0.263em;">D</span><span class="mo" id="MathJax-Span-71" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">∗</span><span class="mi" id="MathJax-Span-72" style="font-family: STIXGeneral-Italic; padding-left: 0.263em;">l<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.003em;"></span></span><span class="mi" id="MathJax-Span-73" style="font-family: STIXGeneral-Italic;">o</span><span class="msubsup" id="MathJax-Span-74"><span style="display: inline-block; position: relative; width: 0.94em; height: 0px;"><span style="position: absolute; clip: rect(1.93em 1000.003em 2.867em -0.466em); top: -2.497em; left: 0.003em;"><span class="mi" id="MathJax-Span-75" style="font-family: STIXGeneral-Italic;">g</span><span style="display: inline-block; width: 0px; height: 2.503em;"></span></span><span style="position: absolute; top: -2.081em; left: 0.523em;"><span class="mn" id="MathJax-Span-76" style="font-size: 70.7%; font-family: STIXGeneral-Regular;">2</span><span style="display: inline-block; width: 0px; height: 2.346em;"></span></span></span></span><span class="mi" id="MathJax-Span-77" style="font-family: STIXGeneral-Italic;">V<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.503em;"></span></span></span><span style="border-left-width: 0.003em; border-left-style: solid; display: inline-block; overflow: hidden; width: 0px; height: 1.337em; vertical-align: -0.397em;"></span></span></nobr></span><script type="math/tex" id="MathJax-Element-8">O = N*D + D*log_2V</script> <br>
+</center><p></p>
+
+<p>CBOW结构图： <br>
+</p><center> <br>
+<img src="http://img.blog.csdn.net/20150607105553165" alt="CBOW" title=""> <br>
+</center> <br>
+<br><br><p></p>
+
+<blockquote>
+  <p>3 .  Proposed Method 2 - <font color="#00BFFF">Continuous Skip-gram Model</font></p>
+</blockquote>
+
+<p>与CBOW相反，Continuous Skip-gram Model不利用上下文。 其输入为当前word，经过projection的特征提取去预测该word周围的c个词，其cost function为： <br>
+</p><center> <br>
+<img src="http://img.blog.csdn.net/20150607152122337" alt="cost_function_of_Skip-gram" title=""> <br>
+</center><p></p>
+
+<p>如下图所示。这里c增大有利于模型的完备性， 但过大的c可能造成很多无关词语相关联， 因此用随机采样方法，远的词少采， 近的多采。</p>
+
+<p></p><center> <br>
+<img src="http://img.blog.csdn.net/20150607113723787" alt="CSGM" title=""> <br>
+</center><p></p>
+
+<p>比如定义最大周围距离为C，则对于每个词w(t)，就选择距离为R=range(1,C)， 选前后各R个词作为预测结果。 <br>
+所以，Continuous Skip-gram Model的复杂度为： <br>
+</p><center> <br>
+<span class="MathJax_Preview"></span><span class="MathJax" id="MathJax-Element-9-Frame" role="textbox" aria-readonly="true"><nobr><span class="math" id="MathJax-Span-78" style="width: 14.169em; display: inline-block;"><span style="display: inline-block; position: relative; width: 11.044em; height: 0px; font-size: 128%;"><span style="position: absolute; clip: rect(1.669em 1000.003em 2.919em -0.414em); top: -2.497em; left: 0.003em;"><span class="mrow" id="MathJax-Span-79"><span class="mi" id="MathJax-Span-80" style="font-family: STIXGeneral-Italic;">O</span><span class="mo" id="MathJax-Span-81" style="font-family: STIXGeneral-Regular; padding-left: 0.315em;">=</span><span class="mn" id="MathJax-Span-82" style="font-family: STIXGeneral-Regular; padding-left: 0.315em;">2</span><span class="mi" id="MathJax-Span-83" style="font-family: STIXGeneral-Italic;">C<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.003em;"></span></span><span class="mo" id="MathJax-Span-84" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">∗</span><span class="mo" id="MathJax-Span-85" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">(</span><span class="mi" id="MathJax-Span-86" style="font-family: STIXGeneral-Italic;">D</span><span class="mo" id="MathJax-Span-87" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">+</span><span class="mi" id="MathJax-Span-88" style="font-family: STIXGeneral-Italic; padding-left: 0.263em;">D</span><span class="mo" id="MathJax-Span-89" style="font-family: STIXGeneral-Regular; padding-left: 0.263em;">∗</span><span class="mi" id="MathJax-Span-90" style="font-family: STIXGeneral-Italic; padding-left: 0.263em;">l<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.003em;"></span></span><span class="mi" id="MathJax-Span-91" style="font-family: STIXGeneral-Italic;">o</span><span class="msubsup" id="MathJax-Span-92"><span style="display: inline-block; position: relative; width: 0.94em; height: 0px;"><span style="position: absolute; clip: rect(1.93em 1000.003em 2.867em -0.466em); top: -2.497em; left: 0.003em;"><span class="mi" id="MathJax-Span-93" style="font-family: STIXGeneral-Italic;">g</span><span style="display: inline-block; width: 0px; height: 2.503em;"></span></span><span style="position: absolute; top: -2.081em; left: 0.523em;"><span class="mn" id="MathJax-Span-94" style="font-size: 70.7%; font-family: STIXGeneral-Regular;">2</span><span style="display: inline-block; width: 0px; height: 2.346em;"></span></span></span></span><span class="mi" id="MathJax-Span-95" style="font-family: STIXGeneral-Italic;">V<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.055em;"></span></span><span class="mo" id="MathJax-Span-96" style="font-family: STIXGeneral-Regular;">)</span></span><span style="display: inline-block; width: 0px; height: 2.503em;"></span></span></span><span style="border-left-width: 0.003em; border-left-style: solid; display: inline-block; overflow: hidden; width: 0px; height: 1.337em; vertical-align: -0.397em;"></span></span></nobr></span><script type="math/tex" id="MathJax-Element-9">O = 2C*(D + D*log_2V)</script> <br>
+</center><p></p>
+
+<p><br> <br>
+具体来说，最简单的情况下， <span class="MathJax_Preview"></span><span class="MathJax" id="MathJax-Element-10-Frame" role="textbox" aria-readonly="true"><nobr><span class="math" id="MathJax-Span-97" style="width: 5.211em; display: inline-block;"><span style="display: inline-block; position: relative; width: 4.065em; height: 0px; font-size: 128%;"><span style="position: absolute; clip: rect(1.669em 1000.003em 2.971em -0.466em); top: -2.497em; left: 0.003em;"><span class="mrow" id="MathJax-Span-98"><span class="mi" id="MathJax-Span-99" style="font-family: STIXGeneral-Italic;">P</span><span class="mo" id="MathJax-Span-100" style="font-family: STIXGeneral-Regular;">(</span><span class="msubsup" id="MathJax-Span-101"><span style="display: inline-block; position: relative; width: 1.617em; height: 0px;"><span style="position: absolute; clip: rect(1.93em 1000.003em 2.659em -0.466em); top: -2.497em; left: 0.003em;"><span class="mi" id="MathJax-Span-102" style="font-family: STIXGeneral-Italic;">w</span><span style="display: inline-block; width: 0px; height: 2.503em;"></span></span><span style="position: absolute; top: -2.185em; left: 0.68em;"><span class="texatom" id="MathJax-Span-103"><span class="mrow" id="MathJax-Span-104"><span class="mi" id="MathJax-Span-105" style="font-size: 70.7%; font-family: STIXGeneral-Italic;">t<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.003em;"></span></span><span class="mo" id="MathJax-Span-106" style="font-size: 70.7%; font-family: STIXGeneral-Regular;">+</span><span class="mi" id="MathJax-Span-107" style="font-size: 70.7%; font-family: STIXGeneral-Italic;">j<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.003em;"></span></span></span></span><span style="display: inline-block; width: 0px; height: 2.346em;"></span></span></span></span><span class="texatom" id="MathJax-Span-108"><span class="mrow" id="MathJax-Span-109"><span class="mo" id="MathJax-Span-110" style="font-family: STIXGeneral-Regular;">|</span></span></span><span class="msubsup" id="MathJax-Span-111"><span style="display: inline-block; position: relative; width: 0.94em; height: 0px;"><span style="position: absolute; clip: rect(1.93em 1000.003em 2.659em -0.466em); top: -2.497em; left: 0.003em;"><span class="mi" id="MathJax-Span-112" style="font-family: STIXGeneral-Italic;">w</span><span style="display: inline-block; width: 0px; height: 2.503em;"></span></span><span style="position: absolute; top: -2.185em; left: 0.68em;"><span class="mi" id="MathJax-Span-113" style="font-size: 70.7%; font-family: STIXGeneral-Italic;">t<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.003em;"></span></span><span style="display: inline-block; width: 0px; height: 2.346em;"></span></span></span></span><span class="mo" id="MathJax-Span-114" style="font-family: STIXGeneral-Regular;">)</span></span><span style="display: inline-block; width: 0px; height: 2.503em;"></span></span></span><span style="border-left-width: 0.003em; border-left-style: solid; display: inline-block; overflow: hidden; width: 0px; height: 1.403em; vertical-align: -0.463em;"></span></span></nobr></span><script type="math/tex" id="MathJax-Element-10">P(w_{t+j}|w_t)</script>的表达式可以为： <br>
+</p><center> <br>
+<img src="http://img.blog.csdn.net/20150607152609433" alt="details" title=""> <br>
+</center> <br>
+其中v和v’分别为输入和输出中的word特征向量。所以说， word2vec方法本质上是一个动态的逻辑回归。<p></p>
+
+<hr>
+
+
+
+<h2 id="count-based方法-vs-directly-predict">Count-based方法 vs. Directly predict</h2>
+
+<p>最后我们看一下之前我们讲过的几个<a href="http://blog.csdn.net/abcjennifer/article/details/45419591">基于统计的传统语言模型</a>与word2vec这种直接预测的方法的比较：</p>
+
+<p></p><center> <br>
+<img src="http://img.blog.csdn.net/20150607153539973" alt="cb vs dp" title=""> <br>
+</center> <br>
+图片摘自Stanford CS244。<p></p>
+
+<hr>
+
+<p>参考文献：</p>
+
+<ol>
+<li>NNLM: Y. Bengio, R. Ducharme, P. Vincent. A neural probabilistic language model, JMLR 2003</li>
+<li>类似工作：T. Mikolov. Language Modeling for Speech Recognition in Czech, Masters thesis</li>
+<li>类似工作：T. Mikolov, J. Kopecky´, L. Burget, O. Glembek and J. Cˇ ernocky´. Neural network based language models for higly inflective languages, In: Proc. ICASSP 2009.]</li>
+<li>类似工作：Pennington J, Socher R, Manning C D. Glove: Global vectors for word representation[J]. Proceedings of the Empiricial Methods in Natural Language Processing (EMNLP 2014), 2014, 12.</li>
+</ol></div>
+        <script  type="text/javascript">
+            $(function () {
+                $('pre.prettyprint code').each(function () {
+                    var lines = $(this).text().split('\n').length;
+                    var $numbering = $('<ul/>').addClass('pre-numbering').hide();
+                    $(this).addClass('has-numbering').parent().append($numbering);
+                    for (i = 1; i <= lines; i++) {
+                        $numbering.append($('<li/>').text(i));
+                    };
+                    $numbering.fadeIn(1700);
+                });
+            });
+        </script>
+   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad" style="float: right;" data-mod="popu_172">
+<a href="#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important"></a>
+<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"  style="background-position:0 -52px !important"></a>
+<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"style="background-position:0 -104px !important"></a>
+<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"style="background-position:0 -260px !important"></a>
+<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"style="background-position:0 -208px !important"></a>
+<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"style="background-position:0 -1612px !important" ></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_detail.css" />
+
+    
+<!--172.16.140.14-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+ 
+
+        <div id="digg" ArticleId="46397829">
+            <dl id="btnDigg" class="digg digg_disable">
+               
+                 <dt>顶</dt>
+                <dd>3</dd>
+            </dl>
+            <dl id="btnBury" class="digg digg_disable">
+              
+                  <dt>踩</dt>
+                <dd>1</dd>
+            </dl>
+        </div>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span  onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian']);location.href='/abcjennifer/article/details/46390309';">上一篇</span><a href="/abcjennifer/article/details/46390309" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian'])">Makefile 速成</a></li>
+                <li class="next_article"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian']);location.href='/abcjennifer/article/details/46424949';">下一篇</span><a href="/abcjennifer/article/details/46424949" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian'])">Caffe —— Deep learning in Practice</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+        <div class="similar_article"  style="display:none">
+                <h4>我的同类文章</h4>
+                <div class="similar_c"style="margin:20px 0px 0px 0px">
+                    <div class="similar_c_t">
+                                <label class="similar_cur">
+                                    <span  style="cursor:pointer"  onclick="GetCategoryArticles('1173803','abcjennifer','foot','46397829');">Machine Learning<em>（47）</em></span>
+                                </label>
+                    </div>
+                   
+                    <div class="similar_wrap tracking-ad" data-mod="popu_141"  style="max-height:195px;">
+                        <a href="http://blog.csdn.net" style="display:none">http://blog.csdn.net</a>
+                        <ul class="similar_list fl">                          
+                        </ul>
+
+                        <ul class="similar_list fr">                           
+                        </ul>
+                    </div>
+                </div>
+            </div>    
+    <script  type="text/javascript">
+        $(function () {
+            GetCategoryArticles('1173803', 'abcjennifer','foot','46397829');
+        });
+    </script>
+      
+</div>
+<div id="suggest"></div>
+         <script  language="javascript" type='text/javascript'>     
+             $(function(){
+                 $.get("/abcjennifer/svc/GetSuggestContent/46397829",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+
+<style>
+.blog-ass-articl dd {
+color: #369;
+width: 99%; /*修改行*/
+float: left;
+overflow: hidden;
+font: normal normal 12px/23px "SimSun";
+height: 23px;
+margin: 0;
+padding: 0 0 0 10px;
+margin-right: 30px;
+background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;
+}
+</style>
+
+ <link rel="stylesheet" href="http://static.blog.csdn.net/css/replace.css"/>
+
+<div id="relate" data-mod="popu_218"  class="tracking-ad">
+        <div class="relate_t">
+            <h3><span>参考知识库</span></h3>
+        </div>
+        <div class="relate_c">
+        </div>
+</div>
+ 
+
+<dl class="blog-ass-articl" id="res-relatived" > 
+    <div class="embody embody_b" id="libkeyparent"  style="display:none">
+            <span class="embody_t">更多资料请参考：</span>
+            <div class="embody_c" id="libkey"></div>
+    </div>
+
+
+     <dt><span>猜你在找</span></dt>    
+
+
+   
+
+
+    <div id="adCollege" style="width: 42%;float: left;"> 
+        <script src="http://csdnimg.cn/jobreco/job_reco.js" type="text/javascript"></script> 
+        <script type="text/javascript">
+            csdn.position.showEdu({
+                sourceType: "blog",
+                searchType: "detail",
+                searchKey: "46397829",
+                username: "",
+                recordcount: "5",
+                containerId: "adCollege" //容器DIV的id。 
+            });
+        </script> 
+    </div>  
+
+    
+     <div id="res"  data-mod="popu_36"  class="tracking-ad" style="width: 42%;float: left;margin-right: 30px;"></div>
+   
+</dl>
+
+
+<script type="text/javascript">
+    $(function () {
+        setTimeout(function () {
+            var searchtitletags = 'word2vec——高效word特征求取' + ',' + $("#tags").html();
+            searchService({
+                index: 'blog',
+                query: searchtitletags,
+                from: 5,
+                size: 5,
+                appendTo: '#res',
+                url: 'recommend',
+                his: 2,
+                client: "blog_cf_enhance",
+                tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+            });
+        }, 500);
+    });    
+
+ </script>  
+
+    <div id="ad_cen">        
+<!-- 广告位开始 -->
+<ins data-revive-zoneid="71" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57"></ins>
+<!-- 广告位结束 -->    </div>  
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list">
+    </div>
+    <div id="comment_bar">
+    </div>
+    <div id="comment_form">
+    </div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '46397829';
+    var commentscount = 4;
+    var islock = false
+</script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/comment.js"></script>
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top"  style="bottom:60px;">
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="http://static.blog.csdn.net/images/blog-icon-reply.png" alt="快速回复">
+        </a>    
+
+    <a id="d-top-a" class="btn btn-top backtop"  style="display: none;" title="返回顶部" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_huidaodingbu'])" style="">         
+         <img src="http://static.blog.csdn.net/images/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+<div class="tag_list" style="display:none"></div>
+  <script  language="javascript" type='text/javascript'>     
+      $(function(){
+              setTimeout(function(){
+                  $.get("/abcjennifer/svc/GetTagContent",function(data){
+                      $(".tag_list").html(data).show();
+                  });     
+              });
+          },500);                       
+ </script> 
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+</script>
+ <script language="javascript" type="text/javascript" src="http://ads.csdn.net/js/async_new.js"></script>      
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/abcjennifer" target="_blank">
+    <img src="http://avatar.csdn.net/1/A/0/1_abcjennifer.jpg" title="访问我的空间" style="max-width:90%"/>
+    </a>
+    <br />
+    <span><a href="http://my.csdn.net/abcjennifer" class="user_name" target="_blank">abcjennifer</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter"  title="[发私信]" onclick="window.open('http://msg.csdn.net/letters/model?receiver=abcjennifer','_blank','height=350,width=700');_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_sixin'])"></a>  
+</div>
+<div id="blog_medal">
+                       <div class="ico_expert"  onclick="javascript:location='http://blog.csdn.net/experts/rule.html'" title="CSDN认证专家" style="cursor:pointer;width:60px;height:60px;background:url('http://c.csdnimg.cn/jifen/images/xunzhang/xunzhang/bokezhuanjiamiddle.png') no-repeat" ></div>
+                <div id="bms_box">
+                                            <a  target="_blank">
+                                                    <img src="http://c.csdnimg.cn/jifen/images/xunzhang/xunzhang/bokezhixing.png" onmouseover="m_over_m(this,6)" onmouseout="m_out_m()" alt="1" >
+                                            </a>
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>4935382次</span></li>
+    <li>积分：<span>43074</span> </li>    
+    <li >等级： <span style="position:relative;display:inline-block;z-index:1" >
+            <img src="http://c.csdnimg.cn/jifen/images/xunzhang/jianzhang/blog8.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：43074 </div>
+        </span>  </li>
+    <li>排名：<span>第50名</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>482篇</span></li>
+    <li>转载：<span>36篇</span></li>
+    <li>译文：<span>1篇</span></li>
+    <li>评论：<span>4235条</span></li>
+</ul>
+</ul>
+</div>
+
+
+
+
+<div id="custom_column_21190029" class="panel">
+<ul class="panel_head"><span>博主描述</span></ul>
+<ul class="panel_body">
+<span style="font-family:'Microsoft YaHei'; font-size:14px; line-height:25px">百度深度学习实验室RD，关注计算机视觉，机器学习，算法研究，人工智能， 移动互联网等学科和产业，希望结识更多同道中人。<br>
+新浪微博：<a href="http://weibo.com/u/2607574543">Rachel____Zhang</a></span><br>
+<!--公众号：<img src="http://img.blog.csdn.net/20150518182205589" width="100px" height="100px">-->
+</ul>
+</div><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="/abcjennifer/article/category/673289" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">ACM</a><span>(149)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/1181433" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Compression</a><span>(16)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/673294" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">杂感</a><span>(45)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/673296" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C/C++</a><span>(133)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/680229" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Computer System</a><span>(32)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/1226975" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Data Mining</a><span>(26)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/1148648" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Linux &amp; MAC</a><span>(20)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/839329" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Computer Vision</a><span>(102)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/1173803" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Machine Learning</a><span>(48)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/673290" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">MFC</a><span>(42)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/1177397" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">MATLAB</a><span>(16)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/673291" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C#</a><span>(34)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/673293" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">ASP.NET</a><span>(8)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/1205981" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Python</a><span>(25)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/1346118" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Computer Graphics</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/673295" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">DIV+CSS</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/688494" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">DataBase</a><span>(12)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/673292" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Java</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/673654" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">English</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/684348" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Data Structure</a><span>(75)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/2875349" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C/C</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/5679487" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">php</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/5679491" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">shell</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/5679493" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">lua</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/abcjennifer/article/category/5900995" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">swig</a><span>(1)</span>
+                </li>
+</ul>
+</div><div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="/abcjennifer/article/details/7826917" title="机器学习——深度学习(Deep Learning)">机器学习——深度学习(Deep Learning)</a><span>(226569)</span>
+</li>
+<li>
+<a href="/abcjennifer/article/details/7639681" title="SIFT特征提取分析">SIFT特征提取分析</a><span>(221129)</span>
+</li>
+<li>
+<a href="/abcjennifer/article/details/7716281" title="Stanford机器学习---第三讲. 逻辑回归和过拟合问题的解决 logistic Regression &amp; Regularization">Stanford机器学习---第三讲. 逻辑回归和过拟合问题的解决 logistic Regression &amp; Regularization</a><span>(111083)</span>
+</li>
+<li>
+<a href="/abcjennifer/article/details/7721834" title="初识压缩感知Compressive Sensing">初识压缩感知Compressive Sensing</a><span>(95791)</span>
+</li>
+<li>
+<a href="/abcjennifer/article/details/7684836" title="Matlab 线性拟合 &amp; 非线性拟合">Matlab 线性拟合 &amp; 非线性拟合</a><span>(95268)</span>
+</li>
+<li>
+<a href="/abcjennifer/article/details/7370177" title="LibSVM 在matlab中的使用">LibSVM 在matlab中的使用</a><span>(72660)</span>
+</li>
+<li>
+<a href="/abcjennifer/article/details/7748833" title="压缩感知进阶——有关稀疏矩阵">压缩感知进阶——有关稀疏矩阵</a><span>(72323)</span>
+</li>
+<li>
+<a href="/abcjennifer/article/details/8198352" title="GMM的EM算法实现">GMM的EM算法实现</a><span>(60361)</span>
+</li>
+<li>
+<a href="/abcjennifer/article/details/7365651" title="HOG特征-理解篇">HOG特征-理解篇</a><span>(59951)</span>
+</li>
+<li>
+<a href="/abcjennifer/article/details/8170687" title="聚类算法K-Means, K-Medoids, GMM, Spectral clustering，Ncut">聚类算法K-Means, K-Medoids, GMM, Spectral clustering，Ncut</a><span>(53847)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="/abcjennifer/article/details/7639681" title="SIFT特征提取分析">SIFT特征提取分析</a><span>(226)</span>
+</li>
+<li>
+<a href="/abcjennifer/article/details/7721834" title="初识压缩感知Compressive Sensing">初识压缩感知Compressive Sensing</a><span>(102)</span>
+</li>
+<li>
+<a href="/abcjennifer/article/details/7829613" title="一首诗，致亲爱的csdn">一首诗，致亲爱的csdn</a><span>(90)</span>
+</li>
+<li>
+<a href="/abcjennifer/article/details/7826917" title="机器学习——深度学习(Deep Learning)">机器学习——深度学习(Deep Learning)</a><span>(88)</span>
+</li>
+<li>
+<a href="/abcjennifer/article/details/7716281" title="Stanford机器学习---第三讲. 逻辑回归和过拟合问题的解决 logistic Regression &amp; Regularization">Stanford机器学习---第三讲. 逻辑回归和过拟合问题的解决 logistic Regression &amp; Regularization</a><span>(84)</span>
+</li>
+<li>
+<a href="/abcjennifer/article/details/7748833" title="压缩感知进阶——有关稀疏矩阵">压缩感知进阶——有关稀疏矩阵</a><span>(81)</span>
+</li>
+<li>
+<a href="/abcjennifer/article/details/7849812" title="Stanford机器学习---第八讲. 支持向量机SVM">Stanford机器学习---第八讲. 支持向量机SVM</a><span>(81)</span>
+</li>
+<li>
+<a href="/abcjennifer/article/details/8455488" title="2012年度总结">2012年度总结</a><span>(76)</span>
+</li>
+<li>
+<a href="/abcjennifer/article/details/20446077" title="opencv 人脸识别 （二）训练和识别">opencv 人脸识别 （二）训练和识别</a><span>(71)</span>
+</li>
+<li>
+<a href="/abcjennifer/article/details/7775284" title="“压缩感知” 之 “Hello World”">“压缩感知” 之 “Hello World”</a><span>(69)</span>
+</li>
+</ul>
+</div>
+<div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="/abcjennifer/article/details/7339312#comments">OPENCV中 RGB 转换到 HSI空间</a>
+    <p style="margin:0px;"><a href="/zhh_panan" class="user_name">zhh_panan</a>:
+大神，没有H分量的
+    </p>
+    </li>
+    <li>
+   
+         <a href="/abcjennifer/article/details/49374307#comments">python 调用 C++ code</a>
+    <p style="margin:0px;"><a href="/ZHAIXINGZHAIYUE" class="user_name">ZHAIXINGZHAIYUE</a>:
+你好，rachel.i中的%使用来注释用的吗？
+    </p>
+    </li>
+    <li>
+   
+         <a href="/abcjennifer/article/details/7748833#comments">压缩感知进阶——有关稀疏矩阵</a>
+    <p style="margin:0px;"><a href="/oHuanYing12345" class="user_name">oHuanYing12345</a>:
+为什么压缩感知重构的过程是求解欠定方程的最稀疏解？文中说有证明，可是我没有找到啊，一直理解不了这个问...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/abcjennifer/article/details/7748833#comments">压缩感知进阶——有关稀疏矩阵</a>
+    <p style="margin:0px;"><a href="/oHuanYing12345" class="user_name">oHuanYing12345</a>:
+为什么压缩感知重构的过程是求解欠定方程的最稀疏解？文中说有证明，可是我没有找到啊，一直理解不了这个问...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/abcjennifer/article/details/50530921#comments">_PyUnicodeUCS4_AsDefaultEncodedString</a>
+    <p style="margin:0px;"><a href="/kkk584520" class="user_name">kkk584520</a>:
+被坑过。系统自带 Python 和本地编译 Python 用了不同的编译选项。
+    </p>
+    </li>
+    <li>
+   
+         <a href="/abcjennifer/article/details/6667424#comments">matlab进阶摸索篇——彩色图求直方图</a>
+    <p style="margin:0px;"><a href="/qiuqiumissking" class="user_name">qiuqiumissking</a>:
+我想请问三个分量怎么合并呢，有什么比例吗
+    </p>
+    </li>
+    <li>
+   
+         <a href="/abcjennifer/article/details/51232645#comments">12 papers to understand QA system with Deep Learning</a>
+    <p style="margin:0px;"><a href="/hetianwen20" class="user_name">hetianwen20</a>:
+同样看过了提到的一些文章了，总结的挺好的；想做一个有记忆的QA，关键是能更好的分析语义和意图，不知道...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/abcjennifer/article/details/50514124#comments">Residual Networks &lt;2015 ICCV, ImageNet 图像分类Top1&gt;</a>
+    <p style="margin:0px;"><a href="/houqiqi" class="user_name">houqiqi</a>:
+计算量比vgg还低的主要原因是第一层用了7*7的kernel生成了更小的feature map，并不...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/abcjennifer/article/details/7365882#comments">SIFT特征提取-应用篇</a>
+    <p style="margin:0px;"><a href="/qq_33366650" class="user_name">qq_33366650</a>:
+您好，请问下载地址中的demo中关键点查找的程序有源码吗？
+    </p>
+    </li>
+    <li>
+   
+         <a href="/abcjennifer/article/details/20905311#comments">Decision Tree 及实现</a>
+    <p style="margin:0px;"><a href="/zhenghaor10" class="user_name">zhenghaor10</a>:
+感觉lz就是抄《机器学习实战》这本书的，自己有没有真的搞明白呢？
+    </p>
+    </li>
+</ul>
+</div>
+
+
+<div id="custom_column_21907571" class="panel">
+<ul class="panel_head"><span>博客推荐</span></ul>
+<ul class="panel_body">
+<p><a href="http://blog.csdn.net/v_JULY_v" target="_blank"><span style="font-size:14px; font-family:'Microsoft YaHei';">研究者July</span></a></p>
+
+<p><a href="http://www.cad.zju.edu.cn/home/dengcai/Data/data.html" target="_blank"><span style="font-size:14px; font-family:'Microsoft YaHei';">CAD Feature Learning</span></a></p>
+
+<p><a href="http://scikit-learn.org/stable/user_guide.html" target="_blank"><span style="font-size:14px; font-family:'Microsoft YaHei';">Scikit guide</span></a></p>
+
+<p><a href="http://web.mit.edu/emeyers/www/face_databases.html" target="_blank"><span style="font-size:14px; font-family:'Microsoft YaHei';">Face Datasets</span></a></p>
+
+<p><a href="http://archive.ics.uci.edu/ml/" target="_blank"><span style="font-size:14px; font-family:'Microsoft YaHei';">UCI Dataset</span></a></p>
+
+<p><a href="http://www.mathworks.cn/products/statistics/code-examples.html?s_tid=brdcrb" target="_blank"><span style="font-size:14px; font-family:'Microsoft YaHei';">MATLAB Statistics Demo</span></a></p>
+</ul>
+</div><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list">
+<!--归档统计-->
+<li><a href="/abcjennifer/article/month/2016/04">2016年04月</a><span>(1)</span></li><li><a href="/abcjennifer/article/month/2016/02">2016年02月</a><span>(1)</span></li><li><a href="/abcjennifer/article/month/2016/01">2016年01月</a><span>(1)</span></li><li><a href="/abcjennifer/article/month/2015/10">2015年10月</a><span>(4)</span></li><li><a href="/abcjennifer/article/month/2015/09">2015年09月</a><span>(3)</span></li><li><a href="/abcjennifer/article/month/2015/08">2015年08月</a><span>(1)</span></li><li><a href="/abcjennifer/article/month/2015/07">2015年07月</a><span>(7)</span></li><li><a href="/abcjennifer/article/month/2015/06">2015年06月</a><span>(7)</span></li><li><a href="/abcjennifer/article/month/2015/05">2015年05月</a><span>(2)</span></li><li><a href="/abcjennifer/article/month/2015/04">2015年04月</a><span>(1)</span></li><li><a href="/abcjennifer/article/month/2015/02">2015年02月</a><span>(1)</span></li><li><a href="/abcjennifer/article/month/2015/01">2015年01月</a><span>(9)</span></li><li><a href="/abcjennifer/article/month/2014/12">2014年12月</a><span>(1)</span></li><li><a href="/abcjennifer/article/month/2014/11">2014年11月</a><span>(1)</span></li><li><a href="/abcjennifer/article/month/2014/10">2014年10月</a><span>(5)</span></li><li><a href="/abcjennifer/article/month/2014/08">2014年08月</a><span>(2)</span></li><li><a href="/abcjennifer/article/month/2014/06">2014年06月</a><span>(1)</span></li><li><a href="/abcjennifer/article/month/2014/05">2014年05月</a><span>(3)</span></li><li><a href="/abcjennifer/article/month/2014/04">2014年04月</a><span>(4)</span></li><li><a href="/abcjennifer/article/month/2014/03">2014年03月</a><span>(6)</span></li><li><a href="/abcjennifer/article/month/2014/02">2014年02月</a><span>(6)</span></li><li><a href="/abcjennifer/article/month/2014/01">2014年01月</a><span>(5)</span></li><li><a href="/abcjennifer/article/month/2013/12">2013年12月</a><span>(4)</span></li><li><a href="/abcjennifer/article/month/2013/11">2013年11月</a><span>(1)</span></li><li><a href="/abcjennifer/article/month/2013/06">2013年06月</a><span>(1)</span></li><li><a href="/abcjennifer/article/month/2013/03">2013年03月</a><span>(1)</span></li><li><a href="/abcjennifer/article/month/2013/02">2013年02月</a><span>(6)</span></li><li><a href="/abcjennifer/article/month/2013/01">2013年01月</a><span>(1)</span></li><li><a href="/abcjennifer/article/month/2012/12">2012年12月</a><span>(2)</span></li><li><a href="/abcjennifer/article/month/2012/11">2012年11月</a><span>(7)</span></li><li><a href="/abcjennifer/article/month/2012/10">2012年10月</a><span>(6)</span></li><li><a href="/abcjennifer/article/month/2012/09">2012年09月</a><span>(7)</span></li><li><a href="/abcjennifer/article/month/2012/08">2012年08月</a><span>(11)</span></li><li><a href="/abcjennifer/article/month/2012/07">2012年07月</a><span>(20)</span></li><li><a href="/abcjennifer/article/month/2012/06">2012年06月</a><span>(12)</span></li><li><a href="/abcjennifer/article/month/2012/05">2012年05月</a><span>(23)</span></li><li><a href="/abcjennifer/article/month/2012/04">2012年04月</a><span>(29)</span></li><li><a href="/abcjennifer/article/month/2012/03">2012年03月</a><span>(37)</span></li><li><a href="/abcjennifer/article/month/2012/02">2012年02月</a><span>(37)</span></li><li><a href="/abcjennifer/article/month/2012/01">2012年01月</a><span>(6)</span></li><li><a href="/abcjennifer/article/month/2011/08">2011年08月</a><span>(24)</span></li><li><a href="/abcjennifer/article/month/2011/07">2011年07月</a><span>(6)</span></li><li><a href="/abcjennifer/article/month/2011/06">2011年06月</a><span>(1)</span></li><li><a href="/abcjennifer/article/month/2011/05">2011年05月</a><span>(1)</span></li><li><a href="/abcjennifer/article/month/2011/02">2011年02月</a><span>(2)</span></li><li><a href="/abcjennifer/article/month/2011/01">2011年01月</a><span>(2)</span></li><li><a href="/abcjennifer/article/month/2010/12">2010年12月</a><span>(1)</span></li><li><a href="/abcjennifer/article/month/2010/11">2010年11月</a><span>(7)</span></li><li><a href="/abcjennifer/article/month/2010/10">2010年10月</a><span>(23)</span></li><li><a href="/abcjennifer/article/month/2010/09">2010年09月</a><span>(20)</span></li><li><a href="/abcjennifer/article/month/2010/08">2010年08月</a><span>(32)</span></li><li><a href="/abcjennifer/article/month/2010/07">2010年07月</a><span>(17)</span></li><li><a href="/abcjennifer/article/month/2010/06">2010年06月</a><span>(5)</span></li><li><a href="/abcjennifer/article/month/2010/05">2010年05月</a><span>(22)</span></li><li><a href="/abcjennifer/article/month/2010/04">2010年04月</a><span>(58)</span></li><li><a href="/abcjennifer/article/month/2010/03">2010年03月</a><span>(8)</span></li><li><a href="/abcjennifer/article/month/2010/02">2010年02月</a><span>(8)</span></li>
+</div>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+ </div>   
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/cnick/cnick.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/newblog.min.js"></script>
+
+
+<script type="text/javascript" src="http://medal.blog.csdn.net/showblogmedal.ashx?blogid=682984"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/JavaScript1.js"></script>
+
+    <script type="text/javascript" src="http://passport.csdn.net/content/loginbox/login.js"></script>
+<script type="text/javascript">document.write("<img src=http://counter.csdn.net/pv.aspx?id=24 border=0 width=0 height=0>");</script>
+<script type="text/javascript" src="http://www.csdn.net/ui/scripts/Csdn/counter.js"></script>
+<script type="text/javascript" src="http://ad.csdn.net/scripts/ad-blog.js"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+    </div>
+      <!--new top-->
+    
+    <script id="csdn-toolbar-id" btnId="header_notice_num" wrapId="note1" count="5" subCount="5" type="text/javascript" src="http://c.csdnimg.cn/public/common/toolbar/js/toolbar.js"></script>
+     <!--new top-->
+   
+    <link href="http://c.csdnimg.cn/comm_ask/css/ask_float_block.css" type="text/css" rel="stylesheet" />
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/wmd.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/showdown.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/prettify.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/apps/ask_float_block.js'></script>
+   
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   </div>
+
+</body>
+</html>   
+ 
